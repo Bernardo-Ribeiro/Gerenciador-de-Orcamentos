@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootPane" styleClass="background" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/26" fx:controller="com.grafica.controller.LoginController">
+
+    <ImageView fx:id="backgroundImage" preserveRatio="false" smooth="true" />
+
+    <ImageView fx:id="frostLayer" mouseTransparent="true" preserveRatio="false" smooth="true" styleClass="frost" />
+
+    <Pane styleClass="background-overlay" />
+
+    <VBox styleClass="login-shell">
+        <VBox fx:id="glassCard" styleClass="card, glass, glass-card">
+            <VBox styleClass="hero-copy">
+                <Label fx:id="titleLabel" id="titleLabel" text="Gerenciador de Orçamentos" textAlignment="CENTER" styleClass="title" />
+                <Label fx:id="subtitleLabel" id="subtitleLabel" styleClass="subtitle" text="Entrar no Sistema" />
+                <Label fx:id="descLabel" id="descLabel" styleClass="description" text="Acesse sua conta para gerenciar orçamentos e clientes" wrapText="true" />
+            </VBox>
+
+            <VBox styleClass="field-group">
+                <Label styleClass="label" text="Usuário" />
+                <TextField fx:id="usernameField" promptText="ex: joao.silva" styleClass="input" />
+            </VBox>
+
+            <VBox styleClass="field-group">
+                <Label styleClass="label" text="Senha" />
+                <PasswordField fx:id="passwordField" promptText="********" styleClass="input" />
+            </VBox>
+
+            <Button maxWidth="280.0" onAction="#handleLogin" styleClass="btn" stylesheets="@../style.css" text="Acessar Dashboard →" />
+
+            <Label fx:id="messageLabel" styleClass="feedback" text="" wrapText="true" />
+
+            <Separator styleClass="card-separator" />
+
+            <Label styleClass="footer" text="Conexão segura criptografada" />
+        </VBox>
+
+        <Label styleClass="bottom-text" text="v0.1 • Suporte Técnico • Políticas de Segurança" />
+    </VBox>
+
+</StackPane>

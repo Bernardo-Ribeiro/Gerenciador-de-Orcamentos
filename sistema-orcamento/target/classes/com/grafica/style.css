@@ -1,0 +1,148 @@
+/* Background */
+.background {
+    -fx-background-color: transparent;
+}
+
+.background-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Layout wrappers */
+.login-shell {
+    -fx-alignment: center;
+    -fx-spacing: 14;
+    -fx-pref-width: 515px;
+    -fx-pref-height: 429px;
+    -fx-max-width: 535px;
+    -fx-max-height: 470px;
+}
+
+.glass-card {
+    -fx-alignment: center;
+    -fx-spacing: 16;
+    -fx-pref-width: 515px;
+    -fx-pref-height: 368px;
+    -fx-max-width: 522px;
+    -fx-max-height: 420px;
+}
+
+.hero-copy {
+    -fx-alignment: center;
+    -fx-spacing: 6;
+}
+
+.field-group {
+    -fx-alignment: center-left;
+    -fx-spacing: 6;
+    -fx-pref-width: 311px;
+    -fx-max-width: 280px;
+}
+
+/* Card shell */
+.card {
+    -fx-background-color: transparent;
+    -fx-padding: 30;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255, 255, 255, 0.30);
+    -fx-border-width: 1;
+    -fx-max-width: 600;
+    -fx-min-width: 400;
+    -fx-pref-width: 420;
+}
+
+.glass {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1;
+}
+
+.glass .label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: rgba(255, 255, 255, 0.90);
+}
+
+/* Specific label overrides must come after the generic .label rule.
+   JavaFX Labels already carry the built-in style class "label". */
+#titleLabel {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-pref-height: 53px;
+    -fx-pref-width: 477px;
+    -fx-text-fill: #ffffff;
+}
+
+#subtitleLabel {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: rgba(255, 255, 255, 0.94);
+}
+
+#descLabel {
+    -fx-font-size: 14px;
+    -fx-text-alignment: center;
+    -fx-text-fill: rgba(255, 255, 255, 0.84);
+}
+
+.glass .input {
+    -fx-font-size: 14px;
+    -fx-pref-height: 40;
+    -fx-max-width: 280px;
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 9;
+    -fx-border-radius: 9;
+    -fx-border-color: #d9dde4;
+    -fx-border-width: 1;
+    -fx-padding: 0 12;
+    -fx-prompt-text-fill: #a1a7b3;
+    -fx-text-fill: #111111;
+}
+
+.glass .input:focused {
+    -fx-border-color: #2b8be8;
+}
+
+.glass .btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-pref-height: 44;
+    -fx-background-color: linear-gradient(to right, #2b8be8, #1f6fd6);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.glass .btn:hover {
+    -fx-background-color: linear-gradient(to right, #237ce0, #1a63c0);
+}
+
+.feedback {
+    -fx-font-size: 18px;
+    -fx-text-alignment: center;
+}
+
+.feedback-error {
+    -fx-text-fill: #c0392b;
+}
+
+.feedback-success {
+    -fx-text-fill: #1f7a3f;
+}
+
+.card-separator {
+    -fx-opacity: 0.8;
+}
+
+.footer {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255, 255, 255, 0.72);
+}
+
+.bottom-text {
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(255, 255, 255, 0.62);
+}
