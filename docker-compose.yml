@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: orcamento-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orcamento_db
+      MYSQL_USER: orcamento_user
+      MYSQL_PASSWORD: orcamento_pass
+      TZ: 'America/Sao_Paulo'
+    ports:
+      - "3306:3306"
+    volumes:
+      # Mount initialization scripts
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      # Persistent data volume
+      - mysql-data:/var/lib/mysql
+    networks:
+      - orcamento-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Java Application Service (Optional - for production/testing)
+  # Comentado por ahora - se ejecutará localmente en desarrollo
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: orcamento-app
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #   environment:
+  #     DB_HOST: mysql
+  #     DB_PORT: 3306
+  #     DB_NAME: orcamento_db
+  #     DB_USER: orcamento_user
+  #     DB_PASSWORD: orcamento_pass
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - orcamento-network
+  #   restart: unless-stopped
+  #   # For development with GUI, comment this out and run locally
+  #   stdin_open: true
+  #   tty: true
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  orcamento-network:
+    driver: bridge
