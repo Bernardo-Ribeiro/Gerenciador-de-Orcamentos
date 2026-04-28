@@ -8,10 +8,10 @@ Este documento descreve a stack tecnológica definida para o projeto e o papel d
 
 | Camada | Tecnologia | Versão | Finalidade |
 | --- | --- | --- | --- |
-| Linguagem | Java | 21 | Base de implementação da aplicação desktop. |
-| Interface Gráfica | JavaFX + FXML | 21 | Construção das telas, navegação e componentes visuais. |
+| Linguagem | Java | 24 | Base de implementação da aplicação desktop. |
+| Interface Gráfica | JavaFX + FXML | 24 | Construção das telas, navegação e componentes visuais. |
 | Banco de Dados | MySQL | 9.7.0 | Persistência de clientes, materiais, orçamentos e histórico. |
-| Geração de PDF | iText ou OpenPDF | Definida no projeto | Criação dos orçamentos em PDF. |
+| Geração de PDF | OpenPDF | Definida no projeto | Criação dos orçamentos em PDF. |
 | Arquitetura | MVC + Service | Definida no projeto | Organização do código em camadas separadas. |
 
 ## 2. Justificativa das Dependências
