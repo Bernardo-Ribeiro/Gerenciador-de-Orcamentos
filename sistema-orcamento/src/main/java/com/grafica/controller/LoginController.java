@@ -1,6 +1,9 @@
 package com.grafica.controller;
 
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.control.PasswordField;
@@ -11,7 +14,10 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.application.Platform;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class LoginController {
@@ -121,7 +127,20 @@ public class LoginController {
 			return;
 		}
 
-		messageLabel.setText("Login realizado com sucesso.");
-		messageLabel.getStyleClass().setAll("feedback", "feedback-success");
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grafica/view/main.fxml"));
+			Parent root = loader.load();
+			MainController mainController = loader.getController();
+			mainController.setUsuarioLogado(username);
+
+			Stage stage = (Stage) rootPane.getScene().getWindow();
+			Scene scene = stage.getScene();
+			scene.setRoot(root);
+			stage.setTitle("Gerenciador de Orçamentos");
+			Platform.runLater(() -> stage.setMaximized(true));
+		} catch (IOException exception) {
+			messageLabel.setText("Não foi possível abrir a tela principal.");
+			messageLabel.getStyleClass().setAll("feedback", "feedback-error");
+		}
 	}
 }

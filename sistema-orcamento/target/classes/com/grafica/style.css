@@ -146,3 +146,114 @@
     -fx-font-size: 10px;
     -fx-text-fill: rgba(255, 255, 255, 0.62);
 }
+
+/* Sidebar container */
+.sidebar-menu {
+    -fx-background-color: #FAFAFBFF;
+    -fx-padding: 16 8 16 8;
+    -fx-spacing: 16;
+    -fx-alignment: top-left;
+    -fx-pref-width: 256px;
+    -fx-min-width: 256px;
+    -fx-max-width: 256px;
+}
+
+/* Main sidebar buttons */
+.sidebar-menu .button {
+    -fx-pref-width: 223px;
+    -fx-min-width: 223px;
+    -fx-max-width: 223px;
+    -fx-pref-height: 44px;
+    -fx-min-height: 44px;
+    -fx-max-height: 44px;
+    -fx-padding: 0 12px;
+    -fx-alignment: center;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 12px;
+    -fx-font-family: "Open Sans", "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #565D6D;
+    -fx-background-color: transparent;
+    -fx-opacity: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.sidebar-menu .button:hover {
+    -fx-text-fill: #1E2128FF;
+    -fx-background-color: #F3F4F6FF;
+}
+
+.sidebar-menu .button:pressed {
+    -fx-text-fill: #1E2128FF;
+    -fx-background-color: #F3F4F6FF;
+}
+
+.sidebar-menu .button.active {
+    -fx-text-fill: #258CF4;
+    -fx-background-color: #E3F0FFFF;
+    -fx-font-weight: 600;
+}
+
+.sidebar-menu .button.active .icon {
+    -fx-fill: #258CF4;
+}
+
+.sidebar-menu .button:disabled {
+    -fx-opacity: 0.4;
+}
+
+.sidebar-menu .button .icon {
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+    -fx-fill: #565D6D;
+}
+
+/* Sidebar separator */
+.sidebar-separator {
+    -fx-padding: 0;
+    -fx-border-color: #DEE1E6FF;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Exit button */
+.sidebar-menu .button.btn-sair {
+    -fx-pref-width: 223px;
+    -fx-min-width: 223px;
+    -fx-max-width: 223px;
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-padding: 0 12px;
+    -fx-alignment: center;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 12px;
+    -fx-font-family: "Open Sans", "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #E83030FF;
+    -fx-background-color: transparent;
+    -fx-opacity: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.sidebar-menu .button.btn-sair:hover {
+    -fx-text-fill: #E83030FF;
+    -fx-background-color: transparent;
+}
+
+.sidebar-menu .button.btn-sair:pressed {
+    -fx-text-fill: #E83030FF;
+    -fx-background-color: transparent;
+}
+
+.sidebar-menu .button.btn-sair .icon {
+    -fx-fill: #E83030FF;
+}
