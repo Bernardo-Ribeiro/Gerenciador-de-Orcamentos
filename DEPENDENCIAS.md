@@ -18,7 +18,7 @@ Este documento descreve a stack tecnológica definida para o projeto e o papel d
 
 ### Java 24
 
-O Java 21 será utilizado como linguagem principal por oferecer suporte moderno, boa manutenção e compatibilidade com aplicações desktop estruturadas.
+O Java 24 será utilizado como linguagem principal por oferecer suporte moderno, boa manutenção e compatibilidade com aplicações desktop estruturadas.
 
 ### JavaFX 24 + FXML
 
@@ -28,7 +28,7 @@ O JavaFX 21 será a base da interface gráfica. O uso de FXML permite separar a 
 
 O MySQL será o SGBD responsável pelo armazenamento dos dados do sistema, incluindo cadastros, históricos, parâmetros de cálculo e registros de orçamento.
 
-### iText / OpenPDF
+### OpenPDF
 
 Uma das bibliotecas será responsável pela geração dos orçamentos em PDF. A escolha final deve considerar licenciamento, facilidade de integração e compatibilidade com a versão do Java adotada.
 
