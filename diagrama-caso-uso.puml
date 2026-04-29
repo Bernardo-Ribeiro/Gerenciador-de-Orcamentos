@@ -1,0 +1,65 @@
+@startuml Gerenciador de Orçamentos - Casos de Uso
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor Usuario
+actor Cliente
+
+rectangle "Sistema de Gerenciamento de Orçamentos" {
+  
+  usecase UC1 as "Fazer Login"
+  usecase UC2 as "Gerenciar Clientes"
+  usecase UC3 as "Criar Orçamento"
+  usecase UC4 as "Editar Orçamento"
+  usecase UC5 as "Visualizar Orçamento"
+  usecase UC6 as "Gerar Relatório"
+  usecase UC7 as "Exportar para PDF"
+  usecase UC8 as "Configurar Custos de Insumos"
+  usecase UC9 as "Definir Escalas Produtivas"
+  usecase UC10 as "Gerenciar Margens de Lucro"
+  usecase UC11 as "Configurar Ajustes do Sistema"
+  usecase UC12 as "Gerenciar Usuários"
+  usecase UC13 as "Visualizar Dashboard"
+  usecase UC14 as "Adicionar Itens ao Orçamento"
+  usecase UC15 as "Remover Itens do Orçamento"
+  
+}
+
+Usuario --> UC1
+UC1 --> UC13
+UC1 --> UC2
+UC1 --> UC3
+UC1 --> UC6
+UC1 --> UC11
+
+UC3 --> UC14
+UC3 --> UC5
+UC4 --> UC15
+UC5 --> UC7
+
+UC11 --> UC8
+UC11 --> UC9
+UC11 --> UC10
+UC11 --> UC12
+
+UC3 -.-> UC8 : usa
+UC3 -.-> UC9 : usa
+UC3 -.-> UC10 : usa
+
+UC6 --> UC7
+
+Cliente --> UC5
+Cliente --> UC6
+
+note right of UC1
+  Autenticação do usuário
+  no sistema
+end note
+
+note right of UC11
+  Apenas administrador
+  pode acessar
+end note
+
+@enduml

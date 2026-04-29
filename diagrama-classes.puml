@@ -1,0 +1,257 @@
+@startuml Gerenciador de Orçamentos - Diagrama de Classes
+
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam classBackgroundColor #F0F0F0
+skinparam classBorderColor #333333
+skinparam arrowColor #333333
+
+package "com.grafica.model" {
+
+  class Usuario {
+    - id: int
+    - nome: String
+    - email: String
+    - senha: String
+    - cargo: String
+    - ativo: boolean
+    - dataCriacao: LocalDateTime
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNome(): String
+    + setNome(String): void
+    + getEmail(): String
+    + setEmail(String): void
+    + validarCredenciais(): boolean
+    + alterarSenha(String): void
+  }
+
+  class Cliente {
+    - id: int
+    - nome: String
+    - email: String
+    - telefone: String
+    - endereco: String
+    - dataCadastro: LocalDateTime
+    - ativo: boolean
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNome(): String
+    + setNome(String): void
+    + getEmail(): String
+    + setEmail(String): void
+    + validarDados(): boolean
+    + obterOrcamentos(): List<Orcamento>
+  }
+
+  class Orcamento {
+    - id: int
+    - numero: String
+    - cliente: Cliente
+    - usuario: Usuario
+    - dataEmissao: LocalDate
+    - dataValidade: LocalDate
+    - status: String
+    - valorTotal: BigDecimal
+    - desconto: BigDecimal
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNumero(): String
+    + setNumero(String): void
+    + getCliente(): Cliente
+    + setCliente(Cliente): void
+    + getUsuario(): Usuario
+    + setUsuario(Usuario): void
+    + adicionarItem(ItemOrcamento): void
+    + removerItem(ItemOrcamento): void
+    + calcularTotal(): BigDecimal
+    + exportarPDF(): void
+    + gerarRelatorio(): void
+  }
+
+  class ItemOrcamento {
+    - id: int
+    - orcamento: Orcamento
+    - material: Material
+    - quantidade: double
+    - valorUnitario: BigDecimal
+    - desconto: BigDecimal
+    - margem: BigDecimal
+    - valorTotal: BigDecimal
+    ---
+    + getId(): int
+    + setId(int): void
+    + getOrcamento(): Orcamento
+    + setOrcamento(Orcamento): void
+    + getMaterial(): Material
+    + setMaterial(Material): void
+    + getQuantidade(): double
+    + setQuantidade(double): void
+    + calcularValorTotal(): BigDecimal
+    + aplicarDesconto(BigDecimal): void
+    + aplicarMargem(BigDecimal): void
+  }
+
+  class Material {
+    - id: int
+    - nome: String
+    - descricao: String
+    - custo: BigDecimal
+    - preco: BigDecimal
+    - unidade: String
+    - estoque: double
+    - ativo: boolean
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNome(): String
+    + setNome(String): void
+    + getCusto(): BigDecimal
+    + setCusto(BigDecimal): void
+    + getPreco(): BigDecimal
+    + setPreco(BigDecimal): void
+    + verificarEstoque(double): boolean
+    + atualizarEstoque(double): void
+  }
+
+  class EscalaProdutiva {
+    - id: int
+    - nome: String
+    - descricao: String
+    - tempoProducao: double
+    - custo: BigDecimal
+    - capacidade: int
+    - ativa: boolean
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNome(): String
+    + setNome(String): void
+    + getTempoProducao(): double
+    + setTempoProducao(double): void
+    + getCusto(): BigDecimal
+    + setCusto(BigDecimal): void
+    + calcularCustoTotal(int): BigDecimal
+    + validarCapacidade(int): boolean
+  }
+
+  class MargemLucro {
+    - id: int
+    - tipo: String
+    - percentualMinimo: BigDecimal
+    - percentualPadrao: BigDecimal
+    - percentualMaximo: BigDecimal
+    ---
+    + getId(): int
+    + setId(int): void
+    + getTipo(): String
+    + setTipo(String): void
+    + calcularMargem(BigDecimal): BigDecimal
+    + validarMargem(BigDecimal): boolean
+  }
+
+  class ConfiguracaoPDF {
+    - id: int
+    - nomeEmpresa: String
+    - logoPath: String
+    - cores: String
+    - fonte: String
+    - rodape: String
+    ---
+    + getId(): int
+    + setId(int): void
+    + getNomeEmpresa(): String
+    + setNomeEmpresa(String): void
+    + aplicarConfiguracao(): void
+    + gerarPDF(Orcamento): void
+  }
+
+}
+
+package "com.grafica.service" {
+  class OrcamentoService {
+    - dao: OrcamentoDAO
+    ---
+    + criar(Orcamento): void
+    + atualizar(Orcamento): void
+    + deletar(int): void
+    + obter(int): Orcamento
+    + listarTodos(): List<Orcamento>
+    + listarPorCliente(int): List<Orcamento>
+    + calcularTotal(Orcamento): BigDecimal
+  }
+
+  class ClienteService {
+    - dao: ClienteDAO
+    ---
+    + criar(Cliente): void
+    + atualizar(Cliente): void
+    + deletar(int): void
+    + obter(int): Cliente
+    + listarTodos(): List<Cliente>
+  }
+
+  class UsuarioService {
+    - dao: UsuarioDAO
+    ---
+    + criar(Usuario): void
+    + atualizar(Usuario): void
+    + deletar(int): void
+    + autenticar(String, String): Usuario
+    + alterarSenha(int, String): void
+  }
+
+  class MaterialService {
+    - dao: MaterialDAO
+    ---
+    + criar(Material): void
+    + atualizar(Material): void
+    + deletar(int): void
+    + obter(int): Material
+    + listarTodos(): List<Material>
+  }
+}
+
+package "com.grafica.dao" {
+  interface GenericDAO {
+    + create(T): void
+    + read(int): T
+    + update(T): void
+    + delete(int): void
+    + getAll(): List<T>
+  }
+
+  class OrcamentoDAO implements GenericDAO {
+  }
+
+  class ClienteDAO implements GenericDAO {
+  }
+
+  class UsuarioDAO implements GenericDAO {
+  }
+
+  class MaterialDAO implements GenericDAO {
+  }
+}
+
+' Relacionamentos
+Orcamento "1" --> "*" ItemOrcamento : contém
+Orcamento "1" --> "1" Cliente : referencia
+Orcamento "1" --> "1" Usuario : criado por
+Orcamento "1" --> "1" ConfiguracaoPDF : usa
+
+ItemOrcamento "1" --> "1" Material : possui
+
+EscalaProdutiva "1" --> "*" ItemOrcamento : utilizada em
+
+MargemLucro "1" --> "*" ItemOrcamento : define
+
+OrcamentoService --> OrcamentoDAO
+ClienteService --> ClienteDAO
+UsuarioService --> UsuarioDAO
+MaterialService --> MaterialDAO
+
+@enduml
