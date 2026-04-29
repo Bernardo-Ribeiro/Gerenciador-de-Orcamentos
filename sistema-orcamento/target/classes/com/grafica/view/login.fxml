@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import java.lang.String?>
 
 <StackPane fx:id="rootPane" styleClass="background" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/26" fx:controller="com.grafica.controller.LoginController">
 
@@ -19,7 +20,12 @@
     <Pane styleClass="background-overlay" />
 
     <VBox styleClass="login-shell">
-        <VBox fx:id="glassCard" styleClass="card, glass, glass-card">
+        <VBox fx:id="glassCard">
+            <styleClass>
+                <String fx:value="card" />
+                <String fx:value="glass" />
+                <String fx:value="glass-card" />
+            </styleClass>
             <VBox styleClass="hero-copy">
                 <Label fx:id="titleLabel" id="titleLabel" text="Gerenciador de Orçamentos" textAlignment="CENTER" styleClass="title" />
                 <Label fx:id="subtitleLabel" id="subtitleLabel" styleClass="subtitle" text="Entrar no Sistema" />

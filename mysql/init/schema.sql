@@ -1,37 +1,49 @@
 CREATE DATABASE IF NOT EXISTS grafica_db;
 USE grafica_db;
 
+
+-- Tabela de usuários, clientes, materiais, escalas produtivas, orçamentos, itens de orçamento e auditoria
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha_hash VARCHAR(255) NOT NULL,
-    status VARCHAR(20) DEFAULT 'Ativo'
+    status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO'
 );
 
--- 2. Tabla de Clientes (Gestión de Cadastro - RF002)
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_razao_social VARCHAR(150) NOT NULL,
     cpf_cnpj VARCHAR(20) NOT NULL UNIQUE,
     email_contato VARCHAR(100),
     telefone_whatsapp VARCHAR(20),
-    status VARCHAR(20) DEFAULT 'Ativo',
+    status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO',
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Tabla de Materiales/Servicios (Gestión de Insumos - RF003 / RN001)
 CREATE TABLE materiais (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    categoria VARCHAR(50) NOT NULL,   -- 'Comunicação Visual' o 'Materiais Impressos'
-    tipo_cobranca VARCHAR(20) NOT NULL, -- 'AREA' (m2) o 'UNIDADE' (tiragem)
-    custo_base DECIMAL(10,2) NOT NULL,  -- Custo do insumo (fornecedor)
-    custo_producao DECIMAL(10,2) DEFAULT 0.00, -- Custo de tempo/máquina
-    status VARCHAR(20) DEFAULT 'Ativo'
+    
+    categoria ENUM('COMUNICACAO_VISUAL', 'IMPRESSOS') NOT NULL,
+    tipo_item ENUM('BASE', 'ACABAMENTO') NOT NULL,
+    
+    tipo_cobranca ENUM(
+        'AREA',
+        'UNIDADE',
+        'TIRAGEM',
+        'FOLHA',
+        'PACOTE',
+        'SERVICO',
+        'CHAPA'
+    ) NOT NULL,
+    
+    custo_base DECIMAL(10,2) NOT NULL,
+    custo_producao DECIMAL(10,2) DEFAULT 0.00,
+    
+    status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO'
 );
 
--- 4. Tabla de Escala Productiva (Regla de Descuentos por Cantidad - RN003)
 CREATE TABLE escalas_produtivas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_material INT NOT NULL,
@@ -41,18 +53,13 @@ CREATE TABLE escalas_produtivas (
     FOREIGN KEY (id_material) REFERENCES materiais(id) ON DELETE CASCADE
 );
 
--- =================================================================
--- SPRINT 2 y 3: Presupuestos (Orçamentos) e Historial
--- =================================================================
-
--- 5. Tabla de Presupuestos (Elaborar Orçamento - RF004, RF005, RN006)
 CREATE TABLE orcamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT NOT NULL,
     id_usuario INT NOT NULL,
     data_emissao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_validade DATE NOT NULL, -- Se calcula a 15 días según RN006
-    status VARCHAR(30) DEFAULT 'Pendente', -- 'Pendente', 'Aprovado (Venda)', 'Cancelado/Reprovado'
+    data_validade DATE NOT NULL,
+    status ENUM('PENDENTE', 'APROVADO', 'REPROVADO') DEFAULT 'PENDENTE',
     valor_bruto DECIMAL(10,2) NOT NULL,
     margem_lucro_percentual DECIMAL(5,2) NOT NULL,
     desconto_progressivo DECIMAL(5,2) DEFAULT 0.00,
@@ -61,22 +68,47 @@ CREATE TABLE orcamentos (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );
 
--- 6. Tabla de Detalles del Presupuesto (Los ítems dentro del presupuesto)
 CREATE TABLE itens_orcamento (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_orcamento INT NOT NULL,
     id_material INT NOT NULL,
-    largura_mm INT DEFAULT 0,  -- Para Comunicação Visual
-    altura_mm INT DEFAULT 0,   -- Para Comunicação Visual
-    quantidade INT NOT NULL,   -- Para Materiais Impressos
+    
+    largura_mm INT DEFAULT 0,
+    altura_mm INT DEFAULT 0,
+    quantidade INT DEFAULT 1,
+    area_calculada DECIMAL(10,4),
+    
     valor_bruto_item DECIMAL(10,2) NOT NULL,
     valor_final_item DECIMAL(10,2) NOT NULL,
+
+    custo_unitario DECIMAL(10,2) NOT NULL,
+    tipo_cobranca_aplicado ENUM(
+        'AREA',
+        'UNIDADE',
+        'TIRAGEM',
+        'FOLHA',
+        'PACOTE',
+        'SERVICO',
+        'CHAPA'
+    ) NOT NULL,
+    
     FOREIGN KEY (id_orcamento) REFERENCES orcamentos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_material) REFERENCES materiais(id)
 );
 
--- =================================================================
--- DATOS INICIALES (Para poder probar el login en el Sprint 1)
--- =================================================================
-INSERT INTO usuarios (nome, email, senha_hash, cargo, status) 
-VALUES ('Admin', 'admin@grafica.com', 'hash_generado_aqui', 'Administrador', 'Ativo');
+CREATE TABLE auditoria_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tabela VARCHAR(50) NOT NULL,
+    id_registro INT NOT NULL,
+    campo VARCHAR(50) NOT NULL,
+    valor_antigo VARCHAR(255),
+    valor_novo VARCHAR(255),
+    usuario VARCHAR(100),
+    data_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índices para otimizar consultas
+CREATE INDEX idx_itens_orcamento_orc ON itens_orcamento(id_orcamento);
+CREATE INDEX idx_itens_orcamento_mat ON itens_orcamento(id_material);
+CREATE INDEX idx_escalas_material ON escalas_produtivas(id_material);
+CREATE INDEX idx_orcamentos_cliente ON orcamentos(id_cliente);

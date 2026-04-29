@@ -4,18 +4,18 @@ SELECT
     (custo_base + custo_producao) as costo_total_produccion,
     custo_base, custo_producao
 FROM materiais 
-WHERE id = ? AND status = 'Ativo';
+WHERE id = ? AND status = 'ATIVO';
 
 -- [RN001.02] Listar materiales de categoría "Comunicación Visual"
-SELECT id, nome, custo_base, custo_producao, (custo_base + custo_producao) as costo_total
+SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, (custo_base + custo_producao) as costo_total
 FROM materiais 
-WHERE categoria = 'Comunicacao Visual' AND status = 'Ativo'
+WHERE categoria = 'COMUNICACAO_VISUAL' AND status = 'ATIVO'
 ORDER BY nome ASC;
 
 -- [RN001.03] Listar materiales de categoría "Materiales Impresos"
-SELECT id, nome, custo_base, custo_producao, (custo_base + custo_producao) as costo_total
+SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, (custo_base + custo_producao) as costo_total
 FROM materiais 
-WHERE categoria = 'Materiais Impressos' AND status = 'Ativo'
+WHERE categoria = 'IMPRESSOS' AND status = 'ATIVO'
 ORDER BY nome ASC;
 
 -- [RN003.01] Obtener descuento aplicable según cantidad
@@ -64,7 +64,7 @@ WHERE id = ?;
 
 -- [RN006.02] Verificar si orçamento aún es válido
 SELECT 
-    id, numero_orcamento, data_emissao, data_validade,
+    id, data_emissao, data_validade,
     CASE 
         WHEN CURDATE() <= data_validade THEN 'VIGENTE'
         ELSE 'VENCIDO'
@@ -74,16 +74,16 @@ FROM orcamentos
 WHERE id = ?;
 
 -- [RN006.03] Listar orçamentos próximos a vencer (< 3 días)
-SELECT id, numero_orcamento, id_cliente, data_validade, DATEDIFF(data_validade, CURDATE()) as dias_restantes
+SELECT id, id_cliente, data_validade, DATEDIFF(data_validade, CURDATE()) as dias_restantes
 FROM orcamentos 
 WHERE DATEDIFF(data_validade, CURDATE()) BETWEEN 0 AND 3 
-AND status = 'Pendente'
+AND status = 'PENDENTE'
 ORDER BY data_validade ASC;
 
 -- [RN006.04] Listar orçamentos vencidos
-SELECT id, numero_orcamento, id_cliente, data_validade
+SELECT id, id_cliente, data_validade
 FROM orcamentos 
-WHERE CURDATE() > data_validade AND status = 'Pendente'
+WHERE CURDATE() > data_validade AND status = 'PENDENTE'
 ORDER BY data_validade DESC;
 
 
@@ -95,7 +95,7 @@ SELECT
     (o.valor_bruto * (1 + o.margem_lucro_percentual/100)) as valor_con_margem,
     o.desconto_progressivo,
     o.valor_final,
-    c.nome as cliente_nome,
+    c.nome_razao_social as cliente_nome,
     u.nome as usuario_nombre,
     DATEDIFF(o.data_validade, CURDATE()) as dias_vigencia
 FROM orcamentos o
@@ -116,11 +116,14 @@ GROUP BY id_orcamento;
 -- [CALC.03] Desglose de items con margen aplicado
 SELECT 
     io.id, io.id_material, m.nome,
-    io.cantidad, 
+    io.quantidade, 
     io.valor_bruto_item,
     ? as margem_percentual_aplicada,
     ROUND(io.valor_bruto_item * (1 + ?/100), 2) as valor_con_margem,
-    io.valor_final_item
+    io.valor_final_item,
+    io.area_calculada,
+    io.custo_unitario,
+    io.tipo_cobranca_aplicado
 FROM itens_orcamento io
 JOIN materiais m ON io.id_material = m.id
 WHERE io.id_orcamento = ?
@@ -137,7 +140,7 @@ GROUP BY status;
 -- [DIAG.02] Verificar integridad referencial de orçamentos
 SELECT o.id, COUNT(io.id) as items_count
 FROM orcamentos o
-LEFT JOIN itens_orcamento io ON o.id_orcamento = io.id_orcamento
+LEFT JOIN itens_orcamento io ON o.id = io.id_orcamento
 GROUP BY o.id
 HAVING items_count = 0;
 
@@ -145,6 +148,6 @@ HAVING items_count = 0;
 SELECT m.id, m.nome, COUNT(ep.id) as escalas_count
 FROM materiais m
 LEFT JOIN escalas_produtivas ep ON m.id = ep.id_material
-WHERE m.status = 'Ativo'
+WHERE m.status = 'ATIVO'
 GROUP BY m.id
 HAVING escalas_count = 0;
