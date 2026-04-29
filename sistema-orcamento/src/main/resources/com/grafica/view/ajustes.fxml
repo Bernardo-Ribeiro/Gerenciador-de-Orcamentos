@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="12.0" styleClass="section-pane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="18.0" styleClass="settings-page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.AjustesController">
     <padding>
         <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
     </padding>
     <children>
-        <Label styleClass="section-title" text="Ajustes" />
-        <Label styleClass="section-text" text="Configurações do aplicativo e preferências do usuário." wrapText="true" />
+        <HBox spacing="14.0" styleClass="settings-warning">
+            <children>
+                <Label styleClass="settings-warning-icon" text="!" />
+                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="settings-warning-title" text="Área de Configurações Críticas" />
+                        <Label styleClass="settings-warning-text" text="Qualquer alteração nestes parâmetros afetará instantaneamente o cálculo de novos orçamentos e as permissões de acesso do sistema." wrapText="true" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <Label fx:id="breadcrumbLabel" styleClass="settings-breadcrumb" text="Início   &gt;   Painel Administrador   &gt;   Gestão de Usuários" />
+
+        <HBox spacing="36.0" VBox.vgrow="ALWAYS" styleClass="settings-content-row">
+            <children>
+                <VBox spacing="10.0" styleClass="settings-nav">
+                    <children>
+                        <Button fx:id="btnGestaoUsuarios" onAction="#selecionarGestaoUsuarios" styleClass="settings-nav-item" text="Gestão de Usuários" />
+                        <Button fx:id="btnCustosInsumos" onAction="#selecionarCustosInsumos" styleClass="settings-nav-item" text="Custos de Insumos" />
+                        <Button fx:id="btnEscalaProdutiva" onAction="#selecionarEscalaProdutiva" styleClass="settings-nav-item" text="Escala Produtiva" />
+                        <Button fx:id="btnMargensLucro" onAction="#selecionarMargensLucro" styleClass="settings-nav-item" text="Margens de Lucro" />
+                        <Button fx:id="btnConfiguracoesPdf" onAction="#selecionarConfiguracoesPdf" styleClass="settings-nav-item" text="Configurações de PDF" />
+                    </children>
+                </VBox>
+
+                <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS" styleClass="settings-content-panel" />
+            </children>
+        </HBox>
     </children>
 </VBox>

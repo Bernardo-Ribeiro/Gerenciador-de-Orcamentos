@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12.0" styleClass="settings-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
+    </padding>
+    <children>
+        <Label styleClass="settings-section-title" text="Gestão de Usuários" />
+        <Label styleClass="settings-section-text" text="Aqui serão exibidas as permissões, perfis e ações administrativas de usuários do sistema." wrapText="true" />
+        <VBox spacing="6.0" styleClass="settings-section-card">
+            <children>
+                <Label styleClass="settings-section-card-title" text="Acesso e permissões" />
+                <Label styleClass="settings-section-card-text" text="Essa área será usada para listar usuários, editar perfis e definir níveis de acesso." wrapText="true" />
+            </children>
+        </VBox>
+    </children>
+</VBox>

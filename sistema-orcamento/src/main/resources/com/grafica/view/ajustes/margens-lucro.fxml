@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12.0" styleClass="settings-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
+    </padding>
+    <children>
+        <Label styleClass="settings-section-title" text="Margens de Lucro" />
+        <Label styleClass="settings-section-text" text="Painel para definir as margens padrão usadas nos cálculos dos orçamentos." wrapText="true" />
+        <VBox spacing="6.0" styleClass="settings-section-card">
+            <children>
+                <Label styleClass="settings-section-card-title" text="Regras de precificação" />
+                <Label styleClass="settings-section-card-text" text="Aqui ficará a manutenção das margens mínimas e máximas por categoria de serviço." wrapText="true" />
+            </children>
+        </VBox>
+    </children>
+</VBox>

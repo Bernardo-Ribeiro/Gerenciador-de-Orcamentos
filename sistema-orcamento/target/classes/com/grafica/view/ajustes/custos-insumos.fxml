@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="12.0" styleClass="settings-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
+    </padding>
+    <children>
+        <Label styleClass="settings-section-title" text="Custos de Insumos" />
+        <Label styleClass="settings-section-text" text="Painel para cadastrar, revisar e atualizar insumos e seus respectivos custos de referência." wrapText="true" />
+        <VBox spacing="6.0" styleClass="settings-section-card">
+            <children>
+                <Label styleClass="settings-section-card-title" text="Base de custo" />
+                <Label styleClass="settings-section-card-text" text="Os valores daqui impactam diretamente a composição de preços dos novos orçamentos." wrapText="true" />
+            </children>
+        </VBox>
+    </children>
+</VBox>
