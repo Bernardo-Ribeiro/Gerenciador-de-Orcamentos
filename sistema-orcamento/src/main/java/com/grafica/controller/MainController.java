@@ -1,5 +1,6 @@
 package com.grafica.controller;
 
+import com.grafica.model.Usuario;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -9,7 +10,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
+import javafx.stage.Stage;
 
+/**
+ * MainController - Controlador principal de la aplicación
+ * Orquesta la navegación entre secciones principales
+ * 
+ * Estructura de navegación:
+ * - Dashboard (inicio)
+ * - Clientes (CRUD de clientes)
+ * - Orçamentos (crear, editar, consultar presupuestos)
+ * - Relatórios (análisis y reportes)
+ * - Ajustes (configuración del usuario)
+ */
 public class MainController {
 	@FXML
 	private BorderPane rootPane;
@@ -27,6 +40,9 @@ public class MainController {
 	private Button btnClientes;
 
 	@FXML
+	private Button btnMateriais;
+
+	@FXML
 	private Button btnOrcamentos;
 
 	@FXML
@@ -35,76 +51,140 @@ public class MainController {
 	@FXML
 	private Button btnAjustes;
 
+	@FXML
+	private Button btnLogout;
+
 	private Button botaoAtual;
+	private Usuario usuarioLogado;
 
 	@FXML
 	private void initialize() {
 		marcarBotaoAtivo(btnDashboard);
+	}
+
+	/**
+	 * Establece el usuario logado y actualiza la etiqueta de bienvenida
+	 */
+	public void setUsuarioLogado(Usuario usuario) {
+		this.usuarioLogado = usuario;
+		if (userLabel != null && usuario != null) {
+			userLabel.setText("Bem-vindo, " + usuario.getNome());
+		}
+	}
+
+	/**
+	 * Abre la vista Dashboard (inicio)
+	 */
+	public void iniciarTelaPrincipal() {
 		abrirDashboard();
 	}
 
-	public void setUsuarioLogado(String usuario) {
-		if (userLabel != null) {
-			userLabel.setText("Bem-vindo, " + usuario);
-		}
-	}
-
+	/**
+	 * Abre la vista Dashboard (inicio)
+	 */
 	@FXML
 	private void abrirDashboard() {
 		marcarBotaoAtivo(btnDashboard);
-		carregarConteudo("/com/grafica/view/dashboard.fxml");
+		carregarPantalla("view/dashboard.fxml");
 	}
 
+	/**
+	 * Abre la vista de Gestión de Clientes
+	 */
 	@FXML
 	private void abrirClientes() {
 		marcarBotaoAtivo(btnClientes);
-		carregarConteudo("/com/grafica/view/clientes.fxml");
+		carregarPantalla("view/clientes.fxml");
 	}
 
+	/**
+	 * Abre la vista de Gestión de Materiais (Catálogo)
+	 */
+	@FXML
+	private void abrirMateriais() {
+		marcarBotaoAtivo(btnMateriais);
+		carregarPantalla("view/materiais.fxml");
+	}
+
+	/**
+	 * Abre la vista de Gestión de Orçamentos
+	 */
 	@FXML
 	private void abrirOrcamentos() {
 		marcarBotaoAtivo(btnOrcamentos);
-		carregarConteudo("/com/grafica/view/orcamentos.fxml");
+		carregarPantalla("view/orcamentos.fxml");
 	}
 
+	/**
+	 * Abre la vista de Relatórios
+	 */
 	@FXML
 	private void abrirRelatorios() {
 		marcarBotaoAtivo(btnRelatorios);
-		carregarConteudo("/com/grafica/view/relatorios.fxml");
+		carregarPantalla("view/relatorios.fxml");
 	}
 
+	/**
+	 * Abre la vista de Ajustes
+	 */
 	@FXML
 	private void abrirAjustes() {
 		marcarBotaoAtivo(btnAjustes);
-		carregarConteudo("/com/grafica/view/ajustes.fxml");
+		carregarPantalla("view/ajustes.fxml");
 	}
 
-	@FXML
-	private void sair() {
-		if (rootPane != null && rootPane.getScene() != null) {
-			rootPane.getScene().getWindow().hide();
-		}
-	}
+	/**
+	 * Carga una pantalla FXML en el área de contenido
+	 */
+	private void carregarPantalla(String fxmlPath) {
+        try {
+			java.net.URL location = getClass().getResource("/com/grafica/" + fxmlPath);
+			if (location == null) {
+				throw new IllegalStateException("FXML no encontrado: /com/grafica/" + fxmlPath);
+			}
+			FXMLLoader loader = new FXMLLoader(location);
+            Parent pantalla = loader.load();
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(pantalla);
+        } catch (IOException e) {
+            System.err.println("Error al cargar pantalla: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
 
+	/**
+	 * Marca el botón actual como activo visualmente
+	 */
 	private void marcarBotaoAtivo(Button botao) {
 		if (botaoAtual != null) {
-			botaoAtual.getStyleClass().remove("active");
+			botaoAtual.setStyle("");
 		}
-		botao.getStyleClass().add("active");
 		botaoAtual = botao;
+		if (botao != null) {
+			botao.setStyle("-fx-text-fill: #0078d4; -fx-font-weight: bold;");
+		}
+	}
+
+	/**
+	 * Obtiene el usuario logado
+	 */
+	public Usuario getUsuarioLogado() {
+		return usuarioLogado;
 	}
 
 	private void carregarConteudo(String fxmlPath) {
-		if (contentArea == null) {
-			return;
-		}
-
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 			Parent content = loader.load();
 			contentArea.getChildren().setAll(content);
-		} catch (Exception exception) {
-			contentArea.getChildren().setAll(new Label("Não foi possível carregar a tela."));
+		} catch (Exception e) {
+			contentArea.getChildren().setAll(new Label("Erro ao carregar tela: " + fxmlPath));
 		}
+	}
+
+	@FXML
+	private void sair() {
+		Stage stage = (Stage) rootPane.getScene().getWindow();
+		stage.close();
 	}
 }

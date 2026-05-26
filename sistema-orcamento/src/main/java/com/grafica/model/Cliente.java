@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Cliente {
     private Integer id;
-    private String nomeRazaoSocial;
+    private String nome;
     private String cpfCnpj;
     private String emailContato;
     private String telefoneWhatsapp;
@@ -14,9 +14,18 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(Integer id, String nomeRazaoSocial, String cpfCnpj, String emailContato, String telefoneWhatsapp, String status, LocalDateTime dataCadastro) {
+    public Cliente(String nome, String cpfCnpj, String emailContato, String telefoneWhatsapp) {
+        this.nome = nome;
+        this.cpfCnpj = cpfCnpj;
+        this.emailContato = emailContato;
+        this.telefoneWhatsapp = telefoneWhatsapp;
+        this.status = "ativo";
+        this.dataCadastro = LocalDateTime.now();
+    }
+
+    public Cliente(Integer id, String nome, String cpfCnpj, String emailContato, String telefoneWhatsapp, String status, LocalDateTime dataCadastro) {
         this.id = id;
-        this.nomeRazaoSocial = nomeRazaoSocial;
+        this.nome = nome;
         this.cpfCnpj = cpfCnpj;
         this.emailContato = emailContato;
         this.telefoneWhatsapp = telefoneWhatsapp;
@@ -32,12 +41,12 @@ public class Cliente {
         this.id = id;
     }
 
-    public String getNomeRazaoSocial() {
-        return nomeRazaoSocial;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeRazaoSocial(String nomeRazaoSocial) {
-        this.nomeRazaoSocial = nomeRazaoSocial;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getCpfCnpj() {
@@ -78,5 +87,18 @@ public class Cliente {
 
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cpfCnpj='" + cpfCnpj + '\'' +
+                ", emailContato='" + emailContato + '\'' +
+                ", telefoneWhatsapp='" + telefoneWhatsapp + '\'' +
+                ", status='" + status + '\'' +
+                ", dataCadastro=" + dataCadastro +
+                '}';
     }
 }

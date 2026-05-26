@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MaterialController" spacing="10" style="-fx-padding: 15;">
+    <HBox spacing="10">
+        <Label text="Catálogo de Materiais" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="filtroCategoria" promptText="Filtrar por Categoria" prefWidth="200"/>
+        <Button text="Filtrar" onAction="#filtrar" style="-fx-padding: 8;"/>
+    </HBox>
+
+    <GridPane hgap="10" vgap="10" style="-fx-border-color: #cccccc; -fx-border-width: 1; -fx-padding: 10;">
+        <columnConstraints>
+            <ColumnConstraints minWidth="150" prefWidth="200"/>
+            <ColumnConstraints minWidth="150" prefWidth="200"/>
+        </columnConstraints>
+
+        <!-- Row 0 -->
+        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="nomeField" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Nome do material"/>
+
+        <!-- Row 1 -->
+        <Label text="Categoria:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoriaCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <!-- Row 2 -->
+        <Label text="Tipo de Item:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="tipoItemCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <!-- Row 3 -->
+        <Label text="Tipo de Cobrança:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="tipoCobrancaCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <!-- Row 4 -->
+        <Label text="Custo Base (R$):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="custoBaseField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="0.00"/>
+
+        <!-- Row 5 -->
+        <Label text="Custo Produção (R$):" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="custoProducaoField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="0.00"/>
+
+        <!-- Row 6 - Buttons -->
+        <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2">
+            <Button text="Salvar" onAction="#salvarMaterial" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
+            <Button text="Deletar" onAction="#deletarMaterial" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
+            <Button text="Limpar" onAction="#limpar" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
+        </HBox>
+    </GridPane>
+
+    <Label text="Lista de Materiais" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="materiaisTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="nomeColumn" text="Nome" prefWidth="150"/>
+            <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="120"/>
+            <TableColumn fx:id="tipoItemColumn" text="Tipo Item" prefWidth="100"/>
+            <TableColumn fx:id="tipoCobrancaColumn" text="Tipo Cobrança" prefWidth="120"/>
+            <TableColumn fx:id="custoBaseColumn" text="Custo Base" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

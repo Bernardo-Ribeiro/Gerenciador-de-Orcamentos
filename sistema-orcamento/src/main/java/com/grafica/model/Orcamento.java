@@ -2,13 +2,12 @@ package com.grafica.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Orcamento {
     private Integer id;
     private Integer idCliente;
     private Integer idUsuario;
-    private LocalDateTime dataEmissao;
+    private LocalDate dataEmissao;
     private LocalDate dataValidade;
     private String status;
     private BigDecimal valorBruto;
@@ -19,7 +18,7 @@ public class Orcamento {
     public Orcamento() {
     }
 
-    public Orcamento(Integer id, Integer idCliente, Integer idUsuario, LocalDateTime dataEmissao, LocalDate dataValidade, String status, BigDecimal valorBruto, BigDecimal margemLucroPercentual, BigDecimal descontoProgressivo, BigDecimal valorFinal) {
+    public Orcamento(Integer id, Integer idCliente, Integer idUsuario, LocalDate dataEmissao, LocalDate dataValidade, String status, BigDecimal valorBruto, BigDecimal margemLucroPercentual, BigDecimal descontoProgressivo, BigDecimal valorFinal) {
         this.id = id;
         this.idCliente = idCliente;
         this.idUsuario = idUsuario;
@@ -56,11 +55,11 @@ public class Orcamento {
         this.idUsuario = idUsuario;
     }
 
-    public LocalDateTime getDataEmissao() {
+    public LocalDate getDataEmissao() {
         return dataEmissao;
     }
 
-    public void setDataEmissao(LocalDateTime dataEmissao) {
+    public void setDataEmissao(LocalDate dataEmissao) {
         this.dataEmissao = dataEmissao;
     }
 
@@ -110,5 +109,21 @@ public class Orcamento {
 
     public void setValorFinal(BigDecimal valorFinal) {
         this.valorFinal = valorFinal;
+    }
+
+    @Override
+    public String toString() {
+        return "Orcamento{" +
+                "id=" + id +
+                ", idCliente=" + idCliente +
+                ", idUsuario=" + idUsuario +
+                ", dataEmissao=" + dataEmissao +
+                ", dataValidade=" + dataValidade +
+                ", status='" + status + '\'' +
+                ", valorBruto=" + valorBruto +
+                ", margemLucroPercentual=" + margemLucroPercentual +
+                ", descontoProgressivo=" + descontoProgressivo +
+                ", valorFinal=" + valorFinal +
+                '}';
     }
 }

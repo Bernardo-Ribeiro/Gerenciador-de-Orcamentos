@@ -33,16 +33,16 @@
             </VBox>
 
             <VBox styleClass="field-group">
-                <Label styleClass="label" text="Usuário" />
-                <TextField fx:id="usernameField" promptText="ex: joao.silva" styleClass="input" />
+                <Label styleClass="label" text="Email" />
+                <TextField fx:id="emailField" promptText="seu_email@grafica.com" styleClass="input" />
             </VBox>
 
             <VBox styleClass="field-group">
                 <Label styleClass="label" text="Senha" />
-                <PasswordField fx:id="passwordField" promptText="********" styleClass="input" />
+                <PasswordField fx:id="senhaField" promptText="********" styleClass="input" />
             </VBox>
 
-            <Button maxWidth="280.0" onAction="#handleLogin" styleClass="btn" stylesheets="@../style.css" text="Acessar Dashboard →" />
+            <Button maxWidth="280.0" onAction="#fazerLogin" styleClass="btn" stylesheets="@../style.css" text="Acessar Dashboard →" />
 
             <Label fx:id="messageLabel" styleClass="feedback" text="" wrapText="true" />
 

@@ -1,42 +1,36 @@
 package com.grafica.controller;
 
-import javafx.beans.property.SimpleStringProperty;
+import com.grafica.dao.MaterialDAO;
+import com.grafica.model.Material;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.Locale;
+import java.math.BigDecimal;
+import java.util.List;
 
 public class CustosInsumosController {
-    private static final DecimalFormat MONEY_FORMAT = (DecimalFormat) DecimalFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
     @FXML
-    private TableView<InsumoRegistro> tableInsumos;
+    private TableView<Material> tableInsumos;
 
     @FXML
-    private TableColumn<InsumoRegistro, String> colMaterial;
+    private TableColumn<Material, String> colMaterial;
 
     @FXML
-    private TableColumn<InsumoRegistro, String> colUnidade;
+    private TableColumn<Material, String> colUnidade;
 
     @FXML
-    private TableColumn<InsumoRegistro, String> colCustoBase;
+    private TableColumn<Material, BigDecimal> colCustoBase;
 
     @FXML
-    private TableColumn<InsumoRegistro, String> colUltimaAtualizacao;
+    private TableColumn<Material, String> colUltimaAtualizacao;
 
     @FXML
-    private TableColumn<InsumoRegistro, String> colStatus;
+    private TableColumn<Material, String> colStatus;
 
     @FXML
     private TextField txtBusca;
@@ -51,273 +45,144 @@ public class CustosInsumosController {
     private ComboBox<String> cmbUnidade;
 
     @FXML
-    private ComboBox<String> cmbStatus;
-
-    @FXML
     private TextField txtCustoBase;
 
     @FXML
     private TextField txtCustoProducao;
 
     @FXML
-    private Button btnSalvarInsumo;
+    private ComboBox<String> cmbStatus;
 
-    private final ObservableList<InsumoRegistro> registros = FXCollections.observableArrayList();
-    private FilteredList<InsumoRegistro> registrosFiltrados;
-    private InsumoRegistro registroSelecionado;
+    private MaterialDAO materialDAO;
+    private ObservableList<Material> materiais;
+    private Material selecionado;
 
     @FXML
     private void initialize() {
+        materialDAO = new MaterialDAO();
+
+        cmbCategoria.setItems(FXCollections.observableArrayList("COMUNICACAO_VISUAL", "IMPRESSOS"));
+        cmbUnidade.setItems(FXCollections.observableArrayList("AREA", "UNIDADE", "TIRAGEM", "FOLHA", "PACOTE", "SERVICO", "CHAPA"));
+        cmbStatus.setItems(FXCollections.observableArrayList("ATIVO", "INATIVO"));
+
         configurarTabela();
-        configurarCombos();
-        carregarDadosExemplo();
-        configurarSelecaoDaTabela();
-        novoInsumo();
-    }
+        carregarInsumos();
 
-    private void configurarTabela() {
-        colMaterial.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMaterial()));
-        colUnidade.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUnidade()));
-        colCustoBase.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCustoBase()));
-        colUltimaAtualizacao.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimaAtualizacao()));
-        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
-
-        registrosFiltrados = new FilteredList<>(registros, registro -> true);
-        tableInsumos.setItems(registrosFiltrados);
-    }
-
-    private void configurarCombos() {
-        cmbCategoria.setItems(FXCollections.observableArrayList(
-                "Comunicação Visual",
-                "Materiais Impressos"
-        ));
-        cmbUnidade.setItems(FXCollections.observableArrayList(
-                "Milheiro",
-                "m2",
-                "Chapa",
-                "Unidade"
-        ));
-        cmbStatus.setItems(FXCollections.observableArrayList(
-                "Ativo",
-                "Desatualizado",
-                "Inativo"
-        ));
-    }
-
-    private void carregarDadosExemplo() {
-        registros.setAll(
-                new InsumoRegistro("Papel Couché 150g", "Milheiro", formatarMoeda(145.50), "2024-05-10", "Ativo", "Comunicação Visual", formatarMoeda(12.00)),
-                new InsumoRegistro("Papel Sulfite 90g", "Milheiro", formatarMoeda(89.20), "2023-12-15", "Desatualizado", "Materiais Impressos", formatarMoeda(7.90)),
-                new InsumoRegistro("Adesivo Vinil Branco Brilho", "m2", formatarMoeda(320.00), "2024-04-20", "Ativo", "Comunicação Visual", formatarMoeda(35.00)),
-                new InsumoRegistro("ACM", "Chapa", formatarMoeda(215.00), "2024-03-05", "Desatualizado", "Comunicação Visual", formatarMoeda(28.00)),
-                new InsumoRegistro("Lona Front Light 440g", "m²", formatarMoeda(12.80), "2024-05-02", "Ativo", "Comunicação Visual", formatarMoeda(1.50))
-        );
-    }
-
-    private void configurarSelecaoDaTabela() {
-        tableInsumos.getSelectionModel().selectedItemProperty().addListener((observable, anterior, selecionado) -> {
-            registroSelecionado = selecionado;
-            preencherFormulario(selecionado);
+        tableInsumos.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+            selecionado = newV;
+            if (selecionado != null) {
+                preencherFormulario(selecionado);
+            }
         });
     }
 
-    @FXML
-    private void novoInsumo() {
-        registroSelecionado = null;
-        tableInsumos.getSelectionModel().clearSelection();
-        txtMaterial.clear();
-        cmbCategoria.getSelectionModel().clearSelection();
-        cmbUnidade.getSelectionModel().clearSelection();
-        cmbStatus.getSelectionModel().clearSelection();
-        txtCustoBase.clear();
-        txtCustoProducao.clear();
-        btnSalvarInsumo.setText("Salvar");
+    private void configurarTabela() {
+        colMaterial.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getNome()));
+        colUnidade.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTipoCobranca()));
+        colCustoBase.setCellValueFactory(cell -> new javafx.beans.property.SimpleObjectProperty<>(cell.getValue().getCustoBase()));
+        colUltimaAtualizacao.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty("-"));
+        colStatus.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getStatus()));
     }
 
-    @FXML
-    private void salvarInsumo() {
-        String material = textoLimpo(txtMaterial.getText());
-        String categoria = cmbCategoria.getValue();
-        String unidade = cmbUnidade.getValue();
-        String status = cmbStatus.getValue();
-        String custoBase = textoLimpo(txtCustoBase.getText());
-        String custoProducao = textoLimpo(txtCustoProducao.getText());
-
-        if (material.isEmpty() || categoria == null || unidade == null || status == null || custoBase.isEmpty()) {
-            mostrarMensagem("Preencha material, categoria, unidade, status e custo base antes de salvar.");
-            return;
-        }
-
-        if (registroSelecionado == null) {
-            registros.add(new InsumoRegistro(
-                    material,
-                    unidade,
-                    formatarMoeda(parseMoeda(custoBase)),
-                    LocalDate.now().toString(),
-                    status,
-                    categoria,
-                    custoProducao.isEmpty() ? formatarMoeda(0) : formatarMoeda(parseMoeda(custoProducao))
-            ));
-        } else {
-            registroSelecionado.setMaterial(material);
-            registroSelecionado.setCategoria(categoria);
-            registroSelecionado.setUnidade(unidade);
-            registroSelecionado.setStatus(status);
-            registroSelecionado.setCustoBase(formatarMoeda(parseMoeda(custoBase)));
-            registroSelecionado.setCustoProducao(custoProducao.isEmpty() ? formatarMoeda(0) : formatarMoeda(parseMoeda(custoProducao)));
-            registroSelecionado.setUltimaAtualizacao(LocalDate.now().toString());
-            tableInsumos.refresh();
-        }
-
-        aplicarFiltro(txtBusca.getText());
-        novoInsumo();
+    private void carregarInsumos() {
+        List<Material> lista = materialDAO.listarTodos();
+        materiais = FXCollections.observableArrayList(lista);
+        tableInsumos.setItems(materiais);
     }
 
-    @FXML
-    private void excluirSelecionado() {
-        if (registroSelecionado == null) {
-            mostrarMensagem("Selecione um item na tabela para excluir.");
-            return;
-        }
-
-        registros.remove(registroSelecionado);
-        novoInsumo();
-        aplicarFiltro(txtBusca.getText());
-    }
-
-    @FXML
-    private void filtrarInsumos() {
-        aplicarFiltro(txtBusca.getText());
+    private void preencherFormulario(Material m) {
+        txtMaterial.setText(m.getNome());
+        cmbCategoria.setValue(m.getCategoria());
+        cmbUnidade.setValue(m.getTipoCobranca());
+        txtCustoBase.setText(m.getCustoBase() != null ? m.getCustoBase().toString() : "");
+        txtCustoProducao.setText(m.getCustoProducao() != null ? m.getCustoProducao().toString() : "");
+        cmbStatus.setValue(m.getStatus());
     }
 
     @FXML
     private void abrirHistoricoGeral() {
-        mostrarMensagem("Histórico geral será conectado ao módulo de auditoria.");
+        System.out.println("Abrir histórico geral (no implementado)");
+    }
+
+    @FXML
+    private void novoInsumo() {
+        selecionado = null;
+        txtMaterial.clear();
+        cmbCategoria.setValue(null);
+        cmbUnidade.setValue(null);
+        txtCustoBase.clear();
+        txtCustoProducao.clear();
+        cmbStatus.setValue("ATIVO");
+    }
+
+    @FXML
+    private void filtrarInsumos(KeyEvent event) {
+        String q = txtBusca.getText().toLowerCase();
+        if (q.isEmpty()) {
+            tableInsumos.setItems(materiais);
+            return;
+        }
+        ObservableList<Material> filtered = FXCollections.observableArrayList();
+        for (Material m : materiais) {
+            if (m.getNome().toLowerCase().contains(q)) filtered.add(m);
+        }
+        tableInsumos.setItems(filtered);
     }
 
     @FXML
     private void abrirFiltros() {
-        mostrarMensagem("Filtros avançados serão adicionados na próxima etapa.");
+        System.out.println("Abrir filtros (no implementado)");
     }
 
     @FXML
     private void exportarCsv() {
-        mostrarMensagem("Exportação CSV será ligada ao DAO mais adiante.");
+        System.out.println("Exportar CSV (no implementado)");
     }
 
-    private void aplicarFiltro(String textoBusca) {
-        String filtro = textoLimpo(textoBusca).toLowerCase();
-        registrosFiltrados.setPredicate(registro -> filtro.isEmpty() || registro.getMaterial().toLowerCase().contains(filtro));
+    @FXML
+    private void excluirSelecionado() {
+        Material m = tableInsumos.getSelectionModel().getSelectedItem();
+        if (m == null) return;
+        materialDAO.deletar(m.getId());
+        carregarInsumos();
+        novoInsumo();
     }
 
-    private void preencherFormulario(InsumoRegistro registro) {
-        if (registro == null) {
-            return;
-        }
+    @FXML
+    private void salvarInsumo() {
+        try {
+            if (txtMaterial.getText().isEmpty() || txtCustoBase.getText().isEmpty()) {
+                Alert a = new Alert(Alert.AlertType.WARNING, "Nombre y costo base son obligatorios", ButtonType.OK);
+                a.showAndWait();
+                return;
+            }
 
-        txtMaterial.setText(registro.getMaterial());
-        cmbCategoria.setValue(registro.getCategoria());
-        cmbUnidade.setValue(registro.getUnidade());
-        cmbStatus.setValue(registro.getStatus());
-        txtCustoBase.setText(registro.getCustoBase());
-        txtCustoProducao.setText(registro.getCustoProducao());
-        btnSalvarInsumo.setText("Atualizar");
-    }
-
-    private void mostrarMensagem(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Custos de Insumos");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
-    private String textoLimpo(String texto) {
-        return texto == null ? "" : texto.trim();
-    }
-
-    private double parseMoeda(String valor) {
-        String normalizado = valor.replace("R$", "").replace(".", "").replace(",", ".").trim();
-        return Double.parseDouble(normalizado);
-    }
-
-    private String formatarMoeda(double valor) {
-        return MONEY_FORMAT.format(valor);
-    }
-
-    public static class InsumoRegistro {
-        private String material;
-        private String unidade;
-        private String custoBase;
-        private String ultimaAtualizacao;
-        private String status;
-        private String categoria;
-        private String custoProducao;
-
-        public InsumoRegistro(String material, String unidade, String custoBase, String ultimaAtualizacao, String status, String categoria, String custoProducao) {
-            this.material = material;
-            this.unidade = unidade;
-            this.custoBase = custoBase;
-            this.ultimaAtualizacao = ultimaAtualizacao;
-            this.status = status;
-            this.categoria = categoria;
-            this.custoProducao = custoProducao;
-        }
-
-        public String getMaterial() {
-            return material;
-        }
-
-        public void setMaterial(String material) {
-            this.material = material;
-        }
-
-        public String getUnidade() {
-            return unidade;
-        }
-
-        public void setUnidade(String unidade) {
-            this.unidade = unidade;
-        }
-
-        public String getCustoBase() {
-            return custoBase;
-        }
-
-        public void setCustoBase(String custoBase) {
-            this.custoBase = custoBase;
-        }
-
-        public String getUltimaAtualizacao() {
-            return ultimaAtualizacao;
-        }
-
-        public void setUltimaAtualizacao(String ultimaAtualizacao) {
-            this.ultimaAtualizacao = ultimaAtualizacao;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getCategoria() {
-            return categoria;
-        }
-
-        public void setCategoria(String categoria) {
-            this.categoria = categoria;
-        }
-
-        public String getCustoProducao() {
-            return custoProducao;
-        }
-
-        public void setCustoProducao(String custoProducao) {
-            this.custoProducao = custoProducao;
+            if (selecionado == null) {
+                Material novo = new Material(
+                    txtMaterial.getText(),
+                    cmbCategoria.getValue(),
+                    "BASE",
+                    cmbUnidade.getValue(),
+                    new BigDecimal(txtCustoBase.getText())
+                );
+                if (!txtCustoProducao.getText().isEmpty()) novo.setCustoProducao(new BigDecimal(txtCustoProducao.getText()));
+                novo.setStatus(cmbStatus.getValue());
+                materialDAO.criar(novo);
+            } else {
+                selecionado.setNome(txtMaterial.getText());
+                selecionado.setCategoria(cmbCategoria.getValue());
+                selecionado.setTipoCobranca(cmbUnidade.getValue());
+                selecionado.setCustoBase(new BigDecimal(txtCustoBase.getText()));
+                if (!txtCustoProducao.getText().isEmpty()) selecionado.setCustoProducao(new BigDecimal(txtCustoProducao.getText()));
+                selecionado.setStatus(cmbStatus.getValue());
+                materialDAO.atualizar(selecionado);
+            }
+            carregarInsumos();
+            novoInsumo();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert a = new Alert(Alert.AlertType.ERROR, "Error al guardar insumo: " + e.getMessage(), ButtonType.OK);
+            a.showAndWait();
         }
     }
 }
