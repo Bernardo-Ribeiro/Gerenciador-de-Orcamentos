@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" styleClass="background" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/26" fx:controller="com.grafica.controller.MainController">
+<BorderPane fx:id="rootPane" styleClass="background" stylesheets="@../style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="com.grafica.controller.MainController">
     <top>
         <HBox spacing="50" BorderPane.alignment="CENTER_LEFT">
             <Pane HBox.hgrow="ALWAYS">

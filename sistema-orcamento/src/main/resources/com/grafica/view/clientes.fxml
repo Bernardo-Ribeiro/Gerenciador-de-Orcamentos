@@ -1,15 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="12.0" styleClass="section-pane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="18.0" styleClass="clients-page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.ClienteController">
     <padding>
         <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
     </padding>
     <children>
-        <Label styleClass="section-title" text="Clientes" />
-        <Label styleClass="section-text" text="Lista e cadastro de clientes serão exibidos aqui." wrapText="true" />
+        <Label styleClass="clients-breadcrumb" text="Dashboard   >   Cadastros   >   Clientes" />
+
+        <VBox spacing="6.0">
+            <children>
+                <Label styleClass="clients-title" text="Gestao de Clientes" />
+                <Label styleClass="clients-subtitle" text="Mantenha sua base de dados organizada para agilizar a criacao de novos orcamentos." wrapText="true" />
+            </children>
+        </VBox>
+
+        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS" styleClass="clients-content-row">
+            <children>
+                <VBox spacing="12.0" styleClass="clients-card clients-form-card">
+                    <children>
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label styleClass="clients-card-title" text="Novo Cadastro" />
+                                <Label styleClass="clients-card-subtitle" text="Preencha os dados abaixo para registrar um novo cliente." wrapText="true" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="clients-form-label" text="Nome / Razao Social" />
+                                <TextField fx:id="nomeField" promptText="Ex: Empresa Exemplo LTDA" styleClass="clients-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="clients-form-label" text="CPF / CNPJ" />
+                                <TextField fx:id="cpfCnpjField" promptText="000.000.000-00 ou 00.000.000/0001-00" styleClass="clients-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="clients-form-label" text="E-mail de Contato" />
+                                <TextField fx:id="emailField" promptText="cliente@exemplo.com.br" styleClass="clients-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="clients-form-label" text="Telefone / WhatsApp" />
+                                <TextField fx:id="telefonejField" promptText="(00) 00000-0000" styleClass="clients-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="8.0">
+                            <children>
+                                <Button text="Cadastrar Cliente" onAction="#salvarCliente" maxWidth="Infinity">
+                                    <styleClass>
+                                        <String fx:value="clients-primary-button" />
+                                    </styleClass>
+                                </Button>
+                                <Button text="Limpar" onAction="#novoCliente" maxWidth="Infinity">
+                                    <styleClass>
+                                        <String fx:value="clients-secondary-button" />
+                                    </styleClass>
+                                </Button>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" styleClass="clients-card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox spacing="12.0" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="clients-card-title" text="Base de Clientes" />
+                                        <Label styleClass="clients-card-subtitle" text="Gerencie seus contatos e visualize o historico rapido." wrapText="true" />
+                                    </children>
+                                </VBox>
+                                <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <TextField fx:id="txtBusca" onKeyReleased="#filtrarClientes" promptText="Buscar por nome ou documento..." styleClass="clients-input clients-search-input" />
+                                        <Button fx:id="btnFiltros" onAction="#alternarFiltros" text="Filtros">
+                                            <styleClass>
+                                                <String fx:value="clients-secondary-button" />
+                                                <String fx:value="clients-icon-button" />
+                                            </styleClass>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+
+                        <HBox fx:id="filtersRow" spacing="10.0" alignment="CENTER_LEFT" visible="false" managed="false">
+                            <children>
+                                <Label styleClass="clients-form-label" text="Status" />
+                                <ComboBox fx:id="cmbStatusFiltro" onAction="#filtrarClientes" promptText="Selecione" styleClass="clients-input" />
+                                <Button onAction="#limparFiltros" text="Limpar filtros" styleClass="clients-secondary-button" />
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="clientesTable" VBox.vgrow="ALWAYS" styleClass="clients-table-view">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="0.0" visible="false" />
+                                <TableColumn fx:id="nomeColumn" text="Cliente" prefWidth="200.0" />
+                                <TableColumn fx:id="cpfCnpjColumn" text="Documento" prefWidth="160.0" />
+                                <TableColumn fx:id="emailColumn" text="Contato" prefWidth="220.0" />
+                                <TableColumn fx:id="telefoneColumn" text="Telefone / WhatsApp" prefWidth="170.0" />
+                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100.0" />
+                            </columns>
+                        </TableView>
+
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <children>
+                                <Label fx:id="lblRegistros" styleClass="clients-table-footer" text="Mostrando 0 de 0 registros" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <HBox spacing="6.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Button fx:id="btnAnterior" onAction="#paginaAnterior" text="Anterior" styleClass="clients-pagination-button" />
+                                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="clients-pagination-button clients-pagination-active" />
+                                        <Button fx:id="btnPage2" onAction="#irParaPagina" text="2" styleClass="clients-pagination-button" />
+                                        <Button fx:id="btnProximo" onAction="#paginaProxima" text="Proximo" styleClass="clients-pagination-button" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
     </children>
 </VBox>

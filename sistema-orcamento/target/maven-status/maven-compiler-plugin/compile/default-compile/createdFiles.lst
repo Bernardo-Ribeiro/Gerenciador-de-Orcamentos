@@ -2,7 +2,7 @@ com\grafica\controller\MaterialController.class
 com\grafica\model\ItemOrcamento.class
 com\grafica\controller\LoginController.class
 com\grafica\dao\UsuarioDAO.class
-com\grafica\App.class
+com\grafica\controller\EscalaProdutivaController$Intervalo.class
 com\grafica\controller\DashboardController.class
 com\grafica\controller\CustosInsumosController.class
 module-info.class
@@ -15,11 +15,14 @@ com\grafica\dao\DbConnection.class
 com\grafica\controller\RelatoriosController.class
 com\grafica\dao\OrcamentoDAO.class
 com\grafica\model\Orcamento.class
+com\grafica\controller\EscalaProdutivaController.class
 com\grafica\dao\ClienteDAO.class
 com\grafica\Main.class
 com\grafica\service\CalculoService.class
 com\grafica\controller\AjustesController.class
 com\grafica\model\EscalaProductiva.class
 com\grafica\controller\MainController.class
+com\grafica\controller\EscalaProdutivaController$IntervaloRow.class
 com\grafica\model\EscalaProdutiva.class
+com\grafica\controller\ClienteController$1.class
 com\grafica\controller\OrcamentoController.class

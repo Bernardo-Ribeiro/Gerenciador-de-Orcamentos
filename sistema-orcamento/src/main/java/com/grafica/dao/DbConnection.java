@@ -9,10 +9,19 @@ import java.sql.SQLException;
  * Usa variables de entorno o valores por defecto
  */
 public class DbConnection {
-    
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/grafica_db";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "root";
+
+    private static final String DB_HOST = System.getenv().getOrDefault("DB_HOST", "localhost");
+    private static final String DB_PORT = System.getenv().getOrDefault("DB_PORT", "3307");
+    private static final String DB_NAME = System.getenv().getOrDefault("DB_NAME", "orcamento_db");
+    private static final String DB_USER = System.getenv().getOrDefault("DB_USER", "orcamento_user");
+    private static final String DB_PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "orcamento_pass");
+    private static final String DB_URL = System.getenv().getOrDefault(
+            "DB_URL",
+            String.format(
+                    "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo",
+                    DB_HOST,
+                    DB_PORT,
+                    DB_NAME));
     private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     static {

@@ -36,6 +36,9 @@ public class CustosInsumosController {
     private TextField txtBusca;
 
     @FXML
+    private CheckBox chkMostrarInativos;
+
+    @FXML
     private TextField txtMaterial;
 
     @FXML
@@ -85,9 +88,9 @@ public class CustosInsumosController {
     }
 
     private void carregarInsumos() {
-        List<Material> lista = materialDAO.listarTodos();
+        List<Material> lista = materialDAO.listarTodos(true);
         materiais = FXCollections.observableArrayList(lista);
-        tableInsumos.setItems(materiais);
+        aplicarFiltro();
     }
 
     private void preencherFormulario(Material m) {
@@ -117,16 +120,30 @@ public class CustosInsumosController {
 
     @FXML
     private void filtrarInsumos(KeyEvent event) {
-        String q = txtBusca.getText().toLowerCase();
-        if (q.isEmpty()) {
-            tableInsumos.setItems(materiais);
-            return;
-        }
-        ObservableList<Material> filtered = FXCollections.observableArrayList();
+        aplicarFiltro();
+    }
+
+    @FXML
+    private void alternarMostrarInativos() {
+        aplicarFiltro();
+    }
+
+    private void aplicarFiltro() {
+        String q = txtBusca.getText().trim().toLowerCase();
+        boolean mostrarInativos = chkMostrarInativos != null && chkMostrarInativos.isSelected();
+        ObservableList<Material> filtrados = FXCollections.observableArrayList();
+
         for (Material m : materiais) {
-            if (m.getNome().toLowerCase().contains(q)) filtered.add(m);
+            if (!mostrarInativos && "INATIVO".equalsIgnoreCase(m.getStatus())) {
+                continue;
+            }
+            if (!q.isEmpty() && !m.getNome().toLowerCase().contains(q)) {
+                continue;
+            }
+            filtrados.add(m);
         }
-        tableInsumos.setItems(filtered);
+
+        tableInsumos.setItems(filtrados);
     }
 
     @FXML

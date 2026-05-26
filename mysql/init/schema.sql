@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS grafica_db;
-USE grafica_db;
+CREATE DATABASE IF NOT EXISTS orcamento_db;
+USE orcamento_db;
 
 
 -- Tabela de usuários, clientes, materiais, escalas produtivas, orçamentos, itens de orçamento e auditoria

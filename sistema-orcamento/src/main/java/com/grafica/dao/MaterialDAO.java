@@ -54,8 +54,14 @@ public class MaterialDAO {
     }
     
     public List<Material> listarTodos() {
+        return listarTodos(false);
+    }
+
+    public List<Material> listarTodos(boolean incluirInativos) {
         List<Material> materiais = new ArrayList<>();
-        String sql = "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE status = 'ATIVO' ORDER BY nome";
+        String sql = incluirInativos
+            ? "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais ORDER BY nome"
+            : "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE status = 'ATIVO' ORDER BY nome";
         
         try (Connection conn = DbConnection.getConnection();
              Statement stmt = conn.createStatement();
