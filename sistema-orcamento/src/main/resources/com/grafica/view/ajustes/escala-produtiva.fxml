@@ -17,7 +17,7 @@
         <VBox spacing="6.0">
             <children>
                 <Label styleClass="scale-title" text="Escala Produtiva" />
-                <Label styleClass="scale-subtitle" text="Configure margens de desconto no preco unitario por intervalo de quantidade." wrapText="true" />
+                <Label styleClass="text-body-sm" text="Configure margens de desconto no preco unitario por intervalo de quantidade." wrapText="true" />
             </children>
         </VBox>
 

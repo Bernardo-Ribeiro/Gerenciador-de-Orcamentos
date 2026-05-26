@@ -1,15 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="12.0" styleClass="section-pane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-    <padding>
-        <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
-    </padding>
-    <children>
-        <Label styleClass="section-title" text="Dashboard" />
-        <Label styleClass="section-text" text="Visão geral dos orçamentos, clientes e alertas do sistema." wrapText="true" />
-    </children>
-</VBox>
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="dashboard-scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <VBox spacing="18.0" styleClass="dashboard-page">
+            <padding>
+                <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+            </padding>
+            <children>
+                <Label styleClass="dashboard-breadcrumb" text="Dashboard   >   Visao Geral" />
+
+                <VBox spacing="4.0">
+                    <children>
+                        <Label styleClass="dashboard-title" text="Ola, Grafica!" />
+                        <Label styleClass="dashboard-subtitle" text="Aqui esta o que esta acontecendo com seus orcamentos hoje." wrapText="true" />
+                    </children>
+                </VBox>
+
+                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="6.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="dashboard-stat-icon" text="RS" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="dashboard-stat-trend" text="+12.5%" />
+                                    </children>
+                                </HBox>
+                                <Label styleClass="dashboard-stat-label" text="Vendas Totais (Mes)" />
+                                <Label styleClass="dashboard-stat-value" text="R$ 45.230,00" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="6.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="dashboard-stat-icon" text="!" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="dashboard-stat-negative" text="-3.2%" />
+                                    </children>
+                                </HBox>
+                                <Label styleClass="dashboard-stat-label" text="Orcamentos Pendentes" />
+                                <Label styleClass="dashboard-stat-value" text="24" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="6.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="dashboard-stat-icon" text="TX" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="dashboard-stat-trend" text="+5.4%" />
+                                    </children>
+                                </HBox>
+                                <Label styleClass="dashboard-stat-label" text="Taxa de Conversao" />
+                                <Label styleClass="dashboard-stat-value" text="68%" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox spacing="6.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label styleClass="dashboard-stat-icon" text="CL" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label styleClass="dashboard-stat-trend" text="+8.1%" />
+                                    </children>
+                                </HBox>
+                                <Label styleClass="dashboard-stat-label" text="Novos Clientes" />
+                                <Label styleClass="dashboard-stat-value" text="12" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+
+                <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+                    <children>
+                        <VBox spacing="16.0" HBox.hgrow="ALWAYS">
+                            <VBox spacing="10.0" styleClass="dashboard-card">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <Label styleClass="dashboard-card-title" text="Atalhos Estrategicos" />
+                                            <Region HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-link" text="Ver todos os modulos" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="10.0">
+                                        <children>
+                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="dashboard-shortcut-icon" text="+" />
+                                                    <Label styleClass="dashboard-shortcut-title" text="Novo Orcamento" />
+                                                    <Label styleClass="dashboard-shortcut-text" text="Inicie a calculadora produtiva para fechar uma nova venda." wrapText="true" />
+                                                </children>
+                                            </VBox>
+                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="dashboard-shortcut-icon" text="CL" />
+                                                    <Label styleClass="dashboard-shortcut-title" text="Cadastrar Cliente" />
+                                                    <Label styleClass="dashboard-shortcut-text" text="Adicione novos prospectos ou empresas a sua base de dados." wrapText="true" />
+                                                </children>
+                                            </VBox>
+                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="dashboard-shortcut-icon" text="RL" />
+                                                    <Label styleClass="dashboard-shortcut-title" text="Gerar Relatorio" />
+                                                    <Label styleClass="dashboard-shortcut-text" text="Analise o desempenho de vendas do ultimo periodo." wrapText="true" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+
+                            <VBox spacing="10.0" styleClass="dashboard-card">
+                                <children>
+                                    <HBox alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="dashboard-card-title" text="Ultimos Orcamentos" />
+                                                    <Label styleClass="dashboard-card-subtitle" text="Resumo dos ultimos 5 registros processados no sistema." />
+                                                </children>
+                                            </VBox>
+                                            <Button text="Ver Historico Completo" styleClass="dashboard-secondary-button" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-header">
+                                        <children>
+                                            <Label styleClass="dashboard-table-label" text="ID" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-label" text="Cliente" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-label" text="Data" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-label" text="Valor" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-label" text="Status" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-label" text="Acoes" prefWidth="70.0" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-row">
+                                        <children>
+                                            <Label styleClass="dashboard-table-value" text="ORC-2024-001" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-value" text="Metalurgica Silva Ltda" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-value" text="Hoje, 14:30" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-value" text="R$ 4.250,00" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-pill" text="Aprovado" prefWidth="90.0" />
+                                            <Button text="Detalhes" styleClass="dashboard-link" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-row">
+                                        <children>
+                                            <Label styleClass="dashboard-table-value" text="ORC-2024-002" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-value" text="Construcao S.A" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-value" text="Hoje, 11:15" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-value" text="R$ 12.800,00" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-pill" text="Em Analise" prefWidth="90.0" />
+                                            <Button text="Detalhes" styleClass="dashboard-link" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-row">
+                                        <children>
+                                            <Label styleClass="dashboard-table-value" text="ORC-2024-003" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-value" text="Joao Pedro Alves" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-value" text="Ontem" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-value" text="R$ 890,00" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-pill" text="Pendente" prefWidth="90.0" />
+                                            <Button text="Detalhes" styleClass="dashboard-link" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-row">
+                                        <children>
+                                            <Label styleClass="dashboard-table-value" text="ORC-2024-004" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-value" text="Oficina do Brilho" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-value" text="22 Mai" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-value" text="R$ 2.400,00" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-pill dashboard-pill-danger" text="Cancelado" prefWidth="90.0" />
+                                            <Button text="Detalhes" styleClass="dashboard-link" />
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                        <styleClass>
+                                            <String fx:value="dashboard-table-row" />
+                                            <String fx:value="dashboard-table-row-last" />
+                                        </styleClass>
+                                        <children>
+                                            <Label styleClass="dashboard-table-value" text="ORC-2024-005" prefWidth="110.0" />
+                                            <Label styleClass="dashboard-table-value" text="Supermercado Ideal" HBox.hgrow="ALWAYS" />
+                                            <Label styleClass="dashboard-table-value" text="21 Mai" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-table-value" text="R$ 7.150,00" prefWidth="90.0" />
+                                            <Label styleClass="dashboard-pill" text="Aprovado" prefWidth="90.0" />
+                                            <Button text="Detalhes" styleClass="dashboard-link" />
+                                        </children>
+                                    </HBox>
+                                </children>
+                            </VBox>
+                        </VBox>
+
+                        <VBox spacing="12.0" styleClass="dashboard-side">
+                            <children>
+                                <VBox spacing="10.0" styleClass="dashboard-card">
+                                    <children>
+                                        <HBox spacing="6.0" alignment="CENTER_LEFT">
+                                            <children>
+                                                <Label styleClass="dashboard-side-title" text="Alertas Criticos" />
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="8.0" styleClass="dashboard-alert">
+                                            <children>
+                                                <Label styleClass="dashboard-alert-tag" text="URGENTE" />
+                                                <Label styleClass="dashboard-alert-text" text="Orcamento ORC-2024-003 esta vencendo em 2 horas." wrapText="true" />
+                                                <Label styleClass="dashboard-alert-time" text="15m atras" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="8.0" styleClass="dashboard-alert">
+                                            <children>
+                                                <Label styleClass="dashboard-alert-tag" text="REVISAO NECESSARIA" />
+                                                <Label styleClass="dashboard-alert-text" text="Construcao S.A. solicitou revisao de margem no item #04." wrapText="true" />
+                                                <Label styleClass="dashboard-alert-time" text="1h atras" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="8.0" styleClass="dashboard-alert">
+                                            <children>
+                                                <Label styleClass="dashboard-alert-tag" text="LOGISTICA" />
+                                                <Label styleClass="dashboard-alert-text" text="Custo do material 'Aluminio' foi atualizado no sistema." wrapText="true" />
+                                                <Label styleClass="dashboard-alert-time" text="3h atras" />
+                                            </children>
+                                        </VBox>
+
+                                        <Button text="Configurar Notificacoes" styleClass="dashboard-secondary-button" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="10.0" styleClass="dashboard-card dashboard-goal">
+                                    <children>
+                                        <Label styleClass="dashboard-goal-icon" text="OK" />
+                                        <Label styleClass="dashboard-goal-title" text="Meta Diaria" />
+                                        <Label styleClass="dashboard-goal-text" text="Voce atingiu 85% da sua meta de orcamentos hoje." wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

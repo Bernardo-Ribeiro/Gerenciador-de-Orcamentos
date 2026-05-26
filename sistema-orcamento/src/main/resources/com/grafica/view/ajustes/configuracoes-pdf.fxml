@@ -31,7 +31,7 @@
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <Button text="Carregar Nova Logo" styleClass="pdf-primary-button" />
+                                            <Button text="Carregar Nova Logo" styleClass="btn-primary" />
                                             <Label styleClass="pdf-helper" text="Recomendado: PNG ou JPG com fundo transparente. Max 2MB." wrapText="true" />
                                         </children>
                                     </VBox>
@@ -82,7 +82,7 @@
                             <VBox spacing="6.0">
                                 <children>
                                     <Label styleClass="pdf-field-label" text="Endereco Completo" />
-                                    <TextField text="Av. Industrial, 1500 - Bloco B, Sao Paulo - SP" styleClass="settings-input" />
+                                    <TextField text="Av. Industrial, 1500 - Bloco B, Sao Paulo - SP" styleClass="input-base" />
                                 </children>
                             </VBox>
                         </children>
@@ -127,8 +127,8 @@
 
                     <HBox spacing="10.0" alignment="CENTER_RIGHT">
                         <children>
-                            <Button text="Restaurar Padroes" styleClass="pdf-secondary-button" />
-                            <Button text="Salvar Configuracoes" styleClass="pdf-primary-button" />
+                            <Button text="Restaurar Padroes" styleClass="btn-secondary" />
+                            <Button text="Salvar Configuracoes" styleClass="btn-primary" />
                         </children>
                     </HBox>
                 </VBox>

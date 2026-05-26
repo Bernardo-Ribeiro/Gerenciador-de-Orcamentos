@@ -94,7 +94,7 @@
                                 </VBox>
                                 <HBox spacing="8.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <TextField fx:id="txtBusca" onKeyReleased="#filtrarClientes" promptText="Buscar por nome ou documento..." styleClass="clients-input clients-search-input" />
+                                        <TextField fx:id="txtBusca" onKeyReleased="#filtrarClientes" promptText="Buscar por nome ou documento..." styleClass="clients-input, clients-search-input" />
                                         <Button fx:id="btnFiltros" onAction="#alternarFiltros" text="Filtros">
                                             <styleClass>
                                                 <String fx:value="clients-secondary-button" />
@@ -132,7 +132,7 @@
                                 <HBox spacing="6.0" alignment="CENTER_RIGHT">
                                     <children>
                                         <Button fx:id="btnAnterior" onAction="#paginaAnterior" text="Anterior" styleClass="clients-pagination-button" />
-                                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="clients-pagination-button clients-pagination-active" />
+                                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="clients-pagination-button, clients-pagination-active" />
                                         <Button fx:id="btnPage2" onAction="#irParaPagina" text="2" styleClass="clients-pagination-button" />
                                         <Button fx:id="btnProximo" onAction="#paginaProxima" text="Proximo" styleClass="clients-pagination-button" />
                                     </children>

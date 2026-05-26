@@ -29,31 +29,31 @@
             <children>
                 <HBox spacing="12.0" styleClass="users-table-header" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="users-table-label" text="Nome" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-label" text="E-mail" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-label" text="Cargo" />
-                        <Label styleClass="users-table-label" text="Status" />
-                        <Label styleClass="users-table-label" text="Acoes" />
+                        <Label styleClass="users-table-label" text="Nome" prefWidth="150.0" />
+                        <Label styleClass="users-table-label" text="E-mail" prefWidth="200.0" />
+                        <Label styleClass="users-table-label" text="Cargo" prefWidth="140.0" />
+                        <Label styleClass="users-table-label" text="Status" prefWidth="90.0" />
+                        <Label styleClass="users-table-label" text="Acoes" prefWidth="110.0" />
                     </children>
                 </HBox>
 
                 <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="users-table-value" text="Carlos Oliveira" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-value" text="carlos@empresa.com" HBox.hgrow="ALWAYS" />
-                        <Label text="Administrador">
+                        <Label styleClass="users-table-value" text="Carlos Oliveira" prefWidth="150.0" />
+                        <Label styleClass="users-table-value" text="carlos@empresa.com" prefWidth="200.0" />
+                        <Label text="Administrador" prefWidth="140.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-neutral" />
                             </styleClass>
                         </Label>
-                        <Label text="Ativo">
+                        <Label text="Ativo" prefWidth="90.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-active" />
                             </styleClass>
                         </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
                             <children>
                                 <Button text="Editar" styleClass="users-action-button" />
                                 <Button text="Excluir">
@@ -69,21 +69,21 @@
 
                 <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="users-table-value" text="Ana Beatriz" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-value" text="ana.b@empresa.com" HBox.hgrow="ALWAYS" />
-                        <Label text="Vendedor Senior">
+                        <Label styleClass="users-table-value" text="Ana Beatriz" prefWidth="150.0" />
+                        <Label styleClass="users-table-value" text="ana.b@empresa.com" prefWidth="200.0" />
+                        <Label text="Vendedor Senior" prefWidth="140.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-neutral" />
                             </styleClass>
                         </Label>
-                        <Label text="Ativo">
+                        <Label text="Ativo" prefWidth="90.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-active" />
                             </styleClass>
                         </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
                             <children>
                                 <Button text="Editar" styleClass="users-action-button" />
                                 <Button text="Excluir">
@@ -99,21 +99,21 @@
 
                 <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="users-table-value" text="Ricardo Silva" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-value" text="ricardo.s@empresa.com" HBox.hgrow="ALWAYS" />
-                        <Label text="Vendedor Junior">
+                        <Label styleClass="users-table-value" text="Ricardo Silva" prefWidth="150.0" />
+                        <Label styleClass="users-table-value" text="ricardo.s@empresa.com" prefWidth="200.0" />
+                        <Label text="Vendedor Junior" prefWidth="140.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-neutral" />
                             </styleClass>
                         </Label>
-                        <Label text="Ativo">
+                        <Label text="Ativo" prefWidth="90.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-active" />
                             </styleClass>
                         </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
                             <children>
                                 <Button text="Editar" styleClass="users-action-button" />
                                 <Button text="Excluir">
@@ -129,21 +129,21 @@
 
                 <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
                     <children>
-                        <Label styleClass="users-table-value" text="Mariana Costa" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-value" text="mariana@empresa.com" HBox.hgrow="ALWAYS" />
-                        <Label text="Financeiro">
+                        <Label styleClass="users-table-value" text="Mariana Costa" prefWidth="150.0" />
+                        <Label styleClass="users-table-value" text="mariana@empresa.com" prefWidth="200.0" />
+                        <Label text="Financeiro" prefWidth="140.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-neutral" />
                             </styleClass>
                         </Label>
-                        <Label text="Ativo">
+                        <Label text="Ativo" prefWidth="90.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-active" />
                             </styleClass>
                         </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
                             <children>
                                 <Button text="Editar" styleClass="users-action-button" />
                                 <Button text="Excluir">
@@ -163,21 +163,21 @@
                         <String fx:value="users-table-row-last" />
                     </styleClass>
                     <children>
-                        <Label styleClass="users-table-value" text="Jorge Mendes" HBox.hgrow="ALWAYS" />
-                        <Label styleClass="users-table-value" text="jorge@empresa.com" HBox.hgrow="ALWAYS" />
-                        <Label text="Producao">
+                        <Label styleClass="users-table-value" text="Jorge Mendes" prefWidth="150.0" />
+                        <Label styleClass="users-table-value" text="jorge@empresa.com" prefWidth="200.0" />
+                        <Label text="Producao" prefWidth="140.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-neutral" />
                             </styleClass>
                         </Label>
-                        <Label text="Inativo">
+                        <Label text="Inativo" prefWidth="90.0">
                             <styleClass>
                                 <String fx:value="users-pill" />
                                 <String fx:value="users-pill-inactive" />
                             </styleClass>
                         </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
                             <children>
                                 <Button text="Editar" styleClass="users-action-button" />
                                 <Button text="Excluir">
