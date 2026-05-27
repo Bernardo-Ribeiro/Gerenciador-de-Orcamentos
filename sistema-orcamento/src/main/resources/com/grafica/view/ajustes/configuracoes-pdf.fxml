@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="pdf-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="18.0" styleClass="pdf-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.ConfiguracoesPdfController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -31,7 +31,7 @@
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <Button text="Carregar Nova Logo" styleClass="btn-primary" />
+                                            <Button text="Carregar Nova Logo" onAction="#carregarLogo" styleClass="btn-primary" />
                                             <Label styleClass="pdf-helper" text="Recomendado: PNG ou JPG com fundo transparente. Max 2MB." wrapText="true" />
                                         </children>
                                     </VBox>
@@ -50,13 +50,13 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Nome Comercial" />
-                                            <TextField text="Serralheria Visual Pro" styleClass="settings-input" />
+                                            <TextField fx:id="txtNomeComercial" styleClass="settings-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="CNPJ" />
-                                            <TextField text="12.345.678/0001-90" styleClass="settings-input" prefWidth="180.0" />
+                                            <TextField fx:id="txtCnpj" styleClass="settings-input" prefWidth="180.0" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -67,13 +67,13 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Telefone / WhatsApp" />
-                                            <TextField text="(11) 98765-4321" styleClass="settings-input" />
+                                            <TextField fx:id="txtTelefone" styleClass="settings-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="E-mail de Contato" />
-                                            <TextField text="contato@visualpro.com.br" styleClass="settings-input" />
+                                            <TextField fx:id="txtEmail" styleClass="settings-input" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -82,7 +82,7 @@
                             <VBox spacing="6.0">
                                 <children>
                                     <Label styleClass="pdf-field-label" text="Endereco Completo" />
-                                    <TextField text="Av. Industrial, 1500 - Bloco B, Sao Paulo - SP" styleClass="input-base" />
+                                    <TextField fx:id="txtEndereco" styleClass="input-base" />
                                 </children>
                             </VBox>
                         </children>
@@ -98,19 +98,19 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Tamanho Papel" />
-                                            <TextField text="A4 (210 x 297mm)" styleClass="settings-input" />
+                                            <TextField fx:id="txtTamanhoPapel" text="A4 (210 x 297mm)" styleClass="settings-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Margem Sup. (mm)" />
-                                            <TextField text="15" styleClass="settings-input" prefWidth="120.0" />
+                                            <TextField fx:id="txtMargemSuperior" text="15" styleClass="settings-input" prefWidth="120.0" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Margem Lat. (mm)" />
-                                            <TextField text="10" styleClass="settings-input" prefWidth="120.0" />
+                                            <TextField fx:id="txtMargemLateral" text="10" styleClass="settings-input" prefWidth="120.0" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -119,7 +119,7 @@
                             <VBox spacing="6.0">
                                 <children>
                                     <Label styleClass="pdf-field-label" text="Observacoes de Rodape (Texto Fixo)" />
-                                    <TextArea text="Este orcamento tem validade de 10 dias uteis. Garantia de 12 meses contra defeitos de fabricacao." styleClass="pdf-textarea" wrapText="true" prefRowCount="3" />
+                                    <TextArea fx:id="txtObservacoes" text="Este orcamento tem validade de 10 dias uteis. Garantia de 12 meses contra defeitos de fabricacao." styleClass="pdf-textarea" wrapText="true" prefRowCount="3" />
                                 </children>
                             </VBox>
                         </children>
@@ -127,8 +127,8 @@
 
                     <HBox spacing="10.0" alignment="CENTER_RIGHT">
                         <children>
-                            <Button text="Restaurar Padroes" styleClass="btn-secondary" />
-                            <Button text="Salvar Configuracoes" styleClass="btn-primary" />
+                            <Button text="Restaurar Padroes" onAction="#restaurarPadroes" styleClass="btn-secondary" />
+                            <Button text="Salvar Configuracoes" onAction="#salvarConfiguracoes" styleClass="btn-primary" />
                         </children>
                     </HBox>
                 </VBox>
@@ -141,14 +141,14 @@
                             <children>
                                 <HBox spacing="8.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label styleClass="pdf-preview-brand" text="Serralheria\nVisual Pro" />
+                                        <Label styleClass="pdf-preview-brand" text="" />
                                         <Region HBox.hgrow="ALWAYS" />
                                         <Label styleClass="pdf-preview-logo" text="LOGO" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="pdf-preview-text" text="CNPJ: 12.345.678/0001-90" />
-                                <Label styleClass="pdf-preview-text" text="Av. Industrial, 1500 - Bloco B, Sao Paulo - SP" />
-                                <Label styleClass="pdf-preview-text" text="(11) 98765-4321  contato@visualpro.com.br" />
+                                <Label styleClass="pdf-preview-text" text="" />
+                                <Label styleClass="pdf-preview-text" text="" />
+                                <Label styleClass="pdf-preview-text" text="" />
                                 <HBox spacing="6.0" alignment="CENTER_LEFT" styleClass="pdf-preview-divider">
                                     <children>
                                         <Label styleClass="pdf-preview-caption" text="ORCAMENTO #2024-085" />

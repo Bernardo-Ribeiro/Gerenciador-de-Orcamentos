@@ -3,12 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="users-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="18.0" styleClass="users-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoUsuariosController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -18,179 +21,83 @@
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="users-title" text="Gestao de Usuarios" />
-                        <Label styleClass="users-subtitle" text="Gerencie as permissoes e acessos dos colaboradores ao sistema." wrapText="true" />
+                        <Label styleClass="users-subtitle" text="Gerencie acessos, status e credenciais dos colaboradores." wrapText="true" />
                     </children>
                 </VBox>
-                <Button text="+ Novo Usuario" styleClass="users-primary-button" />
+                <Button text="Novo" onAction="#novoUsuario" styleClass="users-primary-button" />
             </children>
         </HBox>
 
-        <VBox spacing="0.0" styleClass="users-table-card">
+        <HBox spacing="12.0" alignment="CENTER_LEFT">
             <children>
-                <HBox spacing="12.0" styleClass="users-table-header" alignment="CENTER_LEFT">
-                    <children>
-                        <Label styleClass="users-table-label" text="Nome" prefWidth="150.0" />
-                        <Label styleClass="users-table-label" text="E-mail" prefWidth="200.0" />
-                        <Label styleClass="users-table-label" text="Cargo" prefWidth="140.0" />
-                        <Label styleClass="users-table-label" text="Status" prefWidth="90.0" />
-                        <Label styleClass="users-table-label" text="Acoes" prefWidth="110.0" />
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
-                    <children>
-                        <Label styleClass="users-table-value" text="Carlos Oliveira" prefWidth="150.0" />
-                        <Label styleClass="users-table-value" text="carlos@empresa.com" prefWidth="200.0" />
-                        <Label text="Administrador" prefWidth="140.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-neutral" />
-                            </styleClass>
-                        </Label>
-                        <Label text="Ativo" prefWidth="90.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-active" />
-                            </styleClass>
-                        </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
-                            <children>
-                                <Button text="Editar" styleClass="users-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="users-action-button" />
-                                        <String fx:value="users-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
-                    <children>
-                        <Label styleClass="users-table-value" text="Ana Beatriz" prefWidth="150.0" />
-                        <Label styleClass="users-table-value" text="ana.b@empresa.com" prefWidth="200.0" />
-                        <Label text="Vendedor Senior" prefWidth="140.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-neutral" />
-                            </styleClass>
-                        </Label>
-                        <Label text="Ativo" prefWidth="90.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-active" />
-                            </styleClass>
-                        </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
-                            <children>
-                                <Button text="Editar" styleClass="users-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="users-action-button" />
-                                        <String fx:value="users-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
-                    <children>
-                        <Label styleClass="users-table-value" text="Ricardo Silva" prefWidth="150.0" />
-                        <Label styleClass="users-table-value" text="ricardo.s@empresa.com" prefWidth="200.0" />
-                        <Label text="Vendedor Junior" prefWidth="140.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-neutral" />
-                            </styleClass>
-                        </Label>
-                        <Label text="Ativo" prefWidth="90.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-active" />
-                            </styleClass>
-                        </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
-                            <children>
-                                <Button text="Editar" styleClass="users-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="users-action-button" />
-                                        <String fx:value="users-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" styleClass="users-table-row" alignment="CENTER_LEFT">
-                    <children>
-                        <Label styleClass="users-table-value" text="Mariana Costa" prefWidth="150.0" />
-                        <Label styleClass="users-table-value" text="mariana@empresa.com" prefWidth="200.0" />
-                        <Label text="Financeiro" prefWidth="140.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-neutral" />
-                            </styleClass>
-                        </Label>
-                        <Label text="Ativo" prefWidth="90.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-active" />
-                            </styleClass>
-                        </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
-                            <children>
-                                <Button text="Editar" styleClass="users-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="users-action-button" />
-                                        <String fx:value="users-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT">
-                    <styleClass>
-                        <String fx:value="users-table-row" />
-                        <String fx:value="users-table-row-last" />
-                    </styleClass>
-                    <children>
-                        <Label styleClass="users-table-value" text="Jorge Mendes" prefWidth="150.0" />
-                        <Label styleClass="users-table-value" text="jorge@empresa.com" prefWidth="200.0" />
-                        <Label text="Producao" prefWidth="140.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-neutral" />
-                            </styleClass>
-                        </Label>
-                        <Label text="Inativo" prefWidth="90.0">
-                            <styleClass>
-                                <String fx:value="users-pill" />
-                                <String fx:value="users-pill-inactive" />
-                            </styleClass>
-                        </Label>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT" prefWidth="110.0">
-                            <children>
-                                <Button text="Editar" styleClass="users-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="users-action-button" />
-                                        <String fx:value="users-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
+                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="materials-search" />
+                <Button text="Atualizar" onAction="#recarregar" styleClass="users-action-button" />
             </children>
-        </VBox>
+        </HBox>
+
+        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox spacing="10.0" styleClass="users-table-card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                            <columns>
+                                <TableColumn fx:id="colNome" text="Nome" prefWidth="170.0" />
+                                <TableColumn fx:id="colEmail" text="E-mail" prefWidth="210.0" />
+                                <TableColumn fx:id="colCargo" text="Cargo" prefWidth="140.0" />
+                                <TableColumn fx:id="colStatus" text="Status" prefWidth="90.0" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" styleClass="users-table-card" prefWidth="320.0">
+                    <children>
+                        <Label styleClass="users-title" text="Detalhes do Usuario" />
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Nome" />
+                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="E-mail" />
+                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Senha" />
+                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Cargo" />
+                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Status" />
+                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                            <children>
+                                <Button text="Excluir" onAction="#excluirSelecionado" styleClass="users-action-button" />
+                                <Button text="Salvar" onAction="#salvarUsuario" styleClass="users-primary-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
     </children>
 </VBox>

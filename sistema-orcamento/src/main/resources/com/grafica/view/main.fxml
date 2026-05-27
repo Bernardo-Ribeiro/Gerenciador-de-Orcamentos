@@ -38,6 +38,7 @@
         <VBox spacing="16.0" styleClass="sidebar-menu">
             <Button fx:id="btnDashboard" cancelButton="true" onAction="#abrirDashboard" text="Dashboard" />
             <Button fx:id="btnClientes" onAction="#abrirClientes" text="Clientes" />
+            <Button fx:id="btnMateriais" onAction="#abrirMateriais" text="Materiais" />
             <Button fx:id="btnOrcamentos" onAction="#abrirOrcamentos" text="Orçamentos" />
             <Button fx:id="btnRelatorios" onAction="#abrirRelatorios" text="Relatórios" />
             <Button fx:id="btnAjustes" onAction="#abrirAjustes" text="Ajustes" />

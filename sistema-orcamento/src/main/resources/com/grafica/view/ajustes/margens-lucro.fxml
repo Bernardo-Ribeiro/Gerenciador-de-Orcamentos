@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="profit-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="18.0" styleClass="profit-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MargensLucroController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -23,7 +23,7 @@
                         <Label styleClass="profit-subtitle" text="Gerencie as porcentagens de lucro por categoria para automatizar orcamentos." wrapText="true" />
                     </children>
                 </VBox>
-                <Button text="+ Nova Categoria" styleClass="profit-primary-button" />
+                <Button text="+ Nova Categoria" onAction="#novaCategoria" styleClass="profit-primary-button" />
             </children>
         </HBox>
 
@@ -74,8 +74,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="45" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria1" text="45" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -113,8 +113,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="60" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria2" text="60" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -152,8 +152,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="120" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria3" text="120" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -191,8 +191,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="85" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria4" text="85" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -230,8 +230,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="150" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria5" text="150" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -273,8 +273,8 @@
                         </VBox>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField text="200" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="%%" />
+                                <TextField fx:id="pctCategoria6" text="200" styleClass="settings-input" prefWidth="70.0" />
+                                <Label styleClass="profit-percent-suffix" text="\%" />
                             </children>
                         </HBox>
                         <HBox spacing="8.0" alignment="CENTER_RIGHT">
@@ -301,8 +301,8 @@
                         <Label styleClass="profit-footer-text" text="As alteracoes afetarao 3 administradores e todos os vendedores." />
                     </children>
                 </HBox>
-                <Button text="Cancelar Alteracoes" styleClass="profit-secondary-button" />
-                <Button text="Salvar padroes" styleClass="profit-primary-button" />
+                <Button text="Cancelar Alteracoes" onAction="#cancelarAlteracoes" styleClass="profit-secondary-button" />
+                <Button text="Salvar padroes" onAction="#salvarPadroes" styleClass="profit-primary-button" />
             </children>
         </HBox>
     </children>

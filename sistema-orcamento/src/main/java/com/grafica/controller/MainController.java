@@ -1,6 +1,7 @@
 package com.grafica.controller;
 
 import com.grafica.model.Usuario;
+import com.grafica.controller.DashboardController;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -88,6 +89,10 @@ public class MainController {
 		carregarPantalla("view/dashboard.fxml");
 	}
 
+	public void abrirDashboardTela() {
+		abrirDashboard();
+	}
+
 	/**
 	 * Abre la vista de Gestión de Clientes
 	 */
@@ -95,6 +100,10 @@ public class MainController {
 	private void abrirClientes() {
 		marcarBotaoAtivo(btnClientes);
 		carregarPantalla("view/clientes.fxml");
+	}
+
+	public void abrirClientesTela() {
+		abrirClientes();
 	}
 
 	/**
@@ -106,6 +115,10 @@ public class MainController {
 		carregarPantalla("view/materiais.fxml");
 	}
 
+	public void abrirMateriaisTela() {
+		abrirMateriais();
+	}
+
 	/**
 	 * Abre la vista de Gestión de Orçamentos
 	 */
@@ -113,6 +126,10 @@ public class MainController {
 	private void abrirOrcamentos() {
 		marcarBotaoAtivo(btnOrcamentos);
 		carregarPantalla("view/orcamentos.fxml");
+	}
+
+	public void abrirOrcamentosTela() {
+		abrirOrcamentos();
 	}
 
 	/**
@@ -124,6 +141,10 @@ public class MainController {
 		carregarPantalla("view/relatorios.fxml");
 	}
 
+	public void abrirRelatoriosTela() {
+		abrirRelatorios();
+	}
+
 	/**
 	 * Abre la vista de Ajustes
 	 */
@@ -131,6 +152,10 @@ public class MainController {
 	private void abrirAjustes() {
 		marcarBotaoAtivo(btnAjustes);
 		carregarPantalla("view/ajustes.fxml");
+	}
+
+	public void abrirAjustesTela() {
+		abrirAjustes();
 	}
 
 	/**
@@ -144,6 +169,11 @@ public class MainController {
 			}
 			FXMLLoader loader = new FXMLLoader(location);
             Parent pantalla = loader.load();
+			Object controller = loader.getController();
+				if (controller instanceof DashboardController dashboardController) {
+					dashboardController.setMainController(this);
+					dashboardController.setUsuarioLogado(usuarioLogado);
+				}
             contentArea.getChildren().clear();
             contentArea.getChildren().add(pantalla);
         } catch (IOException e) {

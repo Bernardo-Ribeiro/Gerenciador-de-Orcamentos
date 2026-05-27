@@ -11,7 +11,8 @@ import java.util.List;
 public class ClienteDAO {
 
     public void criar(Cliente cliente) {
-        String sql = "INSERT INTO clientes (nome, cpf_cnpj, email_contato, telefone_whatsapp, status, data_cadastro) VALUES (?, ?, ?, ?, ?, ?)";
+        // DB uses nome_razao_social as column name
+        String sql = "INSERT INTO clientes (nome_razao_social, cpf_cnpj, email_contato, telefone_whatsapp, status, data_cadastro) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -52,7 +53,8 @@ public class ClienteDAO {
 
     public List<Cliente> listarTodos() {
         List<Cliente> clientes = new ArrayList<>();
-        String sql = "SELECT * FROM clientes ORDER BY nome ASC";
+        // Order by the actual column name in schema
+        String sql = "SELECT * FROM clientes ORDER BY nome_razao_social ASC";
         
         try (Connection conn = DbConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -68,7 +70,8 @@ public class ClienteDAO {
     }
 
     public void atualizar(Cliente cliente) {
-        String sql = "UPDATE clientes SET nome = ?, email_contato = ?, telefone_whatsapp = ?, status = ? WHERE id = ?";
+        // update uses nome_razao_social column
+        String sql = "UPDATE clientes SET nome_razao_social = ?, email_contato = ?, telefone_whatsapp = ?, status = ? WHERE id = ?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
@@ -99,12 +102,16 @@ public class ClienteDAO {
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         cliente.setId(rs.getInt("id"));
-        cliente.setNome(rs.getString("nome"));
+        // map DB columns to model
+        cliente.setNome(rs.getString("nome_razao_social"));
         cliente.setCpfCnpj(rs.getString("cpf_cnpj"));
         cliente.setEmailContato(rs.getString("email_contato"));
         cliente.setTelefoneWhatsapp(rs.getString("telefone_whatsapp"));
         cliente.setStatus(rs.getString("status"));
-        cliente.setDataCadastro(rs.getTimestamp("data_cadastro").toLocalDateTime());
+        Timestamp ts = rs.getTimestamp("data_cadastro");
+        if (ts != null) {
+            cliente.setDataCadastro(ts.toLocalDateTime());
+        }
         return cliente;
     }
 }

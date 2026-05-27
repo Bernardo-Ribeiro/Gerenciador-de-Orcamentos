@@ -18,7 +18,7 @@ public class OrcamentoDAO {
             pstmt.setInt(2, orcamento.getIdUsuario() != null ? orcamento.getIdUsuario() : 1);
             pstmt.setDate(3, Date.valueOf(LocalDate.now()));
             pstmt.setDate(4, Date.valueOf(LocalDate.now().plusDays(15)));
-            pstmt.setString(5, "ativo");
+            pstmt.setString(5, orcamento.getStatus() != null ? orcamento.getStatus().toUpperCase() : "PENDENTE");
             pstmt.setBigDecimal(6, orcamento.getValorBruto() != null ? orcamento.getValorBruto() : BigDecimal.ZERO);
             pstmt.setBigDecimal(7, orcamento.getMargemLucroPercentual());
             pstmt.setBigDecimal(8, orcamento.getDescontoProgressivo());
@@ -60,7 +60,7 @@ public class OrcamentoDAO {
             pstmt.setBigDecimal(1, orcamento.getValorFinal());
             pstmt.setBigDecimal(2, orcamento.getMargemLucroPercentual());
             pstmt.setBigDecimal(3, orcamento.getDescontoProgressivo());
-            pstmt.setString(4, orcamento.getStatus());
+            pstmt.setString(4, orcamento.getStatus() != null ? orcamento.getStatus().toUpperCase() : "PENDENTE");
             pstmt.setInt(5, orcamento.getId());
             
             pstmt.executeUpdate();

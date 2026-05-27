@@ -48,8 +48,8 @@ public class LoginController {
 
     @FXML
     private void fazerLogin() {
-        String email = emailField.getText();
-        String senha = senhaField.getText();
+        String email = emailField.getText() != null ? emailField.getText().trim().toLowerCase() : "";
+        String senha = senhaField.getText() != null ? senhaField.getText().trim() : "";
 
         if (email.isEmpty() || senha.isEmpty()) {
             exibirErro("Email e senha são obrigatórios");

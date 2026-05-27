@@ -45,6 +45,9 @@ public class CustosInsumosController {
     private ComboBox<String> cmbCategoria;
 
     @FXML
+    private ComboBox<String> cmbTipoItem;
+
+    @FXML
     private ComboBox<String> cmbUnidade;
 
     @FXML
@@ -65,6 +68,7 @@ public class CustosInsumosController {
         materialDAO = new MaterialDAO();
 
         cmbCategoria.setItems(FXCollections.observableArrayList("COMUNICACAO_VISUAL", "IMPRESSOS"));
+        cmbTipoItem.setItems(FXCollections.observableArrayList("BASE", "ACABAMENTO"));
         cmbUnidade.setItems(FXCollections.observableArrayList("AREA", "UNIDADE", "TIRAGEM", "FOLHA", "PACOTE", "SERVICO", "CHAPA"));
         cmbStatus.setItems(FXCollections.observableArrayList("ATIVO", "INATIVO"));
 
@@ -84,7 +88,7 @@ public class CustosInsumosController {
         colUnidade.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getTipoCobranca()));
         colCustoBase.setCellValueFactory(cell -> new javafx.beans.property.SimpleObjectProperty<>(cell.getValue().getCustoBase()));
         colUltimaAtualizacao.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty("-"));
-        colStatus.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getStatus()));
+        colStatus.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(normalizarTexto(cell.getValue().getStatus())));
     }
 
     private void carregarInsumos() {
@@ -96,10 +100,11 @@ public class CustosInsumosController {
     private void preencherFormulario(Material m) {
         txtMaterial.setText(m.getNome());
         cmbCategoria.setValue(m.getCategoria());
+        cmbTipoItem.setValue(m.getTipoItem());
         cmbUnidade.setValue(m.getTipoCobranca());
         txtCustoBase.setText(m.getCustoBase() != null ? m.getCustoBase().toString() : "");
         txtCustoProducao.setText(m.getCustoProducao() != null ? m.getCustoProducao().toString() : "");
-        cmbStatus.setValue(m.getStatus());
+        cmbStatus.setValue(normalizarTexto(m.getStatus()).toUpperCase());
     }
 
     @FXML
@@ -112,10 +117,12 @@ public class CustosInsumosController {
         selecionado = null;
         txtMaterial.clear();
         cmbCategoria.setValue(null);
+        cmbTipoItem.setValue(null);
         cmbUnidade.setValue(null);
         txtCustoBase.clear();
         txtCustoProducao.clear();
         cmbStatus.setValue("ATIVO");
+        tableInsumos.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -129,7 +136,7 @@ public class CustosInsumosController {
     }
 
     private void aplicarFiltro() {
-        String q = txtBusca.getText().trim().toLowerCase();
+        String q = txtBusca.getText() == null ? "" : txtBusca.getText().trim().toLowerCase();
         boolean mostrarInativos = chkMostrarInativos != null && chkMostrarInativos.isSelected();
         ObservableList<Material> filtrados = FXCollections.observableArrayList();
 
@@ -137,7 +144,10 @@ public class CustosInsumosController {
             if (!mostrarInativos && "INATIVO".equalsIgnoreCase(m.getStatus())) {
                 continue;
             }
-            if (!q.isEmpty() && !m.getNome().toLowerCase().contains(q)) {
+            String nome = m.getNome() != null ? m.getNome().toLowerCase() : "";
+            String categoria = m.getCategoria() != null ? m.getCategoria().toLowerCase() : "";
+            String unidade = m.getTipoCobranca() != null ? m.getTipoCobranca().toLowerCase() : "";
+            if (!q.isEmpty() && !(nome.contains(q) || categoria.contains(q) || unidade.contains(q))) {
                 continue;
             }
             filtrados.add(m);
@@ -168,30 +178,40 @@ public class CustosInsumosController {
     @FXML
     private void salvarInsumo() {
         try {
-            if (txtMaterial.getText().isEmpty() || txtCustoBase.getText().isEmpty()) {
+            if (txtMaterial.getText() == null || txtMaterial.getText().trim().isEmpty() || txtCustoBase.getText() == null || txtCustoBase.getText().trim().isEmpty()) {
                 Alert a = new Alert(Alert.AlertType.WARNING, "Nombre y costo base son obligatorios", ButtonType.OK);
                 a.showAndWait();
                 return;
             }
 
+            if (cmbCategoria.getValue() == null || cmbTipoItem.getValue() == null || cmbUnidade.getValue() == null || cmbStatus.getValue() == null) {
+                Alert a = new Alert(Alert.AlertType.WARNING, "Categoria, tipo, unidade e status são obrigatórios", ButtonType.OK);
+                a.showAndWait();
+                return;
+            }
+
+            BigDecimal custoBase = new BigDecimal(txtCustoBase.getText().trim().replace(',', '.'));
+            BigDecimal custoProducao = parseDecimalOpcional(txtCustoProducao.getText());
+
             if (selecionado == null) {
                 Material novo = new Material(
-                    txtMaterial.getText(),
+                    txtMaterial.getText().trim(),
                     cmbCategoria.getValue(),
-                    "BASE",
+                    cmbTipoItem.getValue(),
                     cmbUnidade.getValue(),
-                    new BigDecimal(txtCustoBase.getText())
+                    custoBase
                 );
-                if (!txtCustoProducao.getText().isEmpty()) novo.setCustoProducao(new BigDecimal(txtCustoProducao.getText()));
-                novo.setStatus(cmbStatus.getValue());
+                novo.setCustoProducao(custoProducao);
+                novo.setStatus(cmbStatus.getValue().toUpperCase());
                 materialDAO.criar(novo);
             } else {
-                selecionado.setNome(txtMaterial.getText());
+                selecionado.setNome(txtMaterial.getText().trim());
                 selecionado.setCategoria(cmbCategoria.getValue());
+                selecionado.setTipoItem(cmbTipoItem.getValue());
                 selecionado.setTipoCobranca(cmbUnidade.getValue());
-                selecionado.setCustoBase(new BigDecimal(txtCustoBase.getText()));
-                if (!txtCustoProducao.getText().isEmpty()) selecionado.setCustoProducao(new BigDecimal(txtCustoProducao.getText()));
-                selecionado.setStatus(cmbStatus.getValue());
+                selecionado.setCustoBase(custoBase);
+                selecionado.setCustoProducao(custoProducao);
+                selecionado.setStatus(cmbStatus.getValue().toUpperCase());
                 materialDAO.atualizar(selecionado);
             }
             carregarInsumos();
@@ -201,5 +221,16 @@ public class CustosInsumosController {
             Alert a = new Alert(Alert.AlertType.ERROR, "Error al guardar insumo: " + e.getMessage(), ButtonType.OK);
             a.showAndWait();
         }
+    }
+
+    private BigDecimal parseDecimalOpcional(String valor) {
+        if (valor == null || valor.trim().isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return new BigDecimal(valor.trim().replace(',', '.'));
+    }
+
+    private String normalizarTexto(String valor) {
+        return valor == null ? "" : valor;
     }
 }
