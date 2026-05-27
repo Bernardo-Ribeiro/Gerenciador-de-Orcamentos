@@ -269,9 +269,49 @@ public class RelatoriosController {
         pdf.getStyleClass().add("reports-action");
         pdf.setOnAction(event -> feedbackLabel.setText("PDF do orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " em implementacao."));
 
-        acoes.getChildren().addAll(ver, pdf);
+        Button aprovar = new Button("Aprovar");
+        aprovar.getStyleClass().add("reports-action-approve");
+        aprovar.setOnAction(event -> {
+            aprovarOrcamento(orcamento);
+        });
+
+        Button reprovar = new Button("Reprovar");
+        reprovar.getStyleClass().add("reports-action-reject");
+        reprovar.setOnAction(event -> {
+            reprovarOrcamento(orcamento);
+        });
+
+        acoes.getChildren().addAll(ver, pdf, aprovar, reprovar);
         linha.getChildren().addAll(codigo, cliente, data, valor, status, acoes);
         return linha;
+    }
+
+    private void aprovarOrcamento(Orcamento orcamento) {
+        if (orcamento == null || orcamento.getId() == null) return;
+        try {
+            orcamento.setStatus("APROVADO");
+            orcamentoDAO.atualizar(orcamento);
+            feedbackLabel.setText("Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " aprovado.");
+            // Atualiza dados locais e UI
+            carregarDadosBase();
+            aplicarFiltros();
+        } catch (Exception e) {
+            feedbackLabel.setText("Falha ao aprovar: " + e.getMessage());
+        }
+    }
+
+    private void reprovarOrcamento(Orcamento orcamento) {
+        if (orcamento == null || orcamento.getId() == null) return;
+        try {
+            orcamento.setStatus("REPROVADO");
+            orcamentoDAO.atualizar(orcamento);
+            feedbackLabel.setText("Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " reprovado.");
+            // Atualiza dados locais e UI
+            carregarDadosBase();
+            aplicarFiltros();
+        } catch (Exception e) {
+            feedbackLabel.setText("Falha ao reprovar: " + e.getMessage());
+        }
     }
 
     private Label criarCelula(String styleClass, String texto, double width) {
