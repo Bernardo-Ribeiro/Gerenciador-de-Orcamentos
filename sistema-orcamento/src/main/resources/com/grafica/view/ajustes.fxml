@@ -31,6 +31,7 @@
                 <VBox spacing="10.0" styleClass="settings-nav">
                     <children>
                         <Button fx:id="btnGestaoUsuarios" onAction="#selecionarGestaoUsuarios" styleClass="settings-nav-item" text="Gestão de Usuários" />
+                        <Button fx:id="btnGestaoLayouts" onAction="#selecionarGestaoLayouts" styleClass="settings-nav-item" text="Gestão de Layouts" />
                         <Button fx:id="btnCustosInsumos" onAction="#selecionarCustosInsumos" styleClass="settings-nav-item" text="Custos de Insumos" />
                         <Button fx:id="btnEscalaProdutiva" onAction="#selecionarEscalaProdutiva" styleClass="settings-nav-item" text="Escala Produtiva" />
                         <Button fx:id="btnMargensLucro" onAction="#selecionarMargensLucro" styleClass="settings-nav-item" text="Margens de Lucro" />

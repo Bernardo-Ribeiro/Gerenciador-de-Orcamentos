@@ -9,19 +9,24 @@ import java.util.List;
 public class MaterialDAO {
     
     public void criar(Material material) {
-        String sql = "INSERT INTO materiais (nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO materiais (nome, categoria, id_categoria_lucro, tipo_item, tipo_cobranca, custo_base, custo_producao, status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             stmt.setString(1, material.getNome());
             stmt.setString(2, material.getCategoria());
-            stmt.setString(3, material.getTipoItem());
-            stmt.setString(4, material.getTipoCobranca());
-            stmt.setBigDecimal(5, material.getCustoBase());
-            stmt.setBigDecimal(6, material.getCustoProducao());
-            stmt.setString(7, material.getStatus());
+            if (material.getIdCategoriaLucro() != null) {
+                stmt.setInt(3, material.getIdCategoriaLucro());
+            } else {
+                stmt.setNull(3, Types.INTEGER);
+            }
+            stmt.setString(4, material.getTipoItem());
+            stmt.setString(5, material.getTipoCobranca());
+            stmt.setBigDecimal(6, material.getCustoBase());
+            stmt.setBigDecimal(7, material.getCustoProducao());
+            stmt.setString(8, material.getStatus());
             
             stmt.executeUpdate();
             
@@ -36,7 +41,7 @@ public class MaterialDAO {
     }
     
     public Material obterPorId(Integer id) {
-        String sql = "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE id = ?";
+        String sql = "SELECT id, nome, categoria, id_categoria_lucro, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE id = ?";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -60,8 +65,8 @@ public class MaterialDAO {
     public List<Material> listarTodos(boolean incluirInativos) {
         List<Material> materiais = new ArrayList<>();
         String sql = incluirInativos
-            ? "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais ORDER BY nome"
-            : "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE status = 'ATIVO' ORDER BY nome";
+            ? "SELECT id, nome, categoria, id_categoria_lucro, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais ORDER BY nome"
+            : "SELECT id, nome, categoria, id_categoria_lucro, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE status = 'ATIVO' ORDER BY nome";
         
         try (Connection conn = DbConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -78,7 +83,7 @@ public class MaterialDAO {
     
     public List<Material> listarPorCategoria(String categoria) {
         List<Material> materiais = new ArrayList<>();
-        String sql = "SELECT id, nome, categoria, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE categoria = ? AND status = 'ATIVO' ORDER BY nome";
+        String sql = "SELECT id, nome, categoria, id_categoria_lucro, tipo_item, tipo_cobranca, custo_base, custo_producao, status FROM materiais WHERE categoria = ? AND status = 'ATIVO' ORDER BY nome";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -96,19 +101,24 @@ public class MaterialDAO {
     }
     
     public void atualizar(Material material) {
-        String sql = "UPDATE materiais SET nome = ?, categoria = ?, tipo_item = ?, tipo_cobranca = ?, custo_base = ?, custo_producao = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE materiais SET nome = ?, categoria = ?, id_categoria_lucro = ?, tipo_item = ?, tipo_cobranca = ?, custo_base = ?, custo_producao = ?, status = ? WHERE id = ?";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, material.getNome());
             stmt.setString(2, material.getCategoria());
-            stmt.setString(3, material.getTipoItem());
-            stmt.setString(4, material.getTipoCobranca());
-            stmt.setBigDecimal(5, material.getCustoBase());
-            stmt.setBigDecimal(6, material.getCustoProducao());
-            stmt.setString(7, material.getStatus());
-            stmt.setInt(8, material.getId());
+            if (material.getIdCategoriaLucro() != null) {
+                stmt.setInt(3, material.getIdCategoriaLucro());
+            } else {
+                stmt.setNull(3, Types.INTEGER);
+            }
+            stmt.setString(4, material.getTipoItem());
+            stmt.setString(5, material.getTipoCobranca());
+            stmt.setBigDecimal(6, material.getCustoBase());
+            stmt.setBigDecimal(7, material.getCustoProducao());
+            stmt.setString(8, material.getStatus());
+            stmt.setInt(9, material.getId());
             
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -131,10 +141,16 @@ public class MaterialDAO {
     }
     
     private Material mapearMaterial(ResultSet rs) throws SQLException {
+        Integer idCategoriaLucro = rs.getInt("id_categoria_lucro");
+        if (rs.wasNull()) {
+            idCategoriaLucro = null;
+        }
+        
         return new Material(
             rs.getInt("id"),
             rs.getString("nome"),
             rs.getString("categoria"),
+            idCategoriaLucro,
             rs.getString("tipo_item"),
             rs.getString("tipo_cobranca"),
             rs.getBigDecimal("custo_base"),

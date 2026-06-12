@@ -5,17 +5,34 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class AjustesController {
+
+    private static final Map<String, String> BREADCRUMBS = Map.of(
+        "ajustes/gestao-usuarios.fxml", "Início   >   Painel Administrador   >   Gestão de Usuários",
+        "ajustes/gestao-layouts.fxml", "Início   >   Painel Administrador   >   Gestão de Layouts",
+        "ajustes/custos-insumos.fxml", "Início   >   Painel Administrador   >   Custos de Insumos",
+        "ajustes/escala-produtiva.fxml", "Início   >   Painel Administrador   >   Escala Produtiva",
+        "ajustes/margens-lucro.fxml", "Início   >   Painel Administrador   >   Margens de Lucro",
+        "ajustes/configuracoes-pdf.fxml", "Início   >   Painel Administrador   >   Configurações de PDF"
+    );
 
     @FXML
     private StackPane contentArea;
 
     @FXML
+    private Label breadcrumbLabel;
+
+    @FXML
     private Button btnGestaoUsuarios;
+
+    @FXML
+    private Button btnGestaoLayouts;
 
     @FXML
     private Button btnCustosInsumos;
@@ -39,6 +56,12 @@ public class AjustesController {
     private void selecionarGestaoUsuarios(ActionEvent event) {
         carregarSubpantalla("ajustes/gestao-usuarios.fxml");
         marcarBotaoAtivo(btnGestaoUsuarios);
+    }
+
+    @FXML
+    private void selecionarGestaoLayouts(ActionEvent event) {
+        carregarSubpantalla("ajustes/gestao-layouts.fxml");
+        marcarBotaoAtivo(btnGestaoLayouts);
     }
 
     @FXML
@@ -68,6 +91,7 @@ public class AjustesController {
     private void marcarBotaoAtivo(Button botaoAtivo) {
         Button[] botoes = {
             btnGestaoUsuarios,
+            btnGestaoLayouts,
             btnCustosInsumos,
             btnEscalaProdutiva,
             btnMargensLucro,
@@ -90,11 +114,18 @@ public class AjustesController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grafica/view/" + resourcePath));
             Node node = loader.load();
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(node);
+            contentArea.getChildren().setAll(node);
+            atualizarBreadcrumb(resourcePath);
         } catch (IOException e) {
-            System.err.println("Error cargando subpantalla: " + resourcePath);
+            System.err.println("Erro ao carregar sub-tela: " + resourcePath);
             e.printStackTrace();
         }
+    }
+
+    private void atualizarBreadcrumb(String resourcePath) {
+        if (breadcrumbLabel == null) {
+            return;
+        }
+        breadcrumbLabel.setText(BREADCRUMBS.getOrDefault(resourcePath, "Início   >   Painel Administrador"));
     }
 }

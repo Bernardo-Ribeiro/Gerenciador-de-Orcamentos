@@ -4,15 +4,21 @@ import com.grafica.dao.ClienteDAO;
 import com.grafica.dao.OrcamentoDAO;
 import com.grafica.model.Cliente;
 import com.grafica.model.Orcamento;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -55,7 +61,19 @@ public class RelatoriosController {
     private Label resultadosSubtitleLabel;
 
     @FXML
-    private VBox resultadosContainer;
+    private TableView<RelatorioOrcamentoView> relatoriosTable;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, String> colCodigo;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, String> colCliente;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, String> colData;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, BigDecimal> colValor;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, String> colStatus;
+    @FXML
+    private TableColumn<RelatorioOrcamentoView, Void> colAcoes;
 
     @FXML
     private VBox rankingClientesContainer;
@@ -72,21 +90,41 @@ public class RelatoriosController {
     @FXML
     private Button btnGerarPdf;
 
+    @FXML
+    private Label lblPaginacao;
+
+    @FXML
+    private Button btnAnterior;
+
+    @FXML
+    private Button btnProximo;
+
+    @FXML
+    private Button btnPage1;
+
+    @FXML
+    private Button btnPage2;
+
     private OrcamentoDAO orcamentoDAO;
     private ClienteDAO clienteDAO;
     private Map<Integer, String> nomesClientes;
     private List<Orcamento> orcamentosBase;
     private List<Orcamento> orcamentosFiltrados;
+    private final ObservableList<RelatorioOrcamentoView> relatoriosVisiveis = FXCollections.observableArrayList();
 
     private final NumberFormat moeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     private static final DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final int LIMITE_LINHAS = 10;
+    private static final int ITENS_POR_PAGINA = 10;
+
+    private int paginaAtual = 1;
+    private int totalPaginas = 1;
 
     @FXML
     private void initialize() {
         orcamentoDAO = new OrcamentoDAO();
         clienteDAO = new ClienteDAO();
         carregarDadosBase();
+        configurarTabela();
         aplicarFiltros();
     }
 
@@ -135,6 +173,7 @@ public class RelatoriosController {
                 .thenComparing(Orcamento::getId, Comparator.nullsLast(Comparator.reverseOrder())))
             .toList();
 
+        paginaAtual = 1;
         atualizarCardsResumo();
         atualizarResultados();
         atualizarRankingClientes();
@@ -218,72 +257,169 @@ public class RelatoriosController {
     }
 
     private void atualizarResultados() {
-        if (resultadosContainer == null) {
+        if (relatoriosTable == null) {
             return;
         }
 
-        resultadosContainer.getChildren().clear();
-        int exibidos = Math.min(LIMITE_LINHAS, orcamentosFiltrados.size());
+        relatoriosVisiveis.clear();
+        int totalRegistros = orcamentosFiltrados.size();
+        totalPaginas = Math.max(1, (int) Math.ceil(totalRegistros / (double) ITENS_POR_PAGINA));
+        paginaAtual = Math.min(Math.max(paginaAtual, 1), totalPaginas);
+
+        int inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
+        int fim = Math.min(inicio + ITENS_POR_PAGINA, totalRegistros);
+        int exibidos = totalRegistros == 0 ? 0 : (fim - inicio);
 
         if (resultadosSubtitleLabel != null) {
-            resultadosSubtitleLabel.setText("Mostrando " + exibidos + " de " + orcamentosFiltrados.size() + " orcamentos encontrados.");
+            resultadosSubtitleLabel.setText("Mostrando " + exibidos + " de " + totalRegistros + " orçamentos encontrados.");
+        }
+        if (lblPaginacao != null) {
+            lblPaginacao.setText("Página " + paginaAtual + " de " + totalPaginas);
         }
 
-        if (orcamentosFiltrados.isEmpty()) {
-            Label vazio = new Label("Nenhum orcamento encontrado para os filtros selecionados.");
-            vazio.getStyleClass().add("reports-card-subtitle");
-            resultadosContainer.getChildren().add(vazio);
+        Label placeholder = new Label("Nenhum orçamento encontrado para os filtros selecionados.");
+        placeholder.getStyleClass().add("reports-card-subtitle");
+        relatoriosTable.setPlaceholder(placeholder);
+
+        if (totalRegistros == 0) {
+            atualizarBotoesPaginacao();
             return;
         }
 
-        for (int i = 0; i < exibidos; i++) {
+        for (int i = inicio; i < fim; i++) {
             Orcamento orcamento = orcamentosFiltrados.get(i);
-            boolean ultimoItem = i == exibidos - 1;
-            resultadosContainer.getChildren().add(criarLinhaResultado(orcamento, ultimoItem));
+            relatoriosVisiveis.add(new RelatorioOrcamentoView(orcamento));
+        }
+
+        atualizarBotoesPaginacao();
+    }
+
+    private void atualizarBotoesPaginacao() {
+        if (btnAnterior != null) {
+            btnAnterior.setDisable(paginaAtual <= 1);
+        }
+        if (btnProximo != null) {
+            btnProximo.setDisable(paginaAtual >= totalPaginas);
+        }
+        configurarBotaoPagina(btnPage1, paginaAtual);
+        configurarBotaoPagina(btnPage2, paginaAtual + 1);
+    }
+
+    private void configurarBotaoPagina(Button botao, int pagina) {
+        if (botao == null) {
+            return;
+        }
+        if (pagina > totalPaginas) {
+            botao.setVisible(false);
+            botao.setManaged(false);
+            return;
+        }
+        botao.setVisible(true);
+        botao.setManaged(true);
+        botao.setText(String.valueOf(pagina));
+        botao.getStyleClass().remove("reports-pagination-active");
+        if (pagina == paginaAtual) {
+            botao.getStyleClass().add("reports-pagination-active");
         }
     }
 
-    private HBox criarLinhaResultado(Orcamento orcamento, boolean ultimoItem) {
-        HBox linha = new HBox(16.0);
-        linha.setAlignment(Pos.CENTER_LEFT);
-        linha.getStyleClass().add("reports-table-row");
-        if (ultimoItem) {
-            linha.getStyleClass().add("reports-table-row-last");
+    @FXML
+    private void paginaAnterior() {
+        if (paginaAtual > 1) {
+            paginaAtual--;
+            atualizarResultados();
         }
+    }
 
-        Label codigo = criarCelula("reports-link", formatarCodigoOrcamento(orcamento.getId()), 140.0);
-        Label cliente = criarCelula("reports-table-value", nomesClientes.getOrDefault(orcamento.getIdCliente(), "Cliente nao identificado"), 180.0);
-        Label data = criarCelula("reports-table-value", formatarData(orcamento.getDataEmissao()), 120.0);
-        Label valor = criarCelula("reports-table-value", moeda.format(valorSeguro(orcamento.getValorFinal())), 140.0);
-        Label status = criarCelula("reports-pill", formatarStatus(orcamento.getStatus()), 120.0);
+    @FXML
+    private void paginaProxima() {
+        if (paginaAtual < totalPaginas) {
+            paginaAtual++;
+            atualizarResultados();
+        }
+    }
 
-        HBox acoes = new HBox(6.0);
-        acoes.setAlignment(Pos.CENTER_RIGHT);
-        acoes.setPrefWidth(120.0);
+    @FXML
+    private void irParaPagina(javafx.event.ActionEvent event) {
+        if (!(event.getSource() instanceof Button botao)) {
+            return;
+        }
+        try {
+            paginaAtual = Integer.parseInt(botao.getText());
+            atualizarResultados();
+        } catch (NumberFormatException ignored) {
+        }
+    }
 
-        Button ver = new Button("Ver");
-        ver.getStyleClass().add("reports-action");
-        ver.setOnAction(event -> feedbackLabel.setText("Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " selecionado."));
+    private void configurarTabela() {
+        colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        colCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        colData.setCellValueFactory(new PropertyValueFactory<>("data"));
+        colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        Button pdf = new Button("PDF");
-        pdf.getStyleClass().add("reports-action");
-        pdf.setOnAction(event -> feedbackLabel.setText("PDF do orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " em implementacao."));
-
-        Button aprovar = new Button("Aprovar");
-        aprovar.getStyleClass().add("reports-action-approve");
-        aprovar.setOnAction(event -> {
-            aprovarOrcamento(orcamento);
+        colValor.setCellFactory(tc -> new TableCell<>() {
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : moeda.format(item));
+            }
         });
 
-        Button reprovar = new Button("Reprovar");
-        reprovar.getStyleClass().add("reports-action-reject");
-        reprovar.setOnAction(event -> {
-            reprovarOrcamento(orcamento);
+        colStatus.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setGraphic(null);
+                    setText(null);
+                    return;
+                }
+                Label statusLabel = new Label(status);
+                statusLabel.getStyleClass().add("reports-pill");
+                // TODO: Adicionar classes de estilo específicas para cada status (aprovado, pendente, etc)
+                setGraphic(statusLabel);
+                setText(null);
+            }
         });
 
-        acoes.getChildren().addAll(ver, pdf, aprovar, reprovar);
-        linha.getChildren().addAll(codigo, cliente, data, valor, status, acoes);
-        return linha;
+        colAcoes.setCellFactory(param -> new TableCell<>() {
+            private final Button ver = new Button("Ver");
+            private final Button pdf = new Button("PDF");
+            private final Button aprovar = new Button("Aprovar");
+            private final Button reprovar = new Button("Reprovar");
+            private final HBox acoesContainer = new HBox(6.0, ver, pdf, aprovar, reprovar);
+
+            {
+                acoesContainer.setAlignment(Pos.CENTER_RIGHT);
+                ver.getStyleClass().add("reports-action");
+                pdf.getStyleClass().add("reports-action");
+                aprovar.getStyleClass().add("reports-action");
+                aprovar.getStyleClass().add("reports-action-approve");
+                reprovar.getStyleClass().add("reports-action");
+                reprovar.getStyleClass().add("reports-action-reject");
+
+                ver.setOnAction(event -> {
+                    Orcamento orcamento = getTableView().getItems().get(getIndex()).getOrcamento();
+                    feedbackLabel.setText("Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " selecionado.");
+                });
+                pdf.setOnAction(event -> {
+                    Orcamento orcamento = getTableView().getItems().get(getIndex()).getOrcamento();
+                    feedbackLabel.setText("PDF do orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " em implementacao.");
+                });
+                aprovar.setOnAction(event -> aprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));
+                reprovar.setOnAction(event -> reprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : acoesContainer);
+            }
+        });
+
+        relatoriosTable.setItems(relatoriosVisiveis);
+        relatoriosTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     private void aprovarOrcamento(Orcamento orcamento) {
@@ -312,13 +448,6 @@ public class RelatoriosController {
         } catch (Exception e) {
             feedbackLabel.setText("Falha ao reprovar: " + e.getMessage());
         }
-    }
-
-    private Label criarCelula(String styleClass, String texto, double width) {
-        Label label = new Label(texto);
-        label.getStyleClass().add(styleClass);
-        label.setPrefWidth(width);
-        return label;
     }
 
     private void atualizarRankingClientes() {
@@ -423,5 +552,33 @@ public class RelatoriosController {
 
     private boolean isConcluido(String status) {
         return status != null && "APROVADO".equalsIgnoreCase(status.trim());
+    }
+
+    public class RelatorioOrcamentoView {
+        private final Orcamento orcamento;
+
+        public RelatorioOrcamentoView(Orcamento orcamento) {
+            this.orcamento = orcamento;
+        }
+
+        public Orcamento getOrcamento() {
+            return orcamento;
+        }
+
+        public String getCodigo() {
+            return formatarCodigoOrcamento(orcamento.getId());
+        }
+
+        public String getCliente() {
+            return nomesClientes.getOrDefault(orcamento.getIdCliente(), "Cliente nao identificado");
+        }
+
+        public String getData() {
+            return formatarData(orcamento.getDataEmissao());
+        }
+
+        public BigDecimal getValor() { return valorSeguro(orcamento.getValorFinal()); }
+
+        public String getStatus() { return formatarStatus(orcamento.getStatus()); }
     }
 }

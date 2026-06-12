@@ -1,17 +1,17 @@
 package com.grafica.controller;
 
 import com.grafica.model.Usuario;
-import com.grafica.controller.DashboardController;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.stage.Stage;
 
 /**
  * MainController - Controlador principal de la aplicación
@@ -53,7 +53,7 @@ public class MainController {
 	private Button btnAjustes;
 
 	@FXML
-	private Button btnLogout;
+	private Button btnSair;
 
 	private Button botaoAtual;
 	private Usuario usuarioLogado;
@@ -169,13 +169,8 @@ public class MainController {
 			}
 			FXMLLoader loader = new FXMLLoader(location);
             Parent pantalla = loader.load();
-			Object controller = loader.getController();
-				if (controller instanceof DashboardController dashboardController) {
-					dashboardController.setMainController(this);
-					dashboardController.setUsuarioLogado(usuarioLogado);
-				}
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(pantalla);
+			configurarControllerFilho(loader.getController());
+            contentArea.getChildren().setAll(pantalla);
         } catch (IOException e) {
             System.err.println("Error al cargar pantalla: " + fxmlPath);
             e.printStackTrace();
@@ -185,13 +180,27 @@ public class MainController {
 	/**
 	 * Marca el botón actual como activo visualmente
 	 */
+	private void configurarControllerFilho(Object controller) {
+		if (controller instanceof DashboardController dashboardController) {
+			dashboardController.setMainController(this);
+			dashboardController.setUsuarioLogado(usuarioLogado);
+		} else if (controller instanceof OrcamentoController orcamentoController) {
+			orcamentoController.setMainController(this);
+		}
+	}
+
 	private void marcarBotaoAtivo(Button botao) {
-		if (botaoAtual != null) {
-			botaoAtual.setStyle("");
+		Button[] botoes = {
+			btnDashboard, btnClientes, btnMateriais, btnOrcamentos, btnRelatorios, btnAjustes
+		};
+		for (Button item : botoes) {
+			if (item != null) {
+				item.getStyleClass().remove("active");
+			}
 		}
 		botaoAtual = botao;
-		if (botao != null) {
-			botao.setStyle("-fx-text-fill: #0078d4; -fx-font-weight: bold;");
+		if (botao != null && !botao.getStyleClass().contains("active")) {
+			botao.getStyleClass().add("active");
 		}
 	}
 
@@ -202,19 +211,17 @@ public class MainController {
 		return usuarioLogado;
 	}
 
-	private void carregarConteudo(String fxmlPath) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-			Parent content = loader.load();
-			contentArea.getChildren().setAll(content);
-		} catch (Exception e) {
-			contentArea.getChildren().setAll(new Label("Erro ao carregar tela: " + fxmlPath));
-		}
-	}
-
 	@FXML
 	private void sair() {
-		Stage stage = (Stage) rootPane.getScene().getWindow();
-		stage.close();
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grafica/view/login.fxml"));
+			Parent login = loader.load();
+			Stage stage = (Stage) rootPane.getScene().getWindow();
+			stage.setScene(new Scene(login));
+			stage.setTitle("Login");
+		} catch (IOException e) {
+			Stage stage = (Stage) rootPane.getScene().getWindow();
+			stage.close();
+		}
 	}
 }

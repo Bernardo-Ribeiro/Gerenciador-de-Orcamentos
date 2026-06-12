@@ -16,12 +16,12 @@
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
             </padding>
             <children>
-                <Label styleClass="dashboard-breadcrumb" text="Dashboard   >   Visao Geral" />
+                <Label styleClass="dashboard-breadcrumb" text="Dashboard   >   Visão Geral" />
 
                 <VBox spacing="4.0">
                     <children>
-                        <Label fx:id="tituloLabel" styleClass="dashboard-title" text="Ola, Grafica!" />
-                        <Label fx:id="subtituloLabel" styleClass="dashboard-subtitle" text="Aqui esta o que esta acontecendo com seus orcamentos hoje." wrapText="true" />
+                        <Label fx:id="tituloLabel" styleClass="dashboard-title" text="Olá!" />
+                        <Label fx:id="subtituloLabel" styleClass="dashboard-subtitle" text="Aqui está o que está acontecendo com seus orçamentos hoje." wrapText="true" />
                     </children>
                 </VBox>
 
@@ -36,7 +36,7 @@
                                         <Label styleClass="dashboard-stat-trend" text="+12.5%" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Vendas Totais (Mes)" />
+                                <Label styleClass="dashboard-stat-label" text="Vendas Totais (Mês)" />
                                 <Label fx:id="vendasTotaisLabel" styleClass="dashboard-stat-value" text="R$ 45.230,00" />
                             </children>
                         </VBox>
@@ -50,7 +50,7 @@
                                         <Label styleClass="dashboard-stat-negative" text="-3.2%" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Orcamentos Pendentes" />
+                                <Label styleClass="dashboard-stat-label" text="Orçamentos Pendentes" />
                                 <Label fx:id="orcamentosPendentesLabel" styleClass="dashboard-stat-value" text="24" />
                             </children>
                         </VBox>
@@ -64,7 +64,7 @@
                                         <Label styleClass="dashboard-stat-trend" text="+5.4%" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Taxa de Conversao" />
+                                <Label styleClass="dashboard-stat-label" text="Taxa de Conversão" />
                                 <Label fx:id="taxaConversaoLabel" styleClass="dashboard-stat-value" text="68%" />
                             </children>
                         </VBox>
@@ -92,9 +92,9 @@
                                 <children>
                                     <HBox alignment="CENTER_LEFT">
                                         <children>
-                                            <Label styleClass="dashboard-card-title" text="Atalhos Estrategicos" />
+                                            <Label styleClass="dashboard-card-title" text="Atalhos Estratégicos" />
                                             <Region HBox.hgrow="ALWAYS" />
-                                            <Label styleClass="dashboard-link" text="Ver todos os modulos" />
+                                            <Label styleClass="dashboard-link" text="Ver todos os módulos" />
                                         </children>
                                     </HBox>
 
@@ -103,7 +103,7 @@
                                             <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
                                                 <children>
                                                     <Label styleClass="dashboard-shortcut-icon" text="+" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Novo Orcamento" />
+                                                    <Label styleClass="dashboard-shortcut-title" text="Novo Orçamento" />
                                                     <Label styleClass="dashboard-shortcut-text" text="Inicie a calculadora produtiva para fechar uma nova venda." wrapText="true" />
                                                     <Button fx:id="btnNovoOrcamento" text="Abrir" styleClass="dashboard-secondary-button" />
                                                 </children>

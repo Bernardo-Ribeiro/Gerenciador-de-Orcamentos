@@ -69,6 +69,9 @@ public class GestaoUsuariosController {
         colCargo.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(obterCargo(cell.getValue())));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
+        tabelaUsuarios.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
         tabelaUsuarios.setItems(usuarios);
         tabelaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> preencherFormulario(newValue));
         recarregar();

@@ -6,6 +6,7 @@ public class Material {
     private Integer id;
     private String nome;
     private String categoria; // ENUM: COMUNICACAO_VISUAL, IMPRESSOS
+    private Integer idCategoriaLucro;
     private String tipoItem; // ENUM: BASE, ACABAMENTO
     private String tipoCobranca; // ENUM: AREA, UNIDADE, TIRAGEM, FOLHA, PACOTE, SERVICO, CHAPA
     private BigDecimal custoBase;
@@ -25,10 +26,11 @@ public class Material {
         this.status = "ATIVO";
     }
 
-    public Material(Integer id, String nome, String categoria, String tipoItem, String tipoCobranca, BigDecimal custoBase, BigDecimal custoProducao, String status) {
+    public Material(Integer id, String nome, String categoria, Integer idCategoriaLucro, String tipoItem, String tipoCobranca, BigDecimal custoBase, BigDecimal custoProducao, String status) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
+        this.idCategoriaLucro = idCategoriaLucro;
         this.tipoItem = tipoItem;
         this.tipoCobranca = tipoCobranca;
         this.custoBase = custoBase;
@@ -58,6 +60,14 @@ public class Material {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public Integer getIdCategoriaLucro() {
+        return idCategoriaLucro;
+    }
+
+    public void setIdCategoriaLucro(Integer idCategoriaLucro) {
+        this.idCategoriaLucro = idCategoriaLucro;
     }
 
     public String getTipoItem() {
@@ -106,6 +116,7 @@ public class Material {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", categoria='" + categoria + '\'' +
+                ", idCategoriaLucro=" + idCategoriaLucro +
                 ", tipoItem='" + tipoItem + '\'' +
                 ", tipoCobranca='" + tipoCobranca + '\'' +
                 ", custoBase=" + custoBase +

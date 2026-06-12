@@ -125,6 +125,10 @@ public class ClienteController {
                 setText(null);
             }
         });
+
+        clientesTable.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
     }
 
     @FXML

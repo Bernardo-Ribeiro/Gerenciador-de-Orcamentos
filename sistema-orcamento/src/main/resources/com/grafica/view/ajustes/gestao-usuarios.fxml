@@ -20,7 +20,7 @@
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="users-title" text="Gestao de Usuarios" />
+                        <Label styleClass="users-title" text="Gestão de Usuários" />
                         <Label styleClass="users-subtitle" text="Gerencie acessos, status e credenciais dos colaboradores." wrapText="true" />
                     </children>
                 </VBox>
@@ -30,7 +30,7 @@
 
         <HBox spacing="12.0" alignment="CENTER_LEFT">
             <children>
-                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="materials-search" />
+                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="users-input" />
                 <Button text="Atualizar" onAction="#recarregar" styleClass="users-action-button" />
             </children>
         </HBox>
@@ -39,7 +39,7 @@
             <children>
                 <VBox spacing="10.0" styleClass="users-table-card" HBox.hgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="users-table-view">
                             <columns>
                                 <TableColumn fx:id="colNome" text="Nome" prefWidth="170.0" />
                                 <TableColumn fx:id="colEmail" text="E-mail" prefWidth="210.0" />
@@ -52,40 +52,40 @@
 
                 <VBox spacing="12.0" styleClass="users-table-card" prefWidth="320.0">
                     <children>
-                        <Label styleClass="users-title" text="Detalhes do Usuario" />
+                        <Label styleClass="users-title" text="Detalhes do Usuário" />
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Nome" />
-                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="materials-search" />
+                                <Label styleClass="users-form-label" text="Nome" />
+                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="users-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="E-mail" />
-                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="materials-search" />
+                                <Label styleClass="users-form-label" text="E-mail" />
+                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="users-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Senha" />
-                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="materials-search" />
+                                <Label styleClass="users-form-label" text="Senha" />
+                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="users-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Cargo" />
-                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="materials-search" />
+                                <Label styleClass="users-form-label" text="Cargo" />
+                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="users-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Status" />
-                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="materials-search" />
+                                <Label styleClass="users-form-label" text="Status" />
+                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="users-input" />
                             </children>
                         </VBox>
 

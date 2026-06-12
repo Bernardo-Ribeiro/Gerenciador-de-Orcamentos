@@ -89,6 +89,10 @@ public class CustosInsumosController {
         colCustoBase.setCellValueFactory(cell -> new javafx.beans.property.SimpleObjectProperty<>(cell.getValue().getCustoBase()));
         colUltimaAtualizacao.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty("-"));
         colStatus.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(normalizarTexto(cell.getValue().getStatus())));
+
+        tableInsumos.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
     }
 
     private void carregarInsumos() {
@@ -179,7 +183,7 @@ public class CustosInsumosController {
     private void salvarInsumo() {
         try {
             if (txtMaterial.getText() == null || txtMaterial.getText().trim().isEmpty() || txtCustoBase.getText() == null || txtCustoBase.getText().trim().isEmpty()) {
-                Alert a = new Alert(Alert.AlertType.WARNING, "Nombre y costo base son obligatorios", ButtonType.OK);
+                Alert a = new Alert(Alert.AlertType.WARNING, "Nome e custo base são obrigatórios.", ButtonType.OK);
                 a.showAndWait();
                 return;
             }
@@ -218,7 +222,7 @@ public class CustosInsumosController {
             novoInsumo();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert a = new Alert(Alert.AlertType.ERROR, "Error al guardar insumo: " + e.getMessage(), ButtonType.OK);
+            Alert a = new Alert(Alert.AlertType.ERROR, "Erro ao salvar insumo: " + e.getMessage(), ButtonType.OK);
             a.showAndWait();
         }
     }

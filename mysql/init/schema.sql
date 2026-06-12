@@ -26,6 +26,7 @@ CREATE TABLE materiais (
     nome VARCHAR(100) NOT NULL,
     
     categoria ENUM('COMUNICACAO_VISUAL', 'IMPRESSOS') NOT NULL,
+    id_categoria_lucro INT,
     tipo_item ENUM('BASE', 'ACABAMENTO') NOT NULL,
     
     tipo_cobranca ENUM(
@@ -41,7 +42,17 @@ CREATE TABLE materiais (
     custo_base DECIMAL(10,2) NOT NULL,
     custo_producao DECIMAL(10,2) DEFAULT 0.00,
     
-    status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO'
+    status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO',
+    FOREIGN KEY (id_categoria_lucro) REFERENCES categorias_lucro(id) ON DELETE SET NULL
+);
+
+CREATE TABLE layouts_produto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_material INT NOT NULL,
+    nome_layout VARCHAR(100) NOT NULL,
+    largura_mm INT NOT NULL,
+    altura_mm INT NOT NULL,
+    FOREIGN KEY (id_material) REFERENCES materiais(id) ON DELETE CASCADE
 );
 
 CREATE TABLE escalas_produtivas (
@@ -105,6 +116,13 @@ CREATE TABLE auditoria_log (
     valor_novo VARCHAR(255),
     usuario VARCHAR(100),
     data_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categorias_lucro (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255),
+    margem_padrao DECIMAL(5,2) NOT NULL DEFAULT 0.00
 );
 
 -- Índices para otimizar consultas

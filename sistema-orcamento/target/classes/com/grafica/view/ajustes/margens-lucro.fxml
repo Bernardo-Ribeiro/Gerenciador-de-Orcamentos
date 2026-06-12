@@ -27,7 +27,7 @@
             </children>
         </HBox>
 
-        <HBox spacing="10.0" alignment="CENTER_LEFT" styleClass="profit-alert">
+        <HBox fx:id="alertSuccess" visible="false" managed="false" spacing="10.0" alignment="CENTER_LEFT" styleClass="profit-alert">
             <children>
                 <Label styleClass="profit-alert-icon" text="OK" />
                 <VBox spacing="2.0" HBox.hgrow="ALWAYS">
@@ -36,7 +36,7 @@
                         <Label styleClass="profit-alert-text" text="As margens foram salvas com sucesso e ja estao ativas para novos orcamentos." wrapText="true" />
                     </children>
                 </VBox>
-                <Label styleClass="profit-alert-link" text="Dispensar" />
+                <Label styleClass="profit-alert-link" text="Dispensar" onMouseClicked="#ocultarAlerta" />
             </children>
         </HBox>
 
@@ -47,249 +47,13 @@
                 <Label styleClass="profit-bulk-action" text="Aumentar 5%" />
                 <Label styleClass="profit-bulk-danger" text="Excluir Selecionados" />
                 <Region HBox.hgrow="ALWAYS" />
-                <Label styleClass="profit-bulk-count" text="6 categorias listadas" />
+                <Label fx:id="lblCount" styleClass="profit-bulk-count" text="0 categorias listadas" />
             </children>
         </HBox>
 
-        <VBox spacing="0.0" styleClass="profit-list-card">
+        <VBox fx:id="categoriasContainer" spacing="0.0" styleClass="profit-list-card">
             <children>
-                <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-row">
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Impressao Digital Solvent" />
-                                        <Label text="ID: 01">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Banners, Lonas e Adesivos em grandes formatos" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria1" text="45" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-row">
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Acabamento e Refile" />
-                                        <Label text="ID: 02">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Servicos de corte, solda eletronica e ilhos" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria2" text="60" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-row">
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Letra Caixa Inox" />
-                                        <Label text="ID: 03">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Letreiros metalicos com ou sem iluminacao LED" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria3" text="120" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-row">
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Serralheria Estrutural" />
-                                        <Label text="ID: 04">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Paineis, totens e cavaletes de metal" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria4" text="85" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-row">
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Instalacao em Altura" />
-                                        <Label text="ID: 05">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Servicos externos com necessidade de balancim" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria5" text="150" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
-
-                <HBox spacing="12.0" alignment="CENTER_LEFT">
-                    <styleClass>
-                        <String fx:value="profit-row" />
-                        <String fx:value="profit-row-last" />
-                    </styleClass>
-                    <children>
-                        <CheckBox styleClass="profit-checkbox" />
-                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                    <children>
-                                        <Label styleClass="profit-row-title" text="Design e Vetorizacao" />
-                                        <Label text="ID: 06">
-                                            <styleClass>
-                                                <String fx:value="profit-pill" />
-                                                <String fx:value="profit-pill-neutral" />
-                                            </styleClass>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <Label styleClass="profit-row-subtitle" text="Criacao de artes e ajuste de arquivos tecnicos" />
-                            </children>
-                        </VBox>
-                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                            <children>
-                                <TextField fx:id="pctCategoria6" text="200" styleClass="settings-input" prefWidth="70.0" />
-                                <Label styleClass="profit-percent-suffix" text="\%" />
-                            </children>
-                        </HBox>
-                        <HBox spacing="8.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Editar" styleClass="profit-action-button" />
-                                <Button text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="profit-action-button" />
-                                        <String fx:value="profit-action-danger" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </HBox>
+                <!-- Categorias dinâmicas aqui -->
             </children>
         </VBox>
 

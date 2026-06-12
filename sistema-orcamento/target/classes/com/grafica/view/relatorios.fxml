@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -17,14 +19,14 @@
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
             </padding>
             <children>
-        <Label styleClass="reports-breadcrumb" text="Inicio   >   Consultas   >   Historico e Relatorios" />
+        <Label styleClass="reports-breadcrumb" text="Início   >   Consultas   >   Histórico e Relatórios" />
 
         <HBox spacing="12.0" alignment="CENTER_LEFT">
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-title" text="Historico e Relatorios" />
-                        <Label styleClass="reports-subtitle" text="Consulte orcamentos passados e analise o desempenho comercial." wrapText="true" />
+                        <Label styleClass="reports-title" text="Histórico e Relatórios" />
+                        <Label styleClass="reports-subtitle" text="Consulte orçamentos passados e analise o desempenho comercial." wrapText="true" />
                     </children>
                 </VBox>
                 <Button fx:id="btnExportarCsv" onAction="#exportarCsv" text="Exportar CSV" styleClass="reports-secondary-button" />
@@ -93,19 +95,19 @@
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="reports-filter-label" text="Periodo" />
-                        <TextField fx:id="periodoField" promptText="Ultimos 30 dias" styleClass="settings-input" />
+                        <TextField fx:id="periodoField" promptText="Últimos 30 dias" styleClass="reports-input" />
                     </children>
                 </VBox>
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="reports-filter-label" text="Status" />
-                        <TextField fx:id="statusField" promptText="Todos os Status" styleClass="settings-input" />
+                        <TextField fx:id="statusField" promptText="Todos os status" styleClass="reports-input" />
                     </children>
                 </VBox>
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
                         <Label styleClass="reports-filter-label" text="Cliente" />
-                        <TextField fx:id="clienteField" promptText="Buscar cliente..." styleClass="settings-input" />
+                        <TextField fx:id="clienteField" promptText="Buscar cliente..." styleClass="reports-input" />
                     </children>
                 </VBox>
                 <Button fx:id="btnAplicarFiltros" onAction="#aplicarFiltros" text="Aplicar Filtros" styleClass="reports-primary-button" />
@@ -123,29 +125,25 @@
                     </children>
                 </VBox>
 
-                <HBox spacing="16.0" alignment="CENTER_LEFT" styleClass="reports-table-header">
-                    <children>
-                        <Label styleClass="reports-table-label" text="N Orcamento" prefWidth="140.0" />
-                        <Label styleClass="reports-table-label" text="Cliente" prefWidth="180.0" />
-                        <Label styleClass="reports-table-label" text="Data" prefWidth="120.0" />
-                        <Label styleClass="reports-table-label" text="Valor Bruto" prefWidth="140.0" />
-                        <Label styleClass="reports-table-label" text="Status" prefWidth="120.0" />
-                        <Label styleClass="reports-table-label" text="Acoes" prefWidth="140.0" />
-                    </children>
-                </HBox>
-
-                <VBox fx:id="resultadosContainer" spacing="0.0" />
+                <TableView fx:id="relatoriosTable" styleClass="reports-table-view" VBox.vgrow="ALWAYS" minHeight="300.0">
+                    <columns>
+                        <TableColumn fx:id="colCodigo" text="Nº ORÇAMENTO" prefWidth="120.0" />
+                        <TableColumn fx:id="colCliente" text="CLIENTE" prefWidth="280.0" />
+                        <TableColumn fx:id="colData" text="DATA" prefWidth="100.0" />
+                        <TableColumn fx:id="colValor" text="VALOR" prefWidth="120.0" />
+                        <TableColumn fx:id="colStatus" text="STATUS" prefWidth="100.0" />
+                        <TableColumn fx:id="colAcoes" text="AÇÕES" prefWidth="220.0" />
+                    </columns>
+                </TableView>
 
                 <HBox spacing="16.0" alignment="CENTER_LEFT" styleClass="reports-table-row">
                     <children>
-                        <Label styleClass="reports-footer" text="Pagina 1 de 250" />
+                        <Label fx:id="lblPaginacao" styleClass="reports-footer" text="Página 1 de 1" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button text="Anterior" styleClass="reports-pagination" />
-                        <Button text="1" styleClass="reports-pagination,reports-pagination-active" />
-                        <Button text="2" styleClass="reports-pagination" />
-                        <Button text="3" styleClass="reports-pagination" />
-                        <Button text="250" styleClass="reports-pagination" />
-                        <Button text="Proximo" styleClass="reports-pagination" />
+                        <Button fx:id="btnAnterior" onAction="#paginaAnterior" text="Anterior" styleClass="reports-pagination" />
+                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="reports-pagination reports-pagination-active" />
+                        <Button fx:id="btnPage2" onAction="#irParaPagina" text="2" styleClass="reports-pagination" />
+                        <Button fx:id="btnProximo" onAction="#paginaProxima" text="Próximo" styleClass="reports-pagination" />
                     </children>
                 </HBox>
             </children>

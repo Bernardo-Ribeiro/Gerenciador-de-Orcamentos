@@ -1,11 +1,15 @@
 package com.grafica.controller;
 
 import com.grafica.dao.ClienteDAO;
+import com.grafica.dao.LayoutProdutoDAO;
 import com.grafica.dao.MaterialDAO;
 import com.grafica.dao.OrcamentoDAO;
+import com.grafica.dao.CategoriaLucroDAO;
 import com.grafica.model.Cliente;
+import com.grafica.model.LayoutProduto;
 import com.grafica.model.Material;
 import com.grafica.model.Orcamento;
+import com.grafica.model.CategoriaLucro;
 import com.grafica.service.CalculoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +37,9 @@ public class OrcamentoController {
 
     @FXML
     private ComboBox<Material> materialCombo;
+
+    @FXML
+    private ComboBox<LayoutProduto> layoutCombo;
 
     @FXML
     private TextField larguraField;
@@ -92,16 +99,26 @@ public class OrcamentoController {
     private OrcamentoDAO orcamentoDAO;
     private ClienteDAO clienteDAO;
     private MaterialDAO materialDAO;
+    private LayoutProdutoDAO layoutDAO;
+    private CategoriaLucroDAO categoriaLucroDAO;
+    private MainController mainController;
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
 
     @FXML
     private void initialize() {
         orcamentoDAO = new OrcamentoDAO();
         clienteDAO = new ClienteDAO();
         materialDAO = new MaterialDAO();
+        layoutDAO = new LayoutProdutoDAO();
+        categoriaLucroDAO = new CategoriaLucroDAO();
 
         configurarTabelaItens();
         configurarComboClientes();
         configurarComboMateriais();
+        configurarComboLayouts();
         configurarListenersCalculo();
 
         carregarClientes();
@@ -139,6 +156,10 @@ public class OrcamentoController {
                 setText(null);
             }
         });
+
+        itensTable.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
     }
 
     private TableCell<ItemOrcamentoView, BigDecimal> moedaCell() {
@@ -194,6 +215,57 @@ public class OrcamentoController {
                 return null;
             }
         });
+
+        materialCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                carregarLayouts(newValue.getId());
+                // Carregar margem de lucro automática
+                if (newValue.getIdCategoriaLucro() != null) {
+                    CategoriaLucro cat = categoriaLucroDAO.obterPorId(newValue.getIdCategoriaLucro());
+                    if (cat != null) {
+                        margemField.setText(cat.getMargemPadrao().toString());
+                    }
+                }
+            } else {
+                layoutCombo.setItems(FXCollections.emptyObservableList());
+            }
+        });
+    }
+
+    private void configurarComboLayouts() {
+        layoutCombo.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(LayoutProduto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getNomeLayout() + " (" + item.getLarguraMm() + "x" + item.getAlturaMm() + "mm)");
+            }
+        });
+        layoutCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(LayoutProduto layout) {
+                return layout == null ? "" : layout.getNomeLayout();
+            }
+
+            @Override
+            public LayoutProduto fromString(String string) {
+                return null;
+            }
+        });
+
+        layoutCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                larguraField.setText(newValue.getLarguraMm().toString());
+                alturaField.setText(newValue.getAlturaMm().toString());
+            }
+        });
+    }
+
+    private void carregarLayouts(int idMaterial) {
+        try {
+            layoutCombo.setItems(FXCollections.observableArrayList(layoutDAO.listarPorMaterial(idMaterial)));
+        } catch (Exception e) {
+            mostrarErro("Erro ao carregar layouts: " + e.getMessage());
+        }
     }
 
     private void configurarListenersCalculo() {
@@ -303,6 +375,15 @@ public class OrcamentoController {
         mostrarInfo("Geração de PDF será adicionada na próxima etapa.");
     }
 
+    @FXML
+    private void abrirNovoCliente() {
+        if (mainController != null) {
+            mainController.abrirClientesTela();
+        } else {
+            mostrarInfo("Abra a tela de clientes pelo menu lateral para cadastrar um novo cliente.");
+        }
+    }
+
     private void limparCamposItem() {
         larguraField.clear();
         alturaField.clear();
@@ -320,7 +401,7 @@ public class OrcamentoController {
     }
 
     private void atualizarResumo() {
-        itensCountLabel.setText("Itens do Orcamento (" + itens.size() + ")");
+        itensCountLabel.setText("Itens do Orçamento (" + itens.size() + ")");
         orcamentoBadgeLabel.setText(itens.isEmpty() ? "ID: Novo" : "ID: Rascunho");
         valorBrutoLabel.setText(formatarMoeda(calcularTotalBruto()));
         valorFinalLabel.setText(formatarMoeda(calcularTotalFinal()));

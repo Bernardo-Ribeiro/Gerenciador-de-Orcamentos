@@ -1,64 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MaterialController" spacing="10" style="-fx-padding: 15;">
-    <HBox spacing="10">
-        <Label text="Catálogo de Materiais" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <ComboBox fx:id="filtroCategoria" promptText="Filtrar por Categoria" prefWidth="200"/>
-        <Button text="Filtrar" onAction="#filtrar" style="-fx-padding: 8;"/>
-    </HBox>
+<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MaterialController">
+    <padding>
+        <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+    </padding>
+    <children>
+        <Label styleClass="materials-breadcrumb" text="Dashboard   >   Cadastros   >   Materiais" />
 
-    <GridPane hgap="10" vgap="10" style="-fx-border-color: #cccccc; -fx-border-width: 1; -fx-padding: 10;">
-        <columnConstraints>
-            <ColumnConstraints minWidth="150" prefWidth="200"/>
-            <ColumnConstraints minWidth="150" prefWidth="200"/>
-        </columnConstraints>
+        <VBox spacing="6.0">
+            <children>
+                <Label styleClass="materials-title" text="Catálogo de Materiais" />
+                <Label styleClass="materials-subtitle" text="Gerencie os materiais e serviços para composição de orçamentos." wrapText="true" />
+            </children>
+        </VBox>
 
-        <!-- Row 0 -->
-        <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="nomeField" GridPane.rowIndex="0" GridPane.columnIndex="1" promptText="Nome do material"/>
+        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS" styleClass="materials-content-row">
+            <children>
+                <VBox spacing="12.0" styleClass="materials-card materials-form-card">
+                    <children>
+                        <VBox spacing="4.0">
+                            <children>
+                                <Label styleClass="materials-card-title" text="Novo Cadastro" />
+                                <Label styleClass="materials-card-subtitle" text="Preencha os dados do material ou serviço." wrapText="true" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 1 -->
-        <Label text="Categoria:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="categoriaCombo" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Nome" />
+                                <TextField fx:id="nomeField" promptText="Ex: Lona Brilho 440g" styleClass="materials-input" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 2 -->
-        <Label text="Tipo de Item:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="tipoItemCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Categoria" />
+                                <ComboBox fx:id="categoriaCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 3 -->
-        <Label text="Tipo de Cobrança:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-        <ComboBox fx:id="tipoCobrancaCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Tipo de Item" />
+                                <ComboBox fx:id="tipoItemCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 4 -->
-        <Label text="Custo Base (R$):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <TextField fx:id="custoBaseField" GridPane.rowIndex="4" GridPane.columnIndex="1" promptText="0.00"/>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Tipo de Cobrança" />
+                                <ComboBox fx:id="tipoCobrancaCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 5 -->
-        <Label text="Custo Produção (R$):" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-        <TextField fx:id="custoProducaoField" GridPane.rowIndex="5" GridPane.columnIndex="1" promptText="0.00"/>
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Custo Base (R$)" />
+                                <TextField fx:id="custoBaseField" promptText="0.00" styleClass="materials-input" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Custo Produção (R$)" />
+                                <TextField fx:id="custoProducaoField" promptText="0.00" styleClass="materials-input" />
+                            </children>
+                        </VBox>
 
-        <!-- Row 6 - Buttons -->
-        <HBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2">
-            <Button text="Salvar" onAction="#salvarMaterial" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
-            <Button text="Deletar" onAction="#deletarMaterial" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
-            <Button text="Limpar" onAction="#limpar" style="-fx-padding: 8 20; -fx-font-size: 12;"/>
+                        <VBox spacing="8.0">
+                            <children>
+                                <Button text="Salvar Material" onAction="#salvarMaterial" maxWidth="Infinity">
+                                    <styleClass>
+                                        <String fx:value="materials-primary-button" />
+                                    </styleClass>
+                                </Button>
+                                <Button text="Limpar" onAction="#limpar" maxWidth="Infinity">
+                                    <styleClass>
+                                        <String fx:value="materials-secondary-button" />
+                                    </styleClass>
+                                </Button>
+                                <Button text="Deletar" onAction="#deletarMaterial" maxWidth="Infinity">
+                                    <styleClass>
+                                        <String fx:value="materials-secondary-button" />
+                                    </styleClass>
+                                </Button>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="12.0" styleClass="materials-card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox spacing="12.0" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="materials-card-title" text="Base de Materiais" />
+                                        <Label styleClass="materials-card-subtitle" text="Visualize e filtre os itens cadastrados." wrapText="true" />
+                                    </children>
+                                </VBox>
+                                <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <ComboBox fx:id="filtroCategoria" promptText="Filtrar por Categoria" styleClass="materials-input" />
+                                        <Button onAction="#filtrar" text="Filtrar">
+                                            <styleClass>
+                                                <String fx:value="materials-secondary-button" />
+                                                <String fx:value="materials-icon-button" />
+                                            </styleClass>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="materiaisTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0" visible="false" />
+                                <TableColumn fx:id="nomeColumn" text="Nome" prefWidth="200.0" />
+                                <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="130.0" />
+                                <TableColumn fx:id="tipoItemColumn" text="Tipo Item" prefWidth="130.0" />
+                                <TableColumn fx:id="tipoCobrancaColumn" text="Tipo Cobrança" prefWidth="130.0" />
+                                <TableColumn fx:id="custoBaseColumn" text="Custo Base" prefWidth="100.0" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
         </HBox>
-    </GridPane>
-
-    <Label text="Lista de Materiais" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
-
-    <TableView fx:id="materiaisTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="nomeColumn" text="Nome" prefWidth="150"/>
-            <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="120"/>
-            <TableColumn fx:id="tipoItemColumn" text="Tipo Item" prefWidth="100"/>
-            <TableColumn fx:id="tipoCobrancaColumn" text="Tipo Cobrança" prefWidth="120"/>
-            <TableColumn fx:id="custoBaseColumn" text="Custo Base" prefWidth="100"/>
-        </columns>
-    </TableView>
+    </children>
 </VBox>

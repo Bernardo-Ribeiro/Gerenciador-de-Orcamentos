@@ -46,6 +46,7 @@ public class MaterialController {
     @FXML
     public void initialize() {
         materialDAO = new MaterialDAO();
+
         
         // Configurar ComboBoxes de categorias
         categoriaCombo.setItems(FXCollections.observableArrayList(
@@ -73,13 +74,18 @@ public class MaterialController {
     }
     
     private void configurarTabela() {
+
         idColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getId()));
         nomeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getNome()));
         categoriaColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCategoria()));
         tipoItemColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTipoItem()));
         tipoCobrancaColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTipoCobranca()));
         custoBaseColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getCustoBase()));
-        
+
+        materiaisTable.setColumnResizePolicy(
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
+
         materiaisTable.setOnMouseClicked(event -> {
             materialSelecionado = materiaisTable.getSelectionModel().getSelectedItem();
             if (materialSelecionado != null) {

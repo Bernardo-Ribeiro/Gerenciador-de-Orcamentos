@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -31,7 +30,7 @@
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
-                                            <Button text="Carregar Nova Logo" onAction="#carregarLogo" styleClass="btn-primary" />
+                                            <Button text="Carregar Nova Logo" onAction="#carregarLogo" styleClass="pdf-primary-button" />
                                             <Label styleClass="pdf-helper" text="Recomendado: PNG ou JPG com fundo transparente. Max 2MB." wrapText="true" />
                                         </children>
                                     </VBox>
@@ -50,13 +49,13 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Nome Comercial" />
-                                            <TextField fx:id="txtNomeComercial" styleClass="settings-input" />
+                                            <TextField fx:id="txtNomeComercial" styleClass="pdf-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="CNPJ" />
-                                            <TextField fx:id="txtCnpj" styleClass="settings-input" prefWidth="180.0" />
+                                            <TextField fx:id="txtCnpj" styleClass="pdf-input" prefWidth="180.0" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -67,13 +66,13 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Telefone / WhatsApp" />
-                                            <TextField fx:id="txtTelefone" styleClass="settings-input" />
+                                            <TextField fx:id="txtTelefone" styleClass="pdf-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="E-mail de Contato" />
-                                            <TextField fx:id="txtEmail" styleClass="settings-input" />
+                                            <TextField fx:id="txtEmail" styleClass="pdf-input" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -82,7 +81,7 @@
                             <VBox spacing="6.0">
                                 <children>
                                     <Label styleClass="pdf-field-label" text="Endereco Completo" />
-                                    <TextField fx:id="txtEndereco" styleClass="input-base" />
+                                    <TextField fx:id="txtEndereco" styleClass="pdf-input" />
                                 </children>
                             </VBox>
                         </children>
@@ -98,19 +97,19 @@
                                     <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Tamanho Papel" />
-                                            <TextField fx:id="txtTamanhoPapel" text="A4 (210 x 297mm)" styleClass="settings-input" />
+                                            <TextField fx:id="txtTamanhoPapel" text="A4 (210 x 297mm)" styleClass="pdf-input" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Margem Sup. (mm)" />
-                                            <TextField fx:id="txtMargemSuperior" text="15" styleClass="settings-input" prefWidth="120.0" />
+                                            <TextField fx:id="txtMargemSuperior" text="15" styleClass="pdf-input" prefWidth="120.0" />
                                         </children>
                                     </VBox>
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="pdf-field-label" text="Margem Lat. (mm)" />
-                                            <TextField fx:id="txtMargemLateral" text="10" styleClass="settings-input" prefWidth="120.0" />
+                                            <TextField fx:id="txtMargemLateral" text="10" styleClass="pdf-input" prefWidth="120.0" />
                                         </children>
                                     </VBox>
                                 </children>
@@ -127,8 +126,8 @@
 
                     <HBox spacing="10.0" alignment="CENTER_RIGHT">
                         <children>
-                            <Button text="Restaurar Padroes" onAction="#restaurarPadroes" styleClass="btn-secondary" />
-                            <Button text="Salvar Configuracoes" onAction="#salvarConfiguracoes" styleClass="btn-primary" />
+                            <Button text="Restaurar Padroes" onAction="#restaurarPadroes" styleClass="pdf-secondary-button" />
+                            <Button text="Salvar Configuracoes" onAction="#salvarConfiguracoes" styleClass="pdf-primary-button" />
                         </children>
                     </HBox>
                 </VBox>
