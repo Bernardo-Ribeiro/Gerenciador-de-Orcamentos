@@ -32,8 +32,6 @@
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
                                         <Label styleClass="dashboard-stat-icon" text="RS" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="dashboard-stat-trend" text="+12.5%" />
                                     </children>
                                 </HBox>
                                 <Label styleClass="dashboard-stat-label" text="Vendas Totais (Mês)" />
@@ -46,8 +44,6 @@
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
                                         <Label styleClass="dashboard-stat-icon" text="!" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="dashboard-stat-negative" text="-3.2%" />
                                     </children>
                                 </HBox>
                                 <Label styleClass="dashboard-stat-label" text="Orçamentos Pendentes" />
@@ -60,8 +56,6 @@
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
                                         <Label styleClass="dashboard-stat-icon" text="TX" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="dashboard-stat-trend" text="+5.4%" />
                                     </children>
                                 </HBox>
                                 <Label styleClass="dashboard-stat-label" text="Taxa de Conversão" />
@@ -74,8 +68,6 @@
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
                                         <Label styleClass="dashboard-stat-icon" text="CL" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="dashboard-stat-trend" text="+8.1%" />
                                     </children>
                                 </HBox>
                                 <Label styleClass="dashboard-stat-label" text="Novos Clientes" />
@@ -165,32 +157,6 @@
                                     <VBox fx:id="ultimosOrcamentosContainer" spacing="0.0" />
                                 </children>
                             </VBox>
-                        </VBox>
-
-                        <VBox spacing="12.0" styleClass="dashboard-side">
-                            <children>
-                                <VBox spacing="10.0" styleClass="dashboard-card">
-                                    <children>
-                                        <HBox spacing="6.0" alignment="CENTER_LEFT">
-                                            <children>
-                                                <Label styleClass="dashboard-side-title" text="Alertas Criticos" />
-                                            </children>
-                                        </HBox>
-
-                                        <VBox fx:id="alertasContainer" spacing="8.0" />
-
-                                        <Button fx:id="btnConfiguracoes" text="Configurar Notificacoes" styleClass="dashboard-secondary-button" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="10.0" styleClass="dashboard-card dashboard-goal">
-                                    <children>
-                                        <Label styleClass="dashboard-goal-icon" text="OK" />
-                                        <Label styleClass="dashboard-goal-title" text="Meta Diaria" />
-                                        <Label fx:id="metaDiariaLabel" styleClass="dashboard-goal-text" text="Voce ainda nao tem orcamentos emitidos hoje." wrapText="true" />
-                                    </children>
-                                </VBox>
-                            </children>
                         </VBox>
                     </children>
                 </HBox>

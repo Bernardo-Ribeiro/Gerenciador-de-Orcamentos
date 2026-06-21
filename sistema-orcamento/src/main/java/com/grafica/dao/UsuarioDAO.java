@@ -5,16 +5,38 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 public class UsuarioDAO {
 
+    private String gerarHash(String senha) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(senha.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder(2 * encodedhash.length);
+            for (int i = 0; i < encodedhash.length; i++) {
+                String hex = Integer.toHexString(0xff & encodedhash[i]);
+                if(hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Usuario autenticar(String email, String senha) {
+        String senhaCriptografada = gerarHash(senha);
         String sql = "SELECT * FROM usuarios WHERE email = ? AND senha_hash = ?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, email);
-            pstmt.setString(2, senha);
+            pstmt.setString(2, senhaCriptografada);
             
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -33,7 +55,7 @@ public class UsuarioDAO {
             
             pstmt.setString(1, usuario.getNome());
             pstmt.setString(2, usuario.getEmail());
-            pstmt.setString(3, usuario.getSenhaHash());
+            pstmt.setString(3, gerarHash(usuario.getSenhaHash()));
             pstmt.setString(4, usuario.getStatus());
             
             pstmt.executeUpdate();
@@ -98,7 +120,7 @@ public class UsuarioDAO {
         usuario.setEmail(rs.getString("email"));
         usuario.setSenhaHash(rs.getString("senha_hash"));
         usuario.setStatus(rs.getString("status"));
-        usuario.setDataCadastro(LocalDateTime.now());
+        usuario.setDataCadastro(rs.getTimestamp("data_cadastro") != null ? rs.getTimestamp("data_cadastro").toLocalDateTime() : LocalDateTime.now());
         return usuario;
     }
 }

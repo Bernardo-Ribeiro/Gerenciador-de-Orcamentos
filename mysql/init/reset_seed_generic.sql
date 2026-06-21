@@ -129,11 +129,11 @@ INSERT INTO categorias_lucro (nome, descricao, margem_padrao) VALUES
 ('Design e Vetorização', 'Criação de artes e ajuste de arquivos técnicos', 200.00),
 ('Impressos em Geral', 'Cartões, folhetos e papéis em geral', 100.00);
 
--- Usuários
+--Usuarios
 INSERT INTO usuarios (nome, email, senha_hash, status) VALUES
-('Administrador', 'admin@grafica.com', 'admin', 'ATIVO'),
-('Operador Comercial', 'comercial@grafica.com', '123456', 'ATIVO'),
-('Gestor Produccion', 'gestor@grafica.com', '123456', 'ATIVO');
+('Administrador', 'admin@grafica.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'ATIVO'),
+('Operador Comercial', 'comercial@grafica.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'ATIVO'),
+('Gestor Produccion', 'gestor@grafica.com', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 'ATIVO');
 
 -- Clientes
 INSERT INTO clientes (nome_razao_social, cpf_cnpj, email_contato, telefone_whatsapp, status, data_cadastro) VALUES

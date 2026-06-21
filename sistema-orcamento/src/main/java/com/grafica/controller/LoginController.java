@@ -59,7 +59,6 @@ public class LoginController {
         try {
             Usuario usuario = usuarioDAO.autenticar(email, senha);
             if (usuario != null) {
-                System.out.println("Usuário " + usuario.getNome() + " logado com sucesso");
                 carregarPantallaPrincipal(usuario);
             } else {
                 exibirErro("Email ou senha inválidos");

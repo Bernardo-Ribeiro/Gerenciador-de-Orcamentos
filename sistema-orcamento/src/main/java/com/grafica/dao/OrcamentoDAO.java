@@ -37,7 +37,7 @@ public class OrcamentoDAO {
 
     public List<Orcamento> listarTodos() {
         List<Orcamento> orcamentos = new ArrayList<>();
-        String sql = "SELECT * FROM orcamentos ORDER BY data_emissao DESC";
+        String sql = "SELECT * FROM orcamentos WHERE status != 'EXCLUIDO' ORDER BY data_emissao DESC";
         
         try (Connection conn = DbConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -70,7 +70,7 @@ public class OrcamentoDAO {
     }
 
     public void deletar(Integer id) {
-        String sql = "DELETE FROM orcamentos WHERE id = ?";
+        String sql = "UPDATE orcamentos SET status = 'EXCLUIDO' WHERE id = ?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             

@@ -41,8 +41,6 @@
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
                                 <Label styleClass="reports-stat-icon" text="R$" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Label styleClass="reports-stat-trend" text="+12,5%" />
                             </children>
                         </HBox>
                         <Label styleClass="reports-stat-label" text="Total Vendido (Mes)" />
@@ -67,8 +65,6 @@
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
                                 <Label styleClass="reports-stat-icon" text="\%" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Label styleClass="reports-stat-trend" text="+4%" />
                             </children>
                         </HBox>
                         <Label styleClass="reports-stat-label" text="Conversao Media" />
@@ -152,59 +148,6 @@
         <HBox spacing="12.0" alignment="TOP_LEFT">
             <children>
                 <VBox spacing="10.0" styleClass="reports-card" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="reports-card-title" text="Desempenho de Vendas Semestral" />
-                        <Label styleClass="reports-card-subtitle" text="Comparativo entre orcamentos gerados e vendas fechadas." />
-                        <HBox spacing="6.0" alignment="BOTTOM_LEFT" styleClass="reports-chart">
-                            <children>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="70.0" />
-                                        <Label styleClass="reports-chart-label" text="Jan" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="55.0" />
-                                        <Label styleClass="reports-chart-label" text="Fev" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="80.0" />
-                                        <Label styleClass="reports-chart-label" text="Mar" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="90.0" />
-                                        <Label styleClass="reports-chart-label" text="Abr" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="60.0" />
-                                        <Label styleClass="reports-chart-label" text="Mai" />
-                                    </children>
-                                </VBox>
-                                <VBox spacing="4.0" alignment="BOTTOM_CENTER">
-                                    <children>
-                                        <Label styleClass="reports-bar" text="" prefHeight="100.0" />
-                                        <Label styleClass="reports-chart-label" text="Jun" />
-                                    </children>
-                                </VBox>
-                            </children>
-                        </HBox>
-                        <HBox spacing="10.0" alignment="CENTER_LEFT">
-                            <children>
-                                <Label styleClass="reports-legend" text="Orcamentos Totais" />
-                                <Label styleClass="reports-legend" text="Vendas Concluidas" />
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
-
-                <VBox spacing="10.0" styleClass="reports-card" prefWidth="260.0">
                     <children>
                         <Label styleClass="reports-card-title" text="Rankings de Principais Clientes" />
                         <Label styleClass="reports-card-subtitle" text="Volume financeiro por cliente no periodo selecionado." />

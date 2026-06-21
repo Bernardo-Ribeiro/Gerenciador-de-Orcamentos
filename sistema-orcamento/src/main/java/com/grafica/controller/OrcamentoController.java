@@ -102,6 +102,7 @@ public class OrcamentoController {
     private LayoutProdutoDAO layoutDAO;
     private CategoriaLucroDAO categoriaLucroDAO;
     private MainController mainController;
+    private Orcamento orcamentoAtual;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
@@ -219,7 +220,6 @@ public class OrcamentoController {
         materialCombo.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null) {
                 carregarLayouts(newValue.getId());
-                // Carregar margem de lucro automática
                 if (newValue.getIdCategoriaLucro() != null) {
                     CategoriaLucro cat = categoriaLucroDAO.obterPorId(newValue.getIdCategoriaLucro());
                     if (cat != null) {
@@ -337,21 +337,43 @@ public class OrcamentoController {
         }
 
         try {
-            Orcamento orcamento = new Orcamento();
-            orcamento.setIdCliente(cliente.getId());
-            orcamento.setIdUsuario(1);
-            orcamento.setDataValidade(LocalDate.now().plusDays(15));
-            orcamento.setStatus("PENDENTE");
-            orcamento.setMargemLucroPercentual(lerDecimal(margemField, "0"));
-            orcamento.setDescontoProgressivo(lerDecimal(descuentoField, "0"));
-            orcamento.setValorBruto(calcularTotalBruto());
-            orcamento.setValorFinal(calcularTotalFinal());
+            if (orcamentoAtual == null) {
+                orcamentoAtual = new Orcamento();
+            }
+            orcamentoAtual.setIdCliente(cliente.getId());
+            orcamentoAtual.setIdUsuario(1);
+            orcamentoAtual.setDataValidade(LocalDate.now().plusDays(15));
+            orcamentoAtual.setStatus("PENDENTE");
+            orcamentoAtual.setMargemLucroPercentual(lerDecimal(margemField, "0"));
+            orcamentoAtual.setDescontoProgressivo(lerDecimal(descuentoField, "0"));
+            orcamentoAtual.setValorBruto(calcularTotalBruto());
+            orcamentoAtual.setValorFinal(calcularTotalFinal());
 
-            orcamentoDAO.criar(orcamento);
-            mostrarInfo("Orçamento salvo com sucesso. ID: " + orcamento.getId());
-            orcamentoBadgeLabel.setText("ID: #" + orcamento.getId());
+            if (orcamentoAtual.getId() == null) {
+                orcamentoDAO.criar(orcamentoAtual);
+                mostrarInfo("Orçamento salvo com sucesso. ID: " + orcamentoAtual.getId());
+            } else {
+                orcamentoDAO.atualizar(orcamentoAtual);
+                mostrarInfo("Orçamento atualizado com sucesso. ID: " + orcamentoAtual.getId());
+            }
+            orcamentoBadgeLabel.setText("ID: #" + orcamentoAtual.getId());
         } catch (Exception e) {
-            mostrarErro("Erro ao criar orçamento: " + e.getMessage());
+            mostrarErro("Erro ao salvar orçamento: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void excluirOrcamentoAtual() {
+        if (orcamentoAtual != null && orcamentoAtual.getId() != null) {
+            try {
+                orcamentoDAO.deletar(orcamentoAtual.getId());
+                mostrarInfo("Orçamento movido para a lixeira (Status: EXCLUIDO).");
+                limparCampos();
+            } catch (Exception e) {
+                mostrarErro("Erro ao excluir orçamento: " + e.getMessage());
+            }
+        } else {
+            mostrarErro("Nenhum orçamento salvo para excluir.");
         }
     }
 
@@ -367,6 +389,7 @@ public class OrcamentoController {
         if (descuentoField != null) {
             descuentoField.clear();
         }
+        orcamentoAtual = null;
         atualizarResumo();
     }
 
@@ -402,7 +425,11 @@ public class OrcamentoController {
 
     private void atualizarResumo() {
         itensCountLabel.setText("Itens do Orçamento (" + itens.size() + ")");
-        orcamentoBadgeLabel.setText(itens.isEmpty() ? "ID: Novo" : "ID: Rascunho");
+        if (orcamentoAtual != null && orcamentoAtual.getId() != null) {
+            orcamentoBadgeLabel.setText("ID: #" + orcamentoAtual.getId());
+        } else {
+            orcamentoBadgeLabel.setText(itens.isEmpty() ? "ID: Novo" : "ID: Rascunho");
+        }
         valorBrutoLabel.setText(formatarMoeda(calcularTotalBruto()));
         valorFinalLabel.setText(formatarMoeda(calcularTotalFinal()));
         itensTable.refresh();

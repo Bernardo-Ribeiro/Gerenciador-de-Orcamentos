@@ -59,25 +59,25 @@
                                             <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Material de Base" />
-                                                            <ComboBox fx:id="materialCombo" promptText="Selecione o material" styleClass="budget-input" maxWidth="Infinity" />
+                                                    <ComboBox fx:id="materialCombo" promptText="Selecione o material" styleClass="budget-input" maxWidth="Infinity" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Layout / Tamanho Padrão" />
-                                                            <ComboBox fx:id="layoutCombo" promptText="Opcional" styleClass="budget-input" maxWidth="Infinity" />
+                                                    <ComboBox fx:id="layoutCombo" promptText="Opcional" styleClass="budget-input" maxWidth="Infinity" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Largura (mm)" />
-                                                            <TextField fx:id="larguraField" promptText="2500" styleClass="budget-input" prefWidth="90.0" />
+                                                    <TextField fx:id="larguraField" promptText="2500" styleClass="budget-input" prefWidth="90.0" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Altura (mm)" />
-                                                            <TextField fx:id="alturaField" promptText="1200" styleClass="budget-input" prefWidth="90.0" />
+                                                    <TextField fx:id="alturaField" promptText="1200" styleClass="budget-input" prefWidth="90.0" />
                                                 </children>
                                             </VBox>
                                         </children>
@@ -88,13 +88,13 @@
                                             <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Tipo de Serviço / Acabamento" />
-                                                            <TextField fx:id="acabamentoField" promptText="Selecione" styleClass="budget-input" />
+                                                    <TextField fx:id="acabamentoField" promptText="Selecione" styleClass="budget-input" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0">
                                                 <children>
                                                     <Label styleClass="budget-field-label" text="Quantidade Total" />
-                                                            <TextField fx:id="quantidadeField" promptText="5" styleClass="budget-input" prefWidth="120.0" />
+                                                    <TextField fx:id="quantidadeField" promptText="5" styleClass="budget-input" prefWidth="120.0" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0" alignment="BOTTOM_RIGHT">
@@ -184,7 +184,8 @@
 
                         <Button text="Salvar Orçamento" onAction="#criarOrcamento" styleClass="budget-primary-button" />
                         <Button text="Gerar Proposta PDF" onAction="#gerarPropostaPdf" styleClass="budget-secondary-button" />
-                        <Button text="Limpar Tudo" onAction="#limparCampos" styleClass="budget-ghost-button" />
+                        <Button text="Excluir Orçamento" onAction="#excluirOrcamentoAtual" styleClass="budget-delete-button" />
+                        <Button text="Novo / Limpar" onAction="#limparCampos" styleClass="budget-ghost-button" />
 
                         <VBox spacing="6.0" styleClass="budget-note-card">
                             <children>

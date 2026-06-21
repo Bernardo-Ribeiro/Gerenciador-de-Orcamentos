@@ -25,7 +25,6 @@ public class CalculoService {
             BigDecimal quantidade,
             BigDecimal custoBaso) {
         
-        // Paso 1: Convertir mm² a m² (dividir por 1,000,000)
         BigDecimal areaMm2 = larguraMm.multiply(alturaMm);
         BigDecimal areaM2 = areaMm2.divide(
             BigDecimal.valueOf(1_000_000),
@@ -33,7 +32,6 @@ public class CalculoService {
             RoundingMode.HALF_UP
         );
         
-        // Paso 2: Multiplicar área × cantidad × precio base
         BigDecimal valorBruto = areaM2
             .multiply(quantidade)
             .multiply(custoBaso)
