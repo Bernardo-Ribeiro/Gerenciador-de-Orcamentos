@@ -10,6 +10,7 @@ com\grafica\controller\OrcamentoController$1.class
 com\grafica\model\Cliente.class
 com\grafica\model\Produto.class
 com\grafica\model\ProdutoAcabamento.class
+com\grafica\controller\OrcamentoController$10.class
 com\grafica\dao\DbConnection.class
 com\grafica\dao\OrcamentoDAO.class
 com\grafica\model\ProdutoMaterial.class
@@ -26,6 +27,7 @@ com\grafica\controller\OrcamentoController$7.class
 com\grafica\controller\ClienteController$1.class
 com\grafica\dao\LayoutProdutoDAO.class
 com\grafica\controller\MaterialController.class
+com\grafica\controller\OrcamentoController$9.class
 com\grafica\controller\ProdutoController.class
 com\grafica\model\LayoutProduto.class
 com\grafica\model\ItemOrcamento.class

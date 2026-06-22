@@ -1,3 +1,4 @@
+-- Active: 1782150041296@@127.0.0.1@3306@grafica_db
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP DATABASE IF EXISTS orcamento_db;
@@ -110,7 +111,9 @@ CREATE TABLE layouts_produto (
 
     FOREIGN KEY (id_produto)
         REFERENCES produtos(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT uk_layout_produto UNIQUE (id_produto, nome_layout)
 );
 
 -- =====================================================
@@ -277,12 +280,15 @@ CREATE TABLE auditoria_log (
     tabela VARCHAR(50) NOT NULL,
     id_registro INT NOT NULL,
 
-    campo VARCHAR(50) NOT NULL,
+    campo VARCHAR(50),
+    valor_antigo TEXT,
+    valor_novo TEXT,
 
-    valor_antigo VARCHAR(255),
-    valor_novo VARCHAR(255),
+    id_usuario INT,
 
-    usuario VARCHAR(100),
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id)
+        ON DELETE SET NULL,
 
     data_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -290,6 +296,24 @@ CREATE TABLE auditoria_log (
 -- =====================================================
 -- ÍNDICES
 -- =====================================================
+
+CREATE INDEX idx_layouts_produto_produto
+ON layouts_produto(id_produto);
+
+CREATE INDEX idx_produto_materiais_produto
+ON produto_materiais(id_produto);
+
+CREATE INDEX idx_produto_materiais_material
+ON produto_materiais(id_material);
+
+CREATE INDEX idx_produto_acabamentos_produto
+ON produto_acabamentos(id_produto);
+
+CREATE INDEX idx_produto_acabamentos_material
+ON produto_acabamentos(id_material);
+
+CREATE INDEX idx_item_orcamento_acabamentos_item
+ON item_orcamento_acabamentos(id_item_orcamento);
 
 CREATE INDEX idx_itens_orcamento_orc
 ON itens_orcamento(id_orcamento);
@@ -302,6 +326,7 @@ ON escalas_produtivas(id_material);
 
 CREATE INDEX idx_orcamentos_cliente
 ON orcamentos(id_cliente);
+
 
 SET FOREIGN_KEY_CHECKS = 1;
 -- =============================================================================
@@ -510,9 +535,9 @@ INSERT INTO itens_orcamento (id_orcamento, id_produto, id_material, id_layout, l
 (3, 2, 7, 4, 0, 0, 2500, 0.0000, 950.00, 1159.00, 0.47, 'TIRAGEM');       -- Flyer + Papel Couché 150g (ID 7)
 
 -- 12. Auditoria
-INSERT INTO auditoria_log (tabela, id_registro, campo, valor_antigo, valor_novo, usuario, data_evento) VALUES
-('orcamentos', 1, 'status', 'PENDENTE', 'PENDENTE', 'admin@grafica.com', NOW() - INTERVAL 2 DAY),
-('orcamentos', 2, 'status', 'PENDENTE', 'APROVADO', 'comercial@grafica.com', NOW() - INTERVAL 1 DAY),
-('materiais', 7, 'custo_base', '0.25', '0.28', 'gestor@grafica.com', NOW());
+INSERT INTO auditoria_log (tabela, id_registro, campo, valor_antigo, valor_novo, id_usuario, data_evento) VALUES
+('orcamentos', 1, 'status', 'PENDENTE', 'PENDENTE', 1, NOW() - INTERVAL 2 DAY),
+('orcamentos', 2, 'status', 'PENDENTE', 'APROVADO', 2, NOW() - INTERVAL 1 DAY),
+('materiais', 7, 'custo_base', '0.25', '0.28', 3, NOW());
 
 SET FOREIGN_KEY_CHECKS = 1;

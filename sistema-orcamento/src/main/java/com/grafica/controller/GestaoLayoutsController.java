@@ -1,9 +1,9 @@
 package com.grafica.controller;
 
 import com.grafica.dao.LayoutProdutoDAO;
-import com.grafica.dao.MaterialDAO;
+import com.grafica.dao.ProdutoDAO;
 import com.grafica.model.LayoutProduto;
-import com.grafica.model.Material;
+import com.grafica.model.Produto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GestaoLayoutsController {
 
     @FXML
-    private ComboBox<Material> materialCombo;
+    private ComboBox<Produto> produtoCombo;
     @FXML
     private TextField nomeLayoutField;
     @FXML
@@ -27,7 +27,7 @@ public class GestaoLayoutsController {
     @FXML
     private TableView<LayoutProduto> layoutsTable;
     @FXML
-    private TableColumn<LayoutProduto, Integer> materialColumn;
+    private TableColumn<LayoutProduto, Integer> produtoColumn;
     @FXML
     private TableColumn<LayoutProduto, String> nomeColumn;
     @FXML
@@ -38,18 +38,18 @@ public class GestaoLayoutsController {
     private TableColumn<LayoutProduto, Void> acaoColumn;
 
     private LayoutProdutoDAO layoutDAO;
-    private MaterialDAO materialDAO;
+    private ProdutoDAO produtoDAO;
     private ObservableList<LayoutProduto> layoutsList = FXCollections.observableArrayList();
-    private List<Material> materiais;
+    private List<Produto> produtos;
     private LayoutProduto layoutEmEdicao = null;
 
     @FXML
     public void initialize() {
         layoutDAO = new LayoutProdutoDAO();
-        materialDAO = new MaterialDAO();
+        produtoDAO = new ProdutoDAO();
 
         configurarTabela();
-        configurarComboMateriais();
+        configurarComboProdutos();
         carregarDados();
     }
 
@@ -58,17 +58,17 @@ public class GestaoLayoutsController {
         larguraColumn.setCellValueFactory(new PropertyValueFactory<>("larguraMm"));
         alturaColumn.setCellValueFactory(new PropertyValueFactory<>("alturaMm"));
 
-        materialColumn.setCellValueFactory(new PropertyValueFactory<>("idProduto"));
-        materialColumn.setCellFactory(column -> new TableCell<>() {
+        produtoColumn.setCellValueFactory(new PropertyValueFactory<>("idProduto")); // Mantém a busca pelo ID
+        produtoColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(Integer idProduto, boolean empty) {
                 super.updateItem(idProduto, empty);
                 if (empty || idProduto == null) {
                     setText(null);
                 } else {
-                    setText(materiais.stream()
-                        .filter(m -> m.getId().equals(idProduto))
-                        .map(Material::getNome)
+                    setText(produtos.stream() // Busca na lista de Produtos, não de Materiais
+                        .filter(p -> p.getId().equals(idProduto))
+                        .map(Produto::getNome)
                         .findFirst()
                         .orElse("Desconhecido"));
                 }
@@ -103,15 +103,15 @@ public class GestaoLayoutsController {
         });
     }
 
-    private void configurarComboMateriais() {
-        materialCombo.setConverter(new StringConverter<>() {
+    private void configurarComboProdutos() {
+        produtoCombo.setConverter(new StringConverter<>() {
             @Override
-            public String toString(Material material) {
-                return material == null ? "" : material.getNome();
+            public String toString(Produto produto) {
+                return produto == null ? "" : produto.getNome();
             }
 
             @Override
-            public Material fromString(String string) {
+            public Produto fromString(String string) {
                 return null;
             }
         });
@@ -119,8 +119,8 @@ public class GestaoLayoutsController {
 
     private void carregarDados() {
         try {
-            materiais = materialDAO.listarTodos();
-            materialCombo.setItems(FXCollections.observableArrayList(materiais));
+            produtos = produtoDAO.listarTodos();
+            produtoCombo.setItems(FXCollections.observableArrayList(produtos));
             layoutsList.setAll(layoutDAO.listarTodos());
         } catch (SQLException e) {
             mostrarErro("Erro ao carregar dados: " + e.getMessage());
@@ -129,12 +129,12 @@ public class GestaoLayoutsController {
 
     @FXML
     private void salvarLayout() {
-        Material material = materialCombo.getValue();
+        Produto produto = produtoCombo.getValue();
         String nome = nomeLayoutField.getText();
         String larguraStr = larguraField.getText();
         String alturaStr = alturaField.getText();
 
-        if (material == null || nome.isEmpty() || larguraStr.isEmpty() || alturaStr.isEmpty()) {
+        if (produto == null || nome.isEmpty() || larguraStr.isEmpty() || alturaStr.isEmpty()) {
             mostrarErro("Preencha todos os campos obrigatórios.");
             return;
         }
@@ -144,11 +144,11 @@ public class GestaoLayoutsController {
             int altura = Integer.parseInt(alturaStr);
 
             if (layoutEmEdicao == null) {
-                LayoutProduto novo = new LayoutProduto(null, material.getId(), nome, largura, altura);
+                LayoutProduto novo = new LayoutProduto(null, produto.getId(), nome, largura, altura);
                 layoutDAO.criar(novo);
                 layoutsList.add(novo);
             } else {
-                layoutEmEdicao.setIdProduto(material.getId());
+                layoutEmEdicao.setIdProduto(produto.getId());
                 layoutEmEdicao.setNomeLayout(nome);
                 layoutEmEdicao.setLarguraMm(largura);
                 layoutEmEdicao.setAlturaMm(altura);
@@ -181,7 +181,7 @@ public class GestaoLayoutsController {
 
     private void preencherCamposParaEdicao(LayoutProduto layout) {
         layoutEmEdicao = layout;
-        materialCombo.setValue(materiais.stream().filter(m -> m.getId().equals(layout.getIdProduto())).findFirst().orElse(null));
+        produtoCombo.setValue(produtos.stream().filter(p -> p.getId().equals(layout.getIdProduto())).findFirst().orElse(null));
         nomeLayoutField.setText(layout.getNomeLayout());
         larguraField.setText(layout.getLarguraMm().toString());
         alturaField.setText(layout.getAlturaMm().toString());
@@ -190,7 +190,7 @@ public class GestaoLayoutsController {
     @FXML
     private void limparCampos() {
         layoutEmEdicao = null;
-        materialCombo.setValue(null);
+        produtoCombo.setValue(null);
         nomeLayoutField.clear();
         larguraField.clear();
         alturaField.clear();

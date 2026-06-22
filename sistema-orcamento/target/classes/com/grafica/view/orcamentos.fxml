@@ -88,7 +88,7 @@
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="budget-field-label" text="4. Acabamentos" />
-                                            <ScrollPane fitToWidth="true" prefHeight="120.0" VBox.vgrow="ALWAYS">
+                                            <ScrollPane fitToWidth="true" prefHeight="320.0" VBox.vgrow="ALWAYS">
                                                 <content>
                                                     <VBox fx:id="acabamentosContainer" spacing="4.0" />
                                                 </content>

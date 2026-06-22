@@ -33,9 +33,9 @@
             <children>
                 <VBox spacing="10.0" styleClass="materials-card" HBox.hgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                        <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" prefHeight="600.0" styleClass="materials-table">
                             <columns>
-                                <TableColumn fx:id="materialColumn" text="Material" prefWidth="180.0" />
+                                <TableColumn fx:id="produtoColumn" text="Produto" prefWidth="180.0" />
                                 <TableColumn fx:id="nomeColumn" text="Nome do Layout" prefWidth="200.0" />
                                 <TableColumn fx:id="larguraColumn" text="Largura (mm)" prefWidth="90.0" />
                                 <TableColumn fx:id="alturaColumn" text="Altura (mm)" prefWidth="90.0" />
@@ -54,8 +54,8 @@
 
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="materials-label" text="Material Vinculado" />
-                                        <ComboBox fx:id="materialCombo" promptText="Selecione o material" maxWidth="Infinity" styleClass="materials-input" />
+                                        <Label styleClass="materials-label" text="Produto Vinculado" />
+                                        <ComboBox fx:id="produtoCombo" promptText="Selecione o produto" maxWidth="Infinity" styleClass="materials-input" />
                                     </children>
                                 </VBox>
 

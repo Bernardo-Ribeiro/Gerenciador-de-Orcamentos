@@ -332,6 +332,18 @@ public class OrcamentoController {
         Material material = materialCombo.getValue();
         if (material == null) { mostrarErro("Selecione um material."); return; }
 
+        // Validação: O layout pertence ao produto?
+        if (layout != null && !layout.getIdProduto().equals(produto.getId())) {
+            mostrarErro("Inconsistência de dados: O layout '" + layout.getNomeLayout() + "' não pertence ao produto '" + produto.getNome() + "'.");
+            return;
+        }
+
+        // Validação: A categoria do material é compatível com a do produto?
+        if (!produto.getCategoria().equals(material.getCategoria())) {
+            mostrarErro("Inconsistência de dados: O material '" + material.getNome() + "' (categoria " + material.getCategoria() + ") não é compatível com o produto '" + produto.getNome() + "' (categoria " + produto.getCategoria() + ").");
+            return;
+        }
+
         BigDecimal largura = lerDecimal(larguraField, "0");
         BigDecimal altura = lerDecimal(alturaField, "0");
         if (largura.compareTo(BigDecimal.ZERO) <= 0 || altura.compareTo(BigDecimal.ZERO) <= 0) {
@@ -343,14 +355,27 @@ public class OrcamentoController {
         BigDecimal margem = lerDecimal(margemField, "0");
         BigDecimal desconto = lerDecimal(descuentoField, "0");
 
+        // Obter custo base do material
+        BigDecimal custoBase = material.getCustoBase();
+        if (custoBase == null) {
+            mostrarErro("O material selecionado não possui um custo base definido.");
+            return;
+        }
+
         // Calcular área
         BigDecimal area = largura.multiply(altura).divide(BigDecimal.valueOf(1_000_000), 4, RoundingMode.HALF_UP);
 
-        // Calcular custo base do material
-        BigDecimal custoBase = material.getCustoBase();
+        BigDecimal valorBruto;
+        BigDecimal valorFinal;
 
-        // Calcular valor bruto do material base
-        BigDecimal valorBrutoMaterial = CalculoService.calcularValorBrutoItem(largura, altura, quantidade, custoBase);
+        if ("AREA".equals(material.getTipoCobranca())) {
+            valorBruto = CalculoService.calcularValorBrutoItem(largura, altura, quantidade, custoBase);
+            valorFinal = CalculoService.calcularValorFinalItem(largura, altura, quantidade, custoBase, desconto, margem);
+        } else { // Assumindo "UNIDADE" ou outro tipo
+            valorBruto = custoBase.multiply(quantidade);
+            BigDecimal valorComDesconto = CalculoService.aplicarDescuentoEscala(valorBruto, desconto);
+            valorFinal = CalculoService.aplicarMargenGanancia(valorComDesconto, margem);
+        }
 
         // Calcular custo dos acabamentos selecionados
         BigDecimal custoAcabamentos = BigDecimal.ZERO;
@@ -366,9 +391,8 @@ public class OrcamentoController {
             }
         }
 
-        BigDecimal valorBruto = valorBrutoMaterial.add(custoAcabamentos);
-        BigDecimal valorFinal = CalculoService.calcularValorFinalItem(largura, altura, quantidade, custoBase, desconto, margem)
-                .add(custoAcabamentos);
+        valorBruto = valorBruto.add(custoAcabamentos);
+        valorFinal = valorFinal.add(custoAcabamentos);
 
         String descMaterial = material.getNome();
         String descAcab = descAcabamentos.toString();

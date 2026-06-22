@@ -201,6 +201,15 @@ public class EscalaProdutivaController {
             intervalos.add(new Intervalo(inicio, fim, desconto));
         }
 
+        // Ordena e verifica sobreposição
+        intervalos.sort(Comparator.comparingInt(intervalo -> intervalo.inicio));
+        for (int i = 1; i < intervalos.size(); i++) {
+            if (intervalos.get(i).inicio <= intervalos.get(i - 1).fim) {
+                mostrarErro("Intervalos nao podem se sobrepor. Verifique os valores '" + intervalos.get(i-1).fim + "' e '" + intervalos.get(i).inicio + "'.");
+                return null;
+            }
+        }
+
         intervalos.sort(Comparator.comparingInt(intervalo -> intervalo.inicio));
         for (int i = 1; i < intervalos.size(); i++) {
             Intervalo anterior = intervalos.get(i - 1);
