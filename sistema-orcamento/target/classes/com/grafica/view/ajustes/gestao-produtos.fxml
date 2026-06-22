@@ -35,7 +35,7 @@
                             <children>
                                 <Label styleClass="materials-label" text="Filtrar por Categoria:" />
                                 <ComboBox fx:id="filtroCategoria" promptText="TODOS" styleClass="materials-input" />
-                                <Button onAction="#filtrar" text="Filtrar" styleClass="materials-secondary-button" />
+                                <Button onAction="#filtrarProdutos" text="Filtrar" styleClass="materials-secondary-button" />
                             </children>
                         </HBox>
                         <TableView fx:id="produtosTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
@@ -48,7 +48,7 @@
                     </children>
                 </VBox>
 
-                <VBox spacing="14.0" styleClass="materials-card" prefWidth="340.0">
+                <VBox spacing="14.0" styleClass="materials-card" prefWidth="380.0">
                     <children>
                         <Label styleClass="materials-title" text="Detalhes do Produto" />
                         <Label styleClass="materials-subtitle" text="Defina o nome e a categoria do produto." wrapText="true" />
@@ -72,6 +72,36 @@
                                 <Button onAction="#limpar" text="Novo" styleClass="materials-secondary-button" />
                                 <Button onAction="#salvarProduto" text="Salvar" styleClass="materials-primary-button" />
                                 <Button onAction="#deletarProduto" text="Excluir" styleClass="materials-danger-button" />
+                            </children>
+                        </HBox>
+
+                        <Label styleClass="materials-subtitle" text="Materiais Base Associados" />
+                        <TableView fx:id="materiaisBaseTable" prefHeight="120.0" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                            <columns>
+                                <TableColumn fx:id="materialBaseNomeColumn" text="Material" prefWidth="220.0" />
+                                <TableColumn fx:id="materialBasePadraoColumn" text="Padrão" prefWidth="60.0" />
+                                <TableColumn fx:id="materialBaseAcaoColumn" text="Ação" prefWidth="80.0" />
+                            </columns>
+                        </TableView>
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <children>
+                                <ComboBox fx:id="comboAddMaterialBase" promptText="Selecione um material base" HBox.hgrow="ALWAYS" styleClass="materials-input" />
+                                <Button onAction="#adicionarMaterialBase" text="Adicionar" styleClass="materials-primary-button" />
+                            </children>
+                        </HBox>
+
+                        <Label styleClass="materials-subtitle" text="Acabamentos Associados" />
+                        <TableView fx:id="acabamentosTable" prefHeight="120.0" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                            <columns>
+                                <TableColumn fx:id="acabamentoNomeColumn" text="Acabamento" prefWidth="220.0" />
+                                <TableColumn fx:id="acabamentoObrigatorioColumn" text="Obrigatório" prefWidth="80.0" />
+                                <TableColumn fx:id="acabamentoAcaoColumn" text="Ação" prefWidth="80.0" />
+                            </columns>
+                        </TableView>
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <children>
+                                <ComboBox fx:id="comboAddAcabamento" promptText="Selecione um acabamento" HBox.hgrow="ALWAYS" styleClass="materials-input" />
+                                <Button onAction="#adicionarAcabamento" text="Adicionar" styleClass="materials-primary-button" />
                             </children>
                         </HBox>
                     </children>

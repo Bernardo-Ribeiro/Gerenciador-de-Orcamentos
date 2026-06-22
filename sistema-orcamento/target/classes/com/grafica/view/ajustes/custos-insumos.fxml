@@ -152,6 +152,13 @@
 
                         <VBox spacing="6.0">
                             <children>
+                                <Label styleClass="materials-label" text="Categoria de Lucro" />
+                                <ComboBox fx:id="cmbCategoriaLucro" promptText="Selecione" styleClass="materials-search" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
                                 <Label styleClass="materials-label" text="Status" />
                                 <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="materials-search" />
                             </children>

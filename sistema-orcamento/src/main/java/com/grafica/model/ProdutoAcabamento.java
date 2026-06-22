@@ -7,6 +7,10 @@ public class ProdutoAcabamento {
 
     public ProdutoAcabamento() {}
 
+    public ProdutoAcabamento(Integer idProduto, Integer idMaterial) {
+        this(idProduto, idMaterial, null);
+    }
+
     public ProdutoAcabamento(Integer idProduto, Integer idMaterial, Boolean obrigatorio) {
         this.idProduto = idProduto;
         this.idMaterial = idMaterial;

@@ -75,6 +75,21 @@ public class ProdutoAcabamentoDAO {
         }
     }
 
+    public void atualizar(ProdutoAcabamento pa) {
+        String sql = "UPDATE produto_acabamentos SET obrigatorio = ? WHERE id_produto = ? AND id_material = ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, pa.getObrigatorio() != null && pa.getObrigatorio());
+            stmt.setInt(2, pa.getIdProduto());
+            stmt.setInt(3, pa.getIdMaterial());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deletarPorProduto(Integer idProduto) {
         String sql = "DELETE FROM produto_acabamentos WHERE id_produto = ?";
 

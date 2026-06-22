@@ -1,6 +1,8 @@
 package com.grafica.controller;
 
+import com.grafica.dao.CategoriaLucroDAO;
 import com.grafica.dao.MaterialDAO;
+import com.grafica.model.CategoriaLucro;
 import com.grafica.model.Material;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,9 +10,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class CustosInsumosController {
 
@@ -48,6 +52,9 @@ public class CustosInsumosController {
     private ComboBox<String> cmbTipoItem;
 
     @FXML
+    private ComboBox<CategoriaLucro> cmbCategoriaLucro;
+
+    @FXML
     private ComboBox<String> cmbUnidade;
 
     @FXML
@@ -60,12 +67,15 @@ public class CustosInsumosController {
     private ComboBox<String> cmbStatus;
 
     private MaterialDAO materialDAO;
+    private CategoriaLucroDAO categoriaLucroDAO;
     private ObservableList<Material> materiais;
+    private ObservableList<CategoriaLucro> categoriasLucro;
     private Material selecionado;
 
     @FXML
     private void initialize() {
         materialDAO = new MaterialDAO();
+        categoriaLucroDAO = new CategoriaLucroDAO();
 
         cmbCategoria.setItems(FXCollections.observableArrayList("COMUNICACAO_VISUAL", "IMPRESSOS"));
         cmbTipoItem.setItems(FXCollections.observableArrayList("BASE", "ACABAMENTO"));
@@ -73,6 +83,7 @@ public class CustosInsumosController {
         cmbStatus.setItems(FXCollections.observableArrayList("ATIVO", "INATIVO"));
 
         configurarTabela();
+        configurarCombos();
         carregarInsumos();
 
         tableInsumos.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
@@ -95,6 +106,24 @@ public class CustosInsumosController {
         );
     }
 
+    private void configurarCombos() {
+        categoriasLucro = FXCollections.observableArrayList(categoriaLucroDAO.listarTodos());
+        if (cmbCategoriaLucro != null) cmbCategoriaLucro.setItems(categoriasLucro);
+        cmbCategoriaLucro.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(CategoriaLucro categoriaLucro) {
+                return categoriaLucro == null ? "Nenhuma" : categoriaLucro.getNome();
+            }
+
+            @Override
+            public CategoriaLucro fromString(String s) {
+                return categoriasLucro.stream()
+                    .filter(c -> c.getNome().equalsIgnoreCase(s))
+                    .findFirst().orElse(null);
+            }
+        });
+    }
+
     private void carregarInsumos() {
         List<Material> lista = materialDAO.listarTodos(true);
         materiais = FXCollections.observableArrayList(lista);
@@ -109,6 +138,13 @@ public class CustosInsumosController {
         txtCustoBase.setText(m.getCustoBase() != null ? m.getCustoBase().toString() : "");
         txtCustoProducao.setText(m.getCustoProducao() != null ? m.getCustoProducao().toString() : "");
         cmbStatus.setValue(normalizarTexto(m.getStatus()).toUpperCase());
+
+        if (m.getIdCategoriaLucro() != null) {
+            Optional<CategoriaLucro> cat = categoriasLucro.stream().filter(c -> c.getId() == m.getIdCategoriaLucro()).findFirst();
+            cat.ifPresent(categoriaLucro -> cmbCategoriaLucro.setValue(categoriaLucro));
+        } else {
+            cmbCategoriaLucro.setValue(null);
+        }
     }
 
     @FXML
@@ -124,6 +160,7 @@ public class CustosInsumosController {
         cmbTipoItem.setValue(null);
         cmbUnidade.setValue(null);
         txtCustoBase.clear();
+        cmbCategoriaLucro.setValue(null);
         txtCustoProducao.clear();
         cmbStatus.setValue("ATIVO");
         tableInsumos.getSelectionModel().clearSelection();
@@ -196,6 +233,7 @@ public class CustosInsumosController {
 
             BigDecimal custoBase = new BigDecimal(txtCustoBase.getText().trim().replace(',', '.'));
             BigDecimal custoProducao = parseDecimalOpcional(txtCustoProducao.getText());
+            CategoriaLucro categoriaLucro = cmbCategoriaLucro.getValue();
 
             if (selecionado == null) {
                 Material novo = new Material(
@@ -207,6 +245,9 @@ public class CustosInsumosController {
                 );
                 novo.setCustoProducao(custoProducao);
                 novo.setStatus(cmbStatus.getValue().toUpperCase());
+                if (categoriaLucro != null) {
+                    novo.setIdCategoriaLucro(categoriaLucro.getId());
+                }
                 materialDAO.criar(novo);
             } else {
                 selecionado.setNome(txtMaterial.getText().trim());
@@ -216,6 +257,11 @@ public class CustosInsumosController {
                 selecionado.setCustoBase(custoBase);
                 selecionado.setCustoProducao(custoProducao);
                 selecionado.setStatus(cmbStatus.getValue().toUpperCase());
+                if (categoriaLucro != null) {
+                    selecionado.setIdCategoriaLucro(categoriaLucro.getId());
+                } else {
+                    selecionado.setIdCategoriaLucro(null);
+                }
                 materialDAO.atualizar(selecionado);
             }
             carregarInsumos();

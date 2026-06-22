@@ -224,8 +224,11 @@ public class OrcamentoController {
 
         materialCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null && newVal.getIdCategoriaLucro() != null) {
+                // Busca a categoria de lucro associada ao material selecionado
                 CategoriaLucro cat = categoriaLucroDAO.obterPorId(newVal.getIdCategoriaLucro());
-                if (cat != null) margemField.setText(cat.getMargemPadrao().toString());
+                if (cat != null) {
+                    margemField.setText(cat.getMargemPadrao().toString()); // Preenche o campo de margem automaticamente
+                }
             }
         });
     }

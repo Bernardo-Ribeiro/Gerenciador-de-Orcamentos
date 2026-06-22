@@ -7,6 +7,10 @@ public class ProdutoMaterial {
 
     public ProdutoMaterial() {}
 
+    public ProdutoMaterial(Integer idProduto, Integer idMaterial) {
+        this(idProduto, idMaterial, null);
+    }
+
     public ProdutoMaterial(Integer idProduto, Integer idMaterial, Boolean materialPadrao) {
         this.idProduto = idProduto;
         this.idMaterial = idMaterial;
