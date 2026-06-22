@@ -58,16 +58,16 @@ public class GestaoLayoutsController {
         larguraColumn.setCellValueFactory(new PropertyValueFactory<>("larguraMm"));
         alturaColumn.setCellValueFactory(new PropertyValueFactory<>("alturaMm"));
 
-        materialColumn.setCellValueFactory(new PropertyValueFactory<>("idMaterial"));
+        materialColumn.setCellValueFactory(new PropertyValueFactory<>("idProduto"));
         materialColumn.setCellFactory(column -> new TableCell<>() {
             @Override
-            protected void updateItem(Integer idMaterial, boolean empty) {
-                super.updateItem(idMaterial, empty);
-                if (empty || idMaterial == null) {
+            protected void updateItem(Integer idProduto, boolean empty) {
+                super.updateItem(idProduto, empty);
+                if (empty || idProduto == null) {
                     setText(null);
                 } else {
                     setText(materiais.stream()
-                        .filter(m -> m.getId().equals(idMaterial))
+                        .filter(m -> m.getId().equals(idProduto))
                         .map(Material::getNome)
                         .findFirst()
                         .orElse("Desconhecido"));
@@ -148,7 +148,7 @@ public class GestaoLayoutsController {
                 layoutDAO.criar(novo);
                 layoutsList.add(novo);
             } else {
-                layoutEmEdicao.setIdMaterial(material.getId());
+                layoutEmEdicao.setIdProduto(material.getId());
                 layoutEmEdicao.setNomeLayout(nome);
                 layoutEmEdicao.setLarguraMm(largura);
                 layoutEmEdicao.setAlturaMm(altura);
@@ -181,7 +181,7 @@ public class GestaoLayoutsController {
 
     private void preencherCamposParaEdicao(LayoutProduto layout) {
         layoutEmEdicao = layout;
-        materialCombo.setValue(materiais.stream().filter(m -> m.getId().equals(layout.getIdMaterial())).findFirst().orElse(null));
+        materialCombo.setValue(materiais.stream().filter(m -> m.getId().equals(layout.getIdProduto())).findFirst().orElse(null));
         nomeLayoutField.setText(layout.getNomeLayout());
         larguraField.setText(layout.getLarguraMm().toString());
         alturaField.setText(layout.getAlturaMm().toString());

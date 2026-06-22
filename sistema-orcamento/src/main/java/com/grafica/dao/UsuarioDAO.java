@@ -120,7 +120,6 @@ public class UsuarioDAO {
         usuario.setEmail(rs.getString("email"));
         usuario.setSenhaHash(rs.getString("senha_hash"));
         usuario.setStatus(rs.getString("status"));
-        usuario.setDataCadastro(rs.getTimestamp("data_cadastro") != null ? rs.getTimestamp("data_cadastro").toLocalDateTime() : LocalDateTime.now());
         return usuario;
     }
 }

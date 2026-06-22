@@ -127,7 +127,6 @@ public class MaterialDAO {
     }
     
     public void deletar(Integer id) {
-        // Soft delete: cambiar status a INATIVO
         String sql = "UPDATE materiais SET status = 'INATIVO' WHERE id = ?";
         
         try (Connection conn = DbConnection.getConnection();

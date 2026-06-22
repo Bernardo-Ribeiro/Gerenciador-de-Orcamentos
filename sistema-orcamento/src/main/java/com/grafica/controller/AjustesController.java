@@ -16,6 +16,7 @@ public class AjustesController {
     private static final Map<String, String> BREADCRUMBS = Map.of(
         "ajustes/gestao-usuarios.fxml", "Início   >   Painel Administrador   >   Gestão de Usuários",
         "ajustes/gestao-layouts.fxml", "Início   >   Painel Administrador   >   Gestão de Layouts",
+        "ajustes/gestao-produtos.fxml", "Início   >   Painel Administrador   >   Gestão de Produtos",
         "ajustes/custos-insumos.fxml", "Início   >   Painel Administrador   >   Custos de Insumos",
         "ajustes/escala-produtiva.fxml", "Início   >   Painel Administrador   >   Escala Produtiva",
         "ajustes/margens-lucro.fxml", "Início   >   Painel Administrador   >   Margens de Lucro",
@@ -33,6 +34,9 @@ public class AjustesController {
 
     @FXML
     private Button btnGestaoLayouts;
+
+    @FXML
+    private Button btnGestaoProdutos;
 
     @FXML
     private Button btnCustosInsumos;
@@ -65,6 +69,12 @@ public class AjustesController {
     }
 
     @FXML
+    private void selecionarGestaoProdutos(ActionEvent event) {
+        carregarSubpantalla("ajustes/gestao-produtos.fxml");
+        marcarBotaoAtivo(btnGestaoProdutos);
+    }
+
+    @FXML
     private void selecionarCustosInsumos(ActionEvent event) {
         carregarSubpantalla("ajustes/custos-insumos.fxml");
         marcarBotaoAtivo(btnCustosInsumos);
@@ -92,6 +102,7 @@ public class AjustesController {
         Button[] botoes = {
             btnGestaoUsuarios,
             btnGestaoLayouts,
+            btnGestaoProdutos,
             btnCustosInsumos,
             btnEscalaProdutiva,
             btnMargensLucro,

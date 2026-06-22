@@ -12,7 +12,7 @@ public class ClienteDAO {
 
     public void criar(Cliente cliente) {
         // DB uses nome_razao_social as column name
-        String sql = "INSERT INTO clientes (nome_razao_social, cpf_cnpj, email_contato, telefone_whatsapp, status, data_cadastro) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (nome_razao_social, cpf_cnpj, email_contato, telefone_whatsapp, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -21,7 +21,6 @@ public class ClienteDAO {
             pstmt.setString(3, cliente.getEmailContato());
             pstmt.setString(4, cliente.getTelefoneWhatsapp());
             pstmt.setString(5, cliente.getStatus());
-            pstmt.setTimestamp(6, Timestamp.valueOf(cliente.getDataCadastro()));
             
             pstmt.executeUpdate();
             
@@ -108,10 +107,6 @@ public class ClienteDAO {
         cliente.setEmailContato(rs.getString("email_contato"));
         cliente.setTelefoneWhatsapp(rs.getString("telefone_whatsapp"));
         cliente.setStatus(rs.getString("status"));
-        Timestamp ts = rs.getTimestamp("data_cadastro");
-        if (ts != null) {
-            cliente.setDataCadastro(ts.toLocalDateTime());
-        }
         return cliente;
     }
 }

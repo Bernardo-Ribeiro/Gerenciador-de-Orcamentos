@@ -7,19 +7,19 @@ import java.util.List;
 
 public class LayoutProdutoDAO {
     
-    public List<LayoutProduto> listarPorMaterial(int idMaterial) throws SQLException {
+    public List<LayoutProduto> listarPorProduto(int idProduto) throws SQLException {
         List<LayoutProduto> layouts = new ArrayList<>();
-        String sql = "SELECT * FROM layouts_produto WHERE id_material = ?";
+        String sql = "SELECT * FROM layouts_produto WHERE id_produto = ?";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, idMaterial);
+            stmt.setInt(1, idProduto);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     layouts.add(new LayoutProduto(
                         rs.getInt("id"),
-                        rs.getInt("id_material"),
+                        rs.getInt("id_produto"),
                         rs.getString("nome_layout"),
                         rs.getInt("largura_mm"),
                         rs.getInt("altura_mm")
@@ -31,12 +31,12 @@ public class LayoutProdutoDAO {
     }
 
     public void criar(LayoutProduto layout) throws SQLException {
-        String sql = "INSERT INTO layouts_produto (id_material, nome_layout, largura_mm, altura_mm) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO layouts_produto (id_produto, nome_layout, largura_mm, altura_mm) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            stmt.setInt(1, layout.getIdMaterial());
+            stmt.setInt(1, layout.getIdProduto());
             stmt.setString(2, layout.getNomeLayout());
             stmt.setInt(3, layout.getLarguraMm());
             stmt.setInt(4, layout.getAlturaMm());
@@ -62,7 +62,7 @@ public class LayoutProdutoDAO {
             while (rs.next()) {
                 layouts.add(new LayoutProduto(
                     rs.getInt("id"),
-                    rs.getInt("id_material"),
+                    rs.getInt("id_produto"),
                     rs.getString("nome_layout"),
                     rs.getInt("largura_mm"),
                     rs.getInt("altura_mm")
@@ -73,12 +73,12 @@ public class LayoutProdutoDAO {
     }
 
     public void atualizar(LayoutProduto layout) throws SQLException {
-        String sql = "UPDATE layouts_produto SET id_material = ?, nome_layout = ?, largura_mm = ?, altura_mm = ? WHERE id = ?";
+        String sql = "UPDATE layouts_produto SET id_produto = ?, nome_layout = ?, largura_mm = ?, altura_mm = ? WHERE id = ?";
         
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt(1, layout.getIdMaterial());
+            stmt.setInt(1, layout.getIdProduto());
             stmt.setString(2, layout.getNomeLayout());
             stmt.setInt(3, layout.getLarguraMm());
             stmt.setInt(4, layout.getAlturaMm());

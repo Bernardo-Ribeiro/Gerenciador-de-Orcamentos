@@ -1,3 +1,4 @@
+com\grafica\dao\ItemOrcamentoDAO.class
 com\grafica\controller\OrcamentoController$4.class
 com\grafica\controller\GestaoLayoutsController$2.class
 com\grafica\controller\DashboardController.class
@@ -7,21 +8,25 @@ com\grafica\model\Material.class
 com\grafica\model\CategoriaLucro.class
 com\grafica\controller\OrcamentoController$1.class
 com\grafica\model\Cliente.class
+com\grafica\model\Produto.class
+com\grafica\model\ProdutoAcabamento.class
 com\grafica\dao\DbConnection.class
 com\grafica\dao\OrcamentoDAO.class
+com\grafica\model\ProdutoMaterial.class
 com\grafica\model\Orcamento.class
 com\grafica\controller\OrcamentoController$3.class
 com\grafica\controller\EscalaProdutivaController.class
 com\grafica\service\CalculoService.class
 com\grafica\controller\AjustesController.class
-com\grafica\model\EscalaProductiva.class
 com\grafica\controller\MainController.class
 com\grafica\controller\EscalaProdutivaController$IntervaloRow.class
 com\grafica\model\EscalaProdutiva.class
+com\grafica\dao\ProdutoDAO.class
 com\grafica\controller\OrcamentoController$7.class
 com\grafica\controller\ClienteController$1.class
 com\grafica\dao\LayoutProdutoDAO.class
 com\grafica\controller\MaterialController.class
+com\grafica\controller\ProdutoController.class
 com\grafica\model\LayoutProduto.class
 com\grafica\model\ItemOrcamento.class
 com\grafica\controller\LoginController.class
@@ -29,6 +34,8 @@ com\grafica\controller\GestaoUsuariosController.class
 com\grafica\dao\UsuarioDAO.class
 com\grafica\controller\EscalaProdutivaController$Intervalo.class
 com\grafica\controller\OrcamentoController$6.class
+com\grafica\dao\ProdutoAcabamentoDAO.class
+com\grafica\model\ItemOrcamentoAcabamento.class
 com\grafica\controller\GestaoLayoutsController.class
 com\grafica\controller\CustosInsumosController.class
 com\grafica\controller\GestaoLayoutsController$3.class
@@ -36,6 +43,8 @@ module-info.class
 com\grafica\controller\MargensLucroController.class
 com\grafica\model\Usuario.class
 com\grafica\controller\ClienteController.class
+com\grafica\dao\ItemOrcamentoAcabamentoDAO.class
+com\grafica\dao\ProdutoMaterialDAO.class
 com\grafica\controller\RelatoriosController$3.class
 com\grafica\controller\RelatoriosController$RelatorioOrcamentoView.class
 com\grafica\controller\RelatoriosController.class
@@ -45,6 +54,7 @@ com\grafica\controller\OrcamentoController$8.class
 com\grafica\controller\ConfiguracoesPdfController.class
 com\grafica\dao\CategoriaLucroDAO.class
 com\grafica\controller\OrcamentoController$5.class
+com\grafica\dao\EscalaProdutivaDAO.class
 com\grafica\controller\GestaoLayoutsController$1.class
 com\grafica\controller\OrcamentoController.class
 com\grafica\controller\OrcamentoController$2.class

@@ -3,16 +3,20 @@
 <?import javafx.geometry.Insets?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableCell?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
 <VBox spacing="18.0" styleClass="budget-page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.OrcamentoController">
     <padding>
@@ -24,7 +28,7 @@
         <VBox spacing="6.0">
             <children>
                 <Label styleClass="budget-title" text="Calculadora de Orçamentos" />
-                <Label styleClass="budget-subtitle" text="Monte propostas com base nos materiais, dimensões e margens configuradas no sistema." wrapText="true" />
+                <Label styleClass="budget-subtitle" text="Monte propostas seguindo o fluxo: Produto → Layout → Material → Acabamentos → Quantidade." wrapText="true" />
             </children>
         </VBox>
 
@@ -37,12 +41,11 @@
                             <Label styleClass="budget-card-subtitle" text="Pesquisar Cliente (Nome ou CNPJ)" />
                             <HBox spacing="10.0" alignment="CENTER_LEFT">
                                 <children>
-                                    <ComboBox fx:id="clienteCombo" promptText="Pesquisar cliente..." HBox.hgrow="ALWAYS">
+                                    <SearchableComboBox fx:id="clienteCombo" promptText="Pesquisar cliente..." HBox.hgrow="ALWAYS">
                                         <styleClass>
                                             <String fx:value="budget-input" />
                                         </styleClass>
-                                    </ComboBox>
-                                    <Label styleClass="budget-chip" text="Autocomplete" />
+                                    </SearchableComboBox>
                                     <Button onAction="#abrirNovoCliente" text="+ Novo Cliente" styleClass="budget-secondary-button" />
                                 </children>
                             </HBox>
@@ -58,14 +61,54 @@
                                         <children>
                                             <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="budget-field-label" text="Material de Base" />
-                                                    <ComboBox fx:id="materialCombo" promptText="Selecione o material" styleClass="budget-input" maxWidth="Infinity" />
+                                                    <Label styleClass="budget-field-label" text="1. Produto" />
+                                                    <SearchableComboBox fx:id="produtoCombo" promptText="Selecione o produto" styleClass="budget-input" maxWidth="Infinity" />
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="budget-field-label" text="Layout / Tamanho Padrão" />
-                                                    <ComboBox fx:id="layoutCombo" promptText="Opcional" styleClass="budget-input" maxWidth="Infinity" />
+                                                    <Label styleClass="budget-field-label" text="2. Layout / Tamanho Padrão" />
+                                                    <SearchableComboBox fx:id="layoutCombo" promptText="Opcional" styleClass="budget-input" maxWidth="Infinity" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+
+                                    <HBox spacing="10.0">
+                                        <children>
+                                            <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="budget-field-label" text="3. Material de Base" />
+                                                    <SearchableComboBox fx:id="materialCombo" promptText="Selecione o material" styleClass="budget-input" maxWidth="Infinity" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </HBox>
+
+                                    <VBox spacing="6.0">
+                                        <children>
+                                            <Label styleClass="budget-field-label" text="4. Acabamentos" />
+                                            <ScrollPane fitToWidth="true" prefHeight="120.0" VBox.vgrow="ALWAYS">
+                                                <content>
+                                                    <VBox fx:id="acabamentosContainer" spacing="4.0" />
+                                                </content>
+                                            </ScrollPane>
+                                        </children>
+                                    </VBox>
+
+                                    <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                        <children>
+                                            <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                    <Label styleClass="budget-field-label" text="Tamanho" />
+                                                    <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                                        <children>
+                                                            <RadioButton fx:id="usarLayoutRadio" selected="true" styleClass="budget-radio" />
+                                                            <Label text="Usar Layout" />
+                                                            <RadioButton fx:id="personalizadoRadio" styleClass="budget-radio" />
+                                                            <Label text="Personalizado" />
+                                                        </children>
+                                                    </HBox>
                                                 </children>
                                             </VBox>
                                             <VBox spacing="6.0">
@@ -80,20 +123,9 @@
                                                     <TextField fx:id="alturaField" promptText="1200" styleClass="budget-input" prefWidth="90.0" />
                                                 </children>
                                             </VBox>
-                                        </children>
-                                    </HBox>
-
-                                    <HBox spacing="10.0" alignment="CENTER_LEFT">
-                                        <children>
-                                            <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                                <children>
-                                                    <Label styleClass="budget-field-label" text="Tipo de Serviço / Acabamento" />
-                                                    <TextField fx:id="acabamentoField" promptText="Selecione" styleClass="budget-input" />
-                                                </children>
-                                            </VBox>
                                             <VBox spacing="6.0">
                                                 <children>
-                                                    <Label styleClass="budget-field-label" text="Quantidade Total" />
+                                                    <Label styleClass="budget-field-label" text="5. Quantidade" />
                                                     <TextField fx:id="quantidadeField" promptText="5" styleClass="budget-input" prefWidth="120.0" />
                                                 </children>
                                             </VBox>
@@ -105,7 +137,7 @@
                                         </children>
                                     </HBox>
 
-                                    <Label fx:id="areaCalculadaLabel" styleClass="budget-helper" text="* Area calculada: 0.00 m2" />
+                                    <Label fx:id="areaCalculadaLabel" styleClass="budget-helper" text="* Área calculada: 0,00 m²" />
                                 </children>
                             </VBox>
                         </children>
@@ -123,18 +155,19 @@
 
                             <HBox styleClass="budget-table-header" alignment="CENTER_LEFT">
                                 <children>
-                                    <Label styleClass="budget-table-label" text="Material / Serviço" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-                                    <Label styleClass="budget-table-label" text="Dimensões" prefWidth="140.0" minWidth="140.0" alignment="CENTER" />
-                                    <Label styleClass="budget-table-label" text="Qtd" prefWidth="60.0" minWidth="60.0" alignment="CENTER" />
-                                    <Label styleClass="budget-table-label" text="V. Bruto" prefWidth="90.0" minWidth="90.0" alignment="CENTER" />
-                                    <Label styleClass="budget-table-label" text="V. Final" prefWidth="90.0" minWidth="90.0" alignment="CENTER" />
-                                    <Label styleClass="budget-table-label" text="Ações" prefWidth="80.0" minWidth="80.0" alignment="CENTER" />
+                                    <Label fx:id="labelMaterial" styleClass="budget-table-label" text="Produto / Material" prefWidth="220" minWidth="220" HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="labelDimensoes" styleClass="budget-table-label" text="Dimensões" prefWidth="140.0" minWidth="140.0" alignment="CENTER" />
+                                    <Label fx:id="labelQuantidade" styleClass="budget-table-label" text="Qtd" prefWidth="60.0" minWidth="60.0" alignment="CENTER" />
+                                    <Label fx:id="labelValorBruto" styleClass="budget-table-label" text="V. Bruto" prefWidth="90.0" minWidth="90.0" alignment="CENTER" />
+                                    <Label fx:id="labelValorFinal" styleClass="budget-table-label" text="V. Final" prefWidth="90.0" minWidth="90.0" alignment="CENTER" />
+                                    <Label fx:id="labelAcoes" styleClass="budget-table-label" text="Ações" prefWidth="80.0" minWidth="80.0" alignment="CENTER" />
                                 </children>
                             </HBox>
 
                             <TableView fx:id="itensTable" VBox.vgrow="ALWAYS" styleClass="budget-table-view">
                                 <columns>
-                                    <TableColumn fx:id="materialColumn" text="Material / Servico" prefWidth="220.0" />
+                                    <TableColumn fx:id="produtoColumn" text="Produto / Material" prefWidth="220.0" />
+                                    <TableColumn fx:id="materialColumn" text="Material" prefWidth="180.0" />
                                     <TableColumn fx:id="dimensoesColumn" text="Dimensoes" prefWidth="140.0" />
                                     <TableColumn fx:id="quantidadeItemColumn" text="Qtd" prefWidth="60.0" />
                                     <TableColumn fx:id="valorBrutoColumn" text="V. Bruto" prefWidth="90.0" />
@@ -189,7 +222,7 @@
 
                         <VBox spacing="6.0" styleClass="budget-note-card">
                             <children>
-                                <Label styleClass="budget-note-label" text="Os cálculos consideram as dimensões em milímetros e aplicam o custo por metro quadrado do material selecionado." wrapText="true" />
+                                <Label styleClass="budget-note-label" text="Fluxo: Produto → Layout → Material → Acabamentos → Quantidade. O cálculo é automático." wrapText="true" />
                                 <Label styleClass="budget-note-link" text="Painel Admin." />
                             </children>
                         </VBox>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.ProdutoController">
+    <padding>
+        <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
+    </padding>
+
+    <children>
+        <HBox spacing="16.0" alignment="CENTER_LEFT">
+            <children>
+                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="materials-title" text="Gestão de Produtos" />
+                        <Label styleClass="materials-subtitle" text="Cadastre e gerencie os produtos (Cartão de Visita, Banner, etc.) disponíveis no sistema." wrapText="true" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox spacing="10.0" styleClass="materials-card" HBox.hgrow="ALWAYS">
+                    <children>
+                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                            <children>
+                                <Label styleClass="materials-label" text="Filtrar por Categoria:" />
+                                <ComboBox fx:id="filtroCategoria" promptText="TODOS" styleClass="materials-input" />
+                                <Button onAction="#filtrar" text="Filtrar" styleClass="materials-secondary-button" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="produtosTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0" />
+                                <TableColumn fx:id="nomeColumn" text="Nome do Produto" prefWidth="250.0" />
+                                <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="180.0" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox spacing="14.0" styleClass="materials-card" prefWidth="340.0">
+                    <children>
+                        <Label styleClass="materials-title" text="Detalhes do Produto" />
+                        <Label styleClass="materials-subtitle" text="Defina o nome e a categoria do produto." wrapText="true" />
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Nome do Produto" />
+                                <TextField fx:id="nomeField" promptText="Ex: Cartão de Visita" styleClass="materials-input" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="6.0">
+                            <children>
+                                <Label styleClass="materials-label" text="Categoria" />
+                                <ComboBox fx:id="categoriaCombo" promptText="Selecione a categoria" maxWidth="Infinity" styleClass="materials-input" />
+                            </children>
+                        </VBox>
+
+                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                            <children>
+                                <Button onAction="#limpar" text="Novo" styleClass="materials-secondary-button" />
+                                <Button onAction="#salvarProduto" text="Salvar" styleClass="materials-primary-button" />
+                                <Button onAction="#deletarProduto" text="Excluir" styleClass="materials-danger-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>

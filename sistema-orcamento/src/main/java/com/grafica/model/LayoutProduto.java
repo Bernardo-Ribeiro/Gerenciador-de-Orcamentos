@@ -2,16 +2,16 @@ package com.grafica.model;
 
 public class LayoutProduto {
     private Integer id;
-    private Integer idMaterial;
+    private Integer idProduto;
     private String nomeLayout;
     private Integer larguraMm;
     private Integer alturaMm;
 
     public LayoutProduto() {}
 
-    public LayoutProduto(Integer id, Integer idMaterial, String nomeLayout, Integer larguraMm, Integer alturaMm) {
+    public LayoutProduto(Integer id, Integer idProduto, String nomeLayout, Integer larguraMm, Integer alturaMm) {
         this.id = id;
-        this.idMaterial = idMaterial;
+        this.idProduto = idProduto;
         this.nomeLayout = nomeLayout;
         this.larguraMm = larguraMm;
         this.alturaMm = alturaMm;
@@ -25,12 +25,12 @@ public class LayoutProduto {
         this.id = id;
     }
 
-    public Integer getIdMaterial() {
-        return idMaterial;
+    public Integer getIdProduto() {
+        return idProduto;
     }
 
-    public void setIdMaterial(Integer idMaterial) {
-        this.idMaterial = idMaterial;
+    public void setIdProduto(Integer idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getNomeLayout() {
