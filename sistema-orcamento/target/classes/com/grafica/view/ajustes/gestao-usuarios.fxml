@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -28,76 +29,90 @@
             </children>
         </HBox>
 
-        <HBox spacing="12.0" alignment="CENTER_LEFT">
-            <children>
-                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="users-input" />
-                <Button text="Atualizar" onAction="#recarregar" styleClass="users-action-button" />
-            </children>
-        </HBox>
-
-        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox spacing="10.0" styleClass="users-table-card" HBox.hgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+            <padding>
+                <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
+            </padding>
+            <content>
+                <VBox spacing="12.0">
+                    <padding>
+                        <Insets top="0.0" right="4.0" bottom="4.0" left="4.0" />
+                    </padding>
                     <children>
-                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="users-table-view">
-                            <columns>
-                                <TableColumn fx:id="colNome" text="Nome" prefWidth="170.0" />
-                                <TableColumn fx:id="colEmail" text="E-mail" prefWidth="210.0" />
-                                <TableColumn fx:id="colCargo" text="Cargo" prefWidth="140.0" />
-                                <TableColumn fx:id="colStatus" text="Status" prefWidth="90.0" />
-                            </columns>
-                        </TableView>
-                    </children>
-                </VBox>
-
-                <VBox spacing="12.0" styleClass="users-table-card" prefWidth="320.0">
-                    <children>
-                        <Label styleClass="users-title" text="Detalhes do Usuário" />
-
-                        <VBox spacing="6.0">
+                        <HBox spacing="12.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="users-form-label" text="Nome" />
-                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="users-input" />
+                                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="users-input" />
+                                <Button text="Atualizar" onAction="#recarregar" styleClass="users-action-button" />
                             </children>
-                        </VBox>
+                        </HBox>
 
-                        <VBox spacing="6.0">
+                        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <Label styleClass="users-form-label" text="E-mail" />
-                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="users-input" />
-                            </children>
-                        </VBox>
+                                <VBox spacing="10.0" styleClass="users-table-card" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="users-table-view">
+                                            <columns>
+                                                <TableColumn fx:id="colNome" text="Nome" prefWidth="170.0" />
+                                                <TableColumn fx:id="colEmail" text="E-mail" prefWidth="210.0" />
+                                                <TableColumn fx:id="colCargo" text="Cargo" prefWidth="140.0" />
+                                                <TableColumn fx:id="colStatus" text="Status" prefWidth="90.0" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="users-form-label" text="Senha" />
-                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="users-input" />
-                            </children>
-                        </VBox>
+                                <VBox spacing="12.0" styleClass="users-table-card" style="-fx-border-color: transparent; -fx-border-width: 0;" prefWidth="320.0">
+                                    <children>
+                                        <Label styleClass="users-title" text="Detalhes do Usuário" />
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="users-form-label" text="Cargo" />
-                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="users-input" />
-                            </children>
-                        </VBox>
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="users-form-label" text="Nome" />
+                                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="users-input" />
+                                            </children>
+                                        </VBox>
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="users-form-label" text="Status" />
-                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="users-input" />
-                            </children>
-                        </VBox>
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="users-form-label" text="E-mail" />
+                                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="users-input" />
+                                            </children>
+                                        </VBox>
 
-                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button text="Excluir" onAction="#excluirSelecionado" styleClass="users-action-button" />
-                                <Button text="Salvar" onAction="#salvarUsuario" styleClass="users-primary-button" />
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="users-form-label" text="Senha" />
+                                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="users-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="users-form-label" text="Cargo" />
+                                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="users-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="users-form-label" text="Status" />
+                                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="users-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Button text="Excluir" onAction="#excluirSelecionado" styleClass="users-action-button" />
+                                                <Button text="Salvar" onAction="#salvarUsuario" styleClass="users-primary-button" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
                             </children>
                         </HBox>
                     </children>
                 </VBox>
-            </children>
-        </HBox>
+            </content>
+        </ScrollPane>
     </children>
 </VBox>

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoLayoutsController">
+<VBox spacing="18.0" styleClass="settings-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoLayoutsController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -22,47 +22,56 @@
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="materials-title" text="Gestão de Layouts / Tamanhos Padrão" />
-                        <Label styleClass="materials-subtitle" text="Configure medidas pré-definidas para agilizar a criação de orçamentos." wrapText="true" />
+                        <Label styleClass="settings-section-title" text="Gestão de Layouts / Tamanhos Padrão" />
+                        <Label styleClass="settings-section-text" text="Configure medidas pré-definidas para agilizar a criação de orçamentos." wrapText="true" />
                     </children>
                 </VBox>
             </children>
         </HBox>
 
-        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox spacing="10.0" styleClass="materials-card" HBox.hgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <padding>
+                <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
+            </padding>
+            <content>
+                <HBox spacing="16.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" prefHeight="600.0" styleClass="materials-table">
-                            <columns>
-                                <TableColumn fx:id="produtoColumn" text="Produto" prefWidth="180.0" />
-                                <TableColumn fx:id="nomeColumn" text="Nome do Layout" prefWidth="200.0" />
-                                <TableColumn fx:id="larguraColumn" text="Largura (mm)" prefWidth="90.0" />
-                                <TableColumn fx:id="alturaColumn" text="Altura (mm)" prefWidth="90.0" />
-                                <TableColumn fx:id="acaoColumn" text="Ações" prefWidth="80.0" />
-                            </columns>
-                        </TableView>
-                    </children>
-                </VBox>
-
-                <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="materials-card" VBox.vgrow="ALWAYS">
-                    <content>
-                        <VBox spacing="14.0" prefWidth="320.0">
+                        <VBox spacing="10.0" HBox.hgrow="ALWAYS" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12;">
+                            <padding>
+                                <Insets top="12.0" right="12.0" bottom="12.0" left="12.0" />
+                            </padding>
                             <children>
-                                <Label styleClass="materials-title" text="Detalhes do Layout" />
-                                <Label styleClass="materials-subtitle" text="Vincule um material e defina as dimensões padrão." wrapText="true" />
+                                <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" prefHeight="600.0" styleClass="settings-table-view">
+                                    <columns>
+                                        <TableColumn fx:id="produtoColumn" text="Produto" prefWidth="180.0" />
+                                        <TableColumn fx:id="nomeColumn" text="Nome do Layout" prefWidth="200.0" />
+                                        <TableColumn fx:id="larguraColumn" text="Largura (mm)" prefWidth="90.0" />
+                                        <TableColumn fx:id="alturaColumn" text="Altura (mm)" prefWidth="90.0" />
+                                        <TableColumn fx:id="acaoColumn" text="Ações" prefWidth="80.0" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="14.0" prefWidth="320.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12;">
+                            <padding>
+                                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
+                            </padding>
+                            <children>
+                                <Label styleClass="settings-section-title" text="Detalhes do Layout" />
+                                <Label styleClass="settings-section-text" text="Vincule um material e defina as dimensões padrão." wrapText="true" />
 
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="materials-label" text="Produto Vinculado" />
-                                        <ComboBox fx:id="produtoCombo" promptText="Selecione o produto" maxWidth="Infinity" styleClass="materials-input" />
+                                        <Label styleClass="settings-form-label" text="Produto Vinculado" />
+                                        <ComboBox fx:id="produtoCombo" promptText="Selecione o produto" maxWidth="Infinity" styleClass="settings-input" />
                                     </children>
                                 </VBox>
 
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="materials-label" text="Nome do Layout" />
-                                        <TextField fx:id="nomeLayoutField" promptText="Ex: Cartão de Visita" styleClass="materials-input" />
+                                        <Label styleClass="settings-form-label" text="Nome do Layout" />
+                                        <TextField fx:id="nomeLayoutField" promptText="Ex: Cartão de Visita" styleClass="settings-input" />
                                     </children>
                                 </VBox>
 
@@ -70,14 +79,14 @@
                                     <children>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="materials-label" text="Largura (mm)" />
-                                                <TextField fx:id="larguraField" promptText="0" styleClass="materials-input" />
+                                                <Label styleClass="settings-form-label" text="Largura (mm)" />
+                                                <TextField fx:id="larguraField" promptText="0" styleClass="settings-input" />
                                             </children>
                                         </VBox>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="materials-label" text="Altura (mm)" />
-                                                <TextField fx:id="alturaField" promptText="0" styleClass="materials-input" />
+                                                <Label styleClass="settings-form-label" text="Altura (mm)" />
+                                                <TextField fx:id="alturaField" promptText="0" styleClass="settings-input" />
                                             </children>
                                         </VBox>
                                     </children>
@@ -85,15 +94,15 @@
 
                                 <HBox spacing="10.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <Button onAction="#limparCampos" text="Novo" styleClass="materials-secondary-button" />
-                                        <Button fx:id="btnSalvar" onAction="#salvarLayout" text="Salvar" styleClass="materials-primary-button" />
+                                        <Button onAction="#limparCampos" text="Novo" styleClass="settings-secondary-action, settings-action-button" />
+                                        <Button fx:id="btnSalvar" onAction="#salvarLayout" text="Salvar" styleClass="settings-primary-action, settings-action-button" />
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
-                    </content>
-                </ScrollPane>
-            </children>
-        </HBox>
+                    </children>
+                </HBox>
+            </content>
+        </ScrollPane>
     </children>
 </VBox>

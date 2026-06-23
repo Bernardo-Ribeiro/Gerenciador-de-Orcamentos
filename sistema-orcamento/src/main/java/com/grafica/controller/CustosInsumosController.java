@@ -6,10 +6,12 @@ import com.grafica.model.CategoriaLucro;
 import com.grafica.model.Material;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
 import java.math.BigDecimal;
@@ -66,6 +68,18 @@ public class CustosInsumosController {
     @FXML
     private ComboBox<String> cmbStatus;
 
+    @FXML
+    private HBox filtrosContainer;
+
+    @FXML
+    private HBox csvWarning;
+
+    @FXML
+    private ComboBox<String> cmbFiltroCategoria;
+
+    @FXML
+    private ComboBox<String> cmbFiltroTipoItem;
+
     private MaterialDAO materialDAO;
     private CategoriaLucroDAO categoriaLucroDAO;
     private ObservableList<Material> materiais;
@@ -81,6 +95,9 @@ public class CustosInsumosController {
         cmbTipoItem.setItems(FXCollections.observableArrayList("BASE", "ACABAMENTO"));
         cmbUnidade.setItems(FXCollections.observableArrayList("AREA", "UNIDADE", "TIRAGEM", "FOLHA", "PACOTE", "SERVICO", "CHAPA"));
         cmbStatus.setItems(FXCollections.observableArrayList("ATIVO", "INATIVO"));
+
+        cmbFiltroCategoria.setItems(FXCollections.observableArrayList(null, "COMUNICACAO_VISUAL", "IMPRESSOS"));
+        cmbFiltroTipoItem.setItems(FXCollections.observableArrayList(null, "BASE", "ACABAMENTO"));
 
         configurarTabela();
         configurarCombos();
@@ -167,7 +184,7 @@ public class CustosInsumosController {
     }
 
     @FXML
-    private void filtrarInsumos(KeyEvent event) {
+    private void filtrarInsumos() {
         aplicarFiltro();
     }
 
@@ -179,10 +196,18 @@ public class CustosInsumosController {
     private void aplicarFiltro() {
         String q = txtBusca.getText() == null ? "" : txtBusca.getText().trim().toLowerCase();
         boolean mostrarInativos = chkMostrarInativos != null && chkMostrarInativos.isSelected();
+        String filtroCategoria = cmbFiltroCategoria.getValue();
+        String filtroTipoItem = cmbFiltroTipoItem.getValue();
         ObservableList<Material> filtrados = FXCollections.observableArrayList();
 
         for (Material m : materiais) {
             if (!mostrarInativos && "INATIVO".equalsIgnoreCase(m.getStatus())) {
+                continue;
+            }
+            if (filtroCategoria != null && !filtroCategoria.equals(m.getCategoria())) {
+                continue;
+            }
+            if (filtroTipoItem != null && !filtroTipoItem.equals(m.getTipoItem())) {
                 continue;
             }
             String nome = m.getNome() != null ? m.getNome().toLowerCase() : "";
@@ -199,12 +224,15 @@ public class CustosInsumosController {
 
     @FXML
     private void abrirFiltros() {
-        System.out.println("Abrir filtros (no implementado)");
+        boolean visivel = !filtrosContainer.isVisible();
+        filtrosContainer.setVisible(visivel);
+        filtrosContainer.setManaged(visivel);
     }
 
     @FXML
     private void exportarCsv() {
-        System.out.println("Exportar CSV (no implementado)");
+        csvWarning.setVisible(true);
+        csvWarning.setManaged(true);
     }
 
     @FXML

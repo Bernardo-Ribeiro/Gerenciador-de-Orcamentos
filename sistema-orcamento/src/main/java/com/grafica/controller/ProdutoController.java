@@ -78,6 +78,7 @@ public class ProdutoController {
             "TODOS", "IMPRESSOS", "COMUNICACAO_VISUAL", "RIGIDOS"
         ));
         filtroCategoria.setValue("TODOS");
+        filtroCategoria.valueProperty().addListener((obs, oldVal, newVal) -> filtrarProdutos());
 
         // Configurar colunas da tabela de produtos
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));

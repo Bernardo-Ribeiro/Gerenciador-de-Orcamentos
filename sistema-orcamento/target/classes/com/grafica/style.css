@@ -352,6 +352,14 @@
     -fx-border-width: 1;
 }
 
+.materials-card.scroll-pane {
+    -fx-background-color: white;
+    -fx-background: white;
+}
+.materials-card.scroll-pane > .viewport {
+    -fx-background-color: white;
+}
+
 /* =========================
    TOOLBAR
 ========================= */
@@ -494,6 +502,42 @@
 
 .materials-action:hover {
     -fx-text-fill: #111827;
+}
+
+.materials-link-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #D92D20;
+    -fx-cursor: hand;
+    -fx-padding: 0 8;
+}
+
+.materials-link-button:hover {
+    -fx-text-fill: #B42318;
+}
+
+.radio-button {
+    -fx-font-size: 13px;
+}
+
+.radio-button .radio {
+    -fx-background-color: white;
+    -fx-border-color: #D9E0EA;
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 2;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: #2563eb;
+    -fx-border-color: #2563eb;
+}
+
+.radio-button:selected .dot {
+    -fx-background-color: white;
 }
 
 /* =========================
@@ -775,6 +819,22 @@
     -fx-wrap-text: true;
 }
 
+/* Product management screen */
+.product-section-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E6EAF1;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+}
+
+.product-section-title {
+    -fx-text-fill: #1F2A37;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
 /* Costs / CRUD screen */
 .settings-crud-grid {
     -fx-padding: 4 0 0 0;
@@ -951,7 +1011,19 @@
     -fx-font-size: 12px;
     -fx-font-weight: 700;
 }
+.product-section-card {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 10;
+    -fx-border-color: #E5EAF2;
+    -fx-border-radius: 10;
+    -fx-padding: 12;
+}
 
+.product-section-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #344054;
+}
 /* Users management */
 .users-section {
     -fx-background-color: transparent;
@@ -2814,4 +2886,107 @@
 .text-body-sm {
     -fx-font-size: 12px;
     -fx-text-fill: #667085;
+}
+/* Garantir padding uniforme nos cards */
+.settings-form-card,
+.product-section-card {
+    -fx-padding: 20 20 20 20;
+}
+
+/* Espaçamento entre os cards no detalhe */
+.settings-detail-content {
+    -fx-spacing: 28;
+}
+
+/* Altura mínima para tabelas de associação */
+.product-section-card .table-view {
+    -fx-pref-height: 150px;
+    -fx-min-height: 100px;
+}
+
+/* Pequeno espaçamento acima dos HBox de adição */
+.product-section-card .hbox {
+    -fx-spacing: 10;
+    -fx-padding: 6 0 0 0;
+}
+
+/* Evitar que a tabela principal fique sem altura mínima */
+.settings-table-view {
+    -fx-min-height: 200px;
+}
+
+/* Ajuste fino para o SplitPane, evitando que os painéis fiquem muito estreitos */
+.split-pane > .split-pane-divider {
+    -fx-padding: 0 2 0 2;
+}
+/* =====================================================
+   GESTÃO DE PRODUTOS — estilos complementares
+   ===================================================== */
+
+/* Corrige padding interno dos cards de produto/formulário */
+.produtos-detail-card {
+    -fx-padding: 20;
+}
+
+.product-section-card {
+    -fx-padding: 16 16 18 16;
+}
+
+/* Divisória sutil dentro do card de produto */
+.produtos-divider {
+    -fx-background-color: #EEF2F7;
+}
+
+/* Garante que o ScrollPane do painel direito não mostre borda */
+.produtos-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+.produtos-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Painel esquerdo sem fundo extra */
+.produtos-left-pane {
+    -fx-background-color: transparent;
+}
+.produtos-right-pane {
+    -fx-background-color: transparent;
+}
+
+/* SplitPane limpo */
+.produtos-split {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.produtos-split > .split-pane-divider {
+    -fx-padding: 0 3 0 3;
+    -fx-background-color: #E6EAF1;
+}
+
+/* Garante que os botões de ação herdam o pref-height */
+.settings-action-button {
+    -fx-pref-height: 38px;
+    -fx-padding: 0 16;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+/* Tabela principal de produtos com borda arredondada */
+.settings-table-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E6EAF1;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 0;
+}
+
+/* Linha selecionada em azul claro nos cards de associação */
+.product-section-card .settings-table-view .table-row-cell:selected {
+    -fx-background-color: #EAF4FF;
 }

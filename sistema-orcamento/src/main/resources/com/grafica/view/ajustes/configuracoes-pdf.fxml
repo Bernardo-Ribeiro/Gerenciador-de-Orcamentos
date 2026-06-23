@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
@@ -14,166 +15,182 @@
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
     <children>
-        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox spacing="16.0" HBox.hgrow="ALWAYS">
-                    <VBox spacing="10.0" styleClass="pdf-card">
-                        <children>
-                            <Label styleClass="pdf-card-title" text="Identidade Visual" />
-                            <Label styleClass="pdf-card-subtitle" text="A logomarca aparecera no canto superior esquerdo do documento." wrapText="true" />
-                            <HBox spacing="12.0" alignment="CENTER_LEFT">
-                                <children>
-                                    <VBox styleClass="pdf-logo-preview">
-                                        <children>
-                                            <Label styleClass="pdf-logo-placeholder" text="Logo" />
-                                        </children>
-                                    </VBox>
-                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <Button text="Carregar Nova Logo" onAction="#carregarLogo" styleClass="pdf-primary-button" />
-                                            <Label styleClass="pdf-helper" text="Recomendado: PNG ou JPG com fundo transparente. Max 2MB." wrapText="true" />
-                                        </children>
-                                    </VBox>
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
 
-                    <VBox spacing="12.0" styleClass="pdf-card">
-                        <children>
-                            <Label styleClass="pdf-card-title" text="Dados da Empresa" />
-                            <Label styleClass="pdf-card-subtitle" text="Informacoes de contato e faturamento para o cabecalho." wrapText="true" />
-
-                            <HBox spacing="12.0">
-                                <children>
-                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="Nome Comercial" />
-                                            <TextField fx:id="txtNomeComercial" styleClass="pdf-input" />
-                                        </children>
-                                    </VBox>
-                                    <VBox spacing="6.0">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="CNPJ" />
-                                            <TextField fx:id="txtCnpj" styleClass="pdf-input" prefWidth="180.0" />
-                                        </children>
-                                    </VBox>
-                                </children>
-                            </HBox>
-
-                            <HBox spacing="12.0">
-                                <children>
-                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="Telefone / WhatsApp" />
-                                            <TextField fx:id="txtTelefone" styleClass="pdf-input" />
-                                        </children>
-                                    </VBox>
-                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="E-mail de Contato" />
-                                            <TextField fx:id="txtEmail" styleClass="pdf-input" />
-                                        </children>
-                                    </VBox>
-                                </children>
-                            </HBox>
-
-                            <VBox spacing="6.0">
-                                <children>
-                                    <Label styleClass="pdf-field-label" text="Endereco Completo" />
-                                    <TextField fx:id="txtEndereco" styleClass="pdf-input" />
-                                </children>
-                            </VBox>
-                        </children>
-                    </VBox>
-
-                    <VBox spacing="12.0" styleClass="pdf-card">
-                        <children>
-                            <Label styleClass="pdf-card-title" text="Layout do Documento" />
-                            <Label styleClass="pdf-card-subtitle" text="Ajustes finos de impressao e observacoes legais." wrapText="true" />
-
-                            <HBox spacing="12.0">
-                                <children>
-                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="Tamanho Papel" />
-                                            <TextField fx:id="txtTamanhoPapel" text="A4 (210 x 297mm)" styleClass="pdf-input" />
-                                        </children>
-                                    </VBox>
-                                    <VBox spacing="6.0">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="Margem Sup. (mm)" />
-                                            <TextField fx:id="txtMargemSuperior" text="15" styleClass="pdf-input" prefWidth="120.0" />
-                                        </children>
-                                    </VBox>
-                                    <VBox spacing="6.0">
-                                        <children>
-                                            <Label styleClass="pdf-field-label" text="Margem Lat. (mm)" />
-                                            <TextField fx:id="txtMargemLateral" text="10" styleClass="pdf-input" prefWidth="120.0" />
-                                        </children>
-                                    </VBox>
-                                </children>
-                            </HBox>
-
-                            <VBox spacing="6.0">
-                                <children>
-                                    <Label styleClass="pdf-field-label" text="Observacoes de Rodape (Texto Fixo)" />
-                                    <TextArea fx:id="txtObservacoes" text="Este orcamento tem validade de 10 dias uteis. Garantia de 12 meses contra defeitos de fabricacao." styleClass="pdf-textarea" wrapText="true" prefRowCount="3" />
-                                </children>
-                            </VBox>
-                        </children>
-                    </VBox>
-
-                    <HBox spacing="10.0" alignment="CENTER_RIGHT">
-                        <children>
-                            <Button text="Restaurar Padroes" onAction="#restaurarPadroes" styleClass="pdf-secondary-button" />
-                            <Button text="Salvar Configuracoes" onAction="#salvarConfiguracoes" styleClass="pdf-primary-button" />
-                        </children>
-                    </HBox>
-                </VBox>
-
-                <VBox spacing="12.0" styleClass="pdf-preview">
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+            <padding>
+                <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
+            </padding>
+            <content>
+                <VBox spacing="16.0">
+                    <padding>
+                        <Insets top="0.0" right="4.0" bottom="4.0" left="4.0" />
+                    </padding>
                     <children>
-                        <Label styleClass="pdf-preview-title" text="Pre-visualizacao em Tempo Real" />
-
-                        <VBox spacing="8.0" styleClass="pdf-preview-card">
+                        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
                             <children>
-                                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                <VBox spacing="16.0" HBox.hgrow="ALWAYS">
+                                    <VBox spacing="10.0" styleClass="pdf-card">
+                                        <children>
+                                            <Label styleClass="pdf-card-title" text="Identidade Visual" />
+                                            <Label styleClass="pdf-card-subtitle" text="A logomarca aparecerá no canto superior esquerdo do documento." wrapText="true" />
+                                            <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                                <children>
+                                                    <VBox styleClass="pdf-logo-preview">
+                                                        <children>
+                                                            <Label styleClass="pdf-logo-placeholder" text="Logo" />
+                                                        </children>
+                                                    </VBox>
+                                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Button text="Carregar Nova Logo" onAction="#carregarLogo" styleClass="pdf-primary-button" />
+                                                            <Label styleClass="pdf-helper" text="Recomendado: PNG ou JPG com fundo transparente. Max 2MB." wrapText="true" />
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </children>
+                                    </VBox>
+
+                                    <VBox spacing="12.0" styleClass="pdf-card">
+                                        <children>
+                                            <Label styleClass="pdf-card-title" text="Dados da Empresa" />
+                                            <Label styleClass="pdf-card-subtitle" text="Informações de contato e faturamento para o cabeçalho." wrapText="true" />
+
+                                            <HBox spacing="12.0">
+                                                <children>
+                                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="Nome Comercial" />
+                                                            <TextField fx:id="txtNomeComercial" styleClass="pdf-input" />
+                                                        </children>
+                                                    </VBox>
+                                                    <VBox spacing="6.0">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="CNPJ" />
+                                                            <TextField fx:id="txtCnpj" styleClass="pdf-input" prefWidth="180.0" />
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+
+                                            <HBox spacing="12.0">
+                                                <children>
+                                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="Telefone / WhatsApp" />
+                                                            <TextField fx:id="txtTelefone" styleClass="pdf-input" />
+                                                        </children>
+                                                    </VBox>
+                                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="E-mail de Contato" />
+                                                            <TextField fx:id="txtEmail" styleClass="pdf-input" />
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <Label styleClass="pdf-field-label" text="Endereço Completo" />
+                                                    <TextField fx:id="txtEndereco" styleClass="pdf-input" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+
+                                    <VBox spacing="12.0" styleClass="pdf-card">
+                                        <children>
+                                            <Label styleClass="pdf-card-title" text="Layout do Documento" />
+                                            <Label styleClass="pdf-card-subtitle" text="Ajustes finos de impressão e observações legais." wrapText="true" />
+
+                                            <HBox spacing="12.0">
+                                                <children>
+                                                    <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="Tamanho Papel" />
+                                                            <TextField fx:id="txtTamanhoPapel" text="A4 (210 x 297mm)" styleClass="pdf-input" />
+                                                        </children>
+                                                    </VBox>
+                                                    <VBox spacing="6.0">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="Margem Sup. (mm)" />
+                                                            <TextField fx:id="txtMargemSuperior" text="15" styleClass="pdf-input" prefWidth="120.0" />
+                                                        </children>
+                                                    </VBox>
+                                                    <VBox spacing="6.0">
+                                                        <children>
+                                                            <Label styleClass="pdf-field-label" text="Margem Lat. (mm)" />
+                                                            <TextField fx:id="txtMargemLateral" text="10" styleClass="pdf-input" prefWidth="120.0" />
+                                                        </children>
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+
+                                            <VBox spacing="6.0">
+                                                <children>
+                                                    <Label styleClass="pdf-field-label" text="Observações do Rodapé (Texto Fixo)" />
+                                                    <TextArea fx:id="txtObservacoes" text="Este orçamento tem validade de 10 dias úteis. Garantia de 12 meses contra defeitos de fabricação." styleClass="pdf-textarea" wrapText="true" prefRowCount="3" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </VBox>
+
+                                    <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                        <children>
+                                            <Button text="Restaurar Padrões" onAction="#restaurarPadroes" styleClass="pdf-secondary-button" />
+                                            <Button text="Salvar Configurações" onAction="#salvarConfiguracoes" styleClass="pdf-primary-button" />
+                                        </children>
+                                    </HBox>
+                                </VBox>
+
+                                <VBox spacing="12.0" styleClass="pdf-preview">
                                     <children>
-                                        <Label styleClass="pdf-preview-brand" text="" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="pdf-preview-logo" text="LOGO" />
-                                    </children>
-                                </HBox>
-                                <Label styleClass="pdf-preview-text" text="" />
-                                <Label styleClass="pdf-preview-text" text="" />
-                                <Label styleClass="pdf-preview-text" text="" />
-                                <HBox spacing="6.0" alignment="CENTER_LEFT" styleClass="pdf-preview-divider">
-                                    <children>
-                                        <Label styleClass="pdf-preview-caption" text="ORCAMENTO #2024-085" />
-                                        <Region HBox.hgrow="ALWAYS" />
-                                        <Label styleClass="pdf-preview-caption" text="Emitido em 24/05/2024" />
-                                    </children>
-                                </HBox>
-                                <VBox spacing="4.0" styleClass="pdf-preview-block">
-                                    <children>
-                                        <Label styleClass="pdf-preview-placeholder" text="" />
-                                        <Label styleClass="pdf-preview-placeholder" text="" />
-                                        <Label styleClass="pdf-preview-placeholder" text="" />
+                                        <Label styleClass="pdf-preview-title" text="Pré-visualização em Tempo Real" />
+
+                                        <VBox spacing="8.0" styleClass="pdf-preview-card">
+                                            <children>
+                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                                    <children>
+                                                        <Label styleClass="pdf-preview-brand" text="" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <Label styleClass="pdf-preview-logo" text="LOGO" />
+                                                    </children>
+                                                </HBox>
+                                                <Label styleClass="pdf-preview-text" text="" />
+                                                <Label styleClass="pdf-preview-text" text="" />
+                                                <Label styleClass="pdf-preview-text" text="" />
+                                                <HBox spacing="6.0" alignment="CENTER_LEFT" styleClass="pdf-preview-divider">
+                                                    <children>
+                                                        <Label styleClass="pdf-preview-caption" text="ORÇAMENTO #2024-085" />
+                                                        <Region HBox.hgrow="ALWAYS" />
+                                                        <Label styleClass="pdf-preview-caption" text="Emitido em 24/05/2024" />
+                                                    </children>
+                                                </HBox>
+                                                <VBox spacing="4.0" styleClass="pdf-preview-block">
+                                                    <children>
+                                                        <Label styleClass="pdf-preview-placeholder" text="" />
+                                                        <Label styleClass="pdf-preview-placeholder" text="" />
+                                                        <Label styleClass="pdf-preview-placeholder" text="" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+
+                                        <HBox spacing="8.0" alignment="CENTER_LEFT" styleClass="pdf-note">
+                                            <children>
+                                                <Label styleClass="pdf-note-icon" text="i" />
+                                                <Label styleClass="pdf-note-text" text="Layout responsivo para visualização em dispositivos móveis e impressão A4." wrapText="true" />
+                                            </children>
+                                        </HBox>
                                     </children>
                                 </VBox>
-                            </children>
-                        </VBox>
-
-                        <HBox spacing="8.0" alignment="CENTER_LEFT" styleClass="pdf-note">
-                            <children>
-                                <Label styleClass="pdf-note-icon" text="i" />
-                                <Label styleClass="pdf-note-text" text="Layout responsivo para visualizacao em dispositivos moveis e impressao A4." wrapText="true" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
-            </children>
-        </HBox>
+            </content>
+        </ScrollPane>
+
     </children>
 </VBox>

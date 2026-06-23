@@ -19,6 +19,10 @@ public class MargensLucroController implements Initializable {
     @FXML private VBox categoriasContainer;
     @FXML private Label lblCount;
     @FXML private HBox alertSuccess;
+    @FXML private VBox novoCategoriaForm;
+    @FXML private TextField txtNovaCategoriaNome;
+    @FXML private TextField txtNovaCategoriaMargem;
+    @FXML private TextField txtNovaCategoriaDescricao;
 
     private CategoriaLucroDAO categoriaDAO = new CategoriaLucroDAO();
     private Map<CategoriaLucro, TextField> fieldMap = new HashMap<>();
@@ -93,24 +97,54 @@ public class MargensLucroController implements Initializable {
 
     @FXML
     private void novaCategoria() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Nova Categoria");
-        dialog.setHeaderText("Cadastrar nova categoria de lucro");
-        dialog.setContentText("Nome da categoria:");
+        txtNovaCategoriaNome.clear();
+        txtNovaCategoriaMargem.setText("50,00");
+        txtNovaCategoriaDescricao.clear();
+        novoCategoriaForm.setVisible(true);
+        novoCategoriaForm.setManaged(true);
+    }
 
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(nome -> {
-            CategoriaLucro nova = new CategoriaLucro();
-            nova.setNome(nome);
-            nova.setDescricao("Nova categoria cadastrada");
-            nova.setMargemPadrao(new BigDecimal("50.00"));
-            if (categoriaDAO.salvar(nova)) {
-                carregarCategorias();
-                mostrarSucesso();
-            } else {
-                mostrarErro("Erro ao salvar nova categoria.");
-            }
-        });
+    @FXML
+    private void cancelarNovaCategoria() {
+        novoCategoriaForm.setVisible(false);
+        novoCategoriaForm.setManaged(false);
+    }
+
+    @FXML
+    private void salvarNovaCategoria() {
+        String nome = txtNovaCategoriaNome.getText().trim();
+        if (nome.isEmpty()) {
+            mostrarErro("Informe o nome da categoria.");
+            return;
+        }
+
+        String margemStr = txtNovaCategoriaMargem.getText().trim().replace(',', '.');
+        BigDecimal margem;
+        try {
+            margem = new BigDecimal(margemStr);
+        } catch (NumberFormatException e) {
+            mostrarErro("Valor de margem inválido.");
+            return;
+        }
+
+        String descricao = txtNovaCategoriaDescricao.getText().trim();
+        if (descricao.isEmpty()) {
+            descricao = "Nova categoria cadastrada";
+        }
+
+        CategoriaLucro nova = new CategoriaLucro();
+        nova.setNome(nome);
+        nova.setDescricao(descricao);
+        nova.setMargemPadrao(margem);
+
+        if (categoriaDAO.salvar(nova)) {
+            novoCategoriaForm.setVisible(false);
+            novoCategoriaForm.setManaged(false);
+            carregarCategorias();
+            mostrarSucesso();
+        } else {
+            mostrarErro("Erro ao salvar nova categoria.");
+        }
     }
 
     @FXML

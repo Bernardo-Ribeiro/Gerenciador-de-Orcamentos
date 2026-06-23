@@ -5,14 +5,13 @@ import com.grafica.dao.OrcamentoDAO;
 import com.grafica.model.Cliente;
 import com.grafica.model.Orcamento;
 import com.grafica.model.Usuario;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -47,7 +46,25 @@ public class DashboardController {
     private Label novosClientesLabel;
 
     @FXML
-    private VBox ultimosOrcamentosContainer;
+    private TableView<OrcamentoRow> tabelaUltimosOrcamentos;
+
+    @FXML
+    private TableColumn<OrcamentoRow, String> colId;
+
+    @FXML
+    private TableColumn<OrcamentoRow, String> colCliente;
+
+    @FXML
+    private TableColumn<OrcamentoRow, String> colData;
+
+    @FXML
+    private TableColumn<OrcamentoRow, String> colValor;
+
+    @FXML
+    private TableColumn<OrcamentoRow, String> colStatus;
+
+    @FXML
+    private TableColumn<OrcamentoRow, Void> colAcoes;
 
     @FXML
     private VBox alertasContainer;
@@ -84,7 +101,36 @@ public class DashboardController {
 
     @FXML
     private void initialize() {
+        configurarTabela();
         atualizarPainel();
+    }
+
+    private void configurarTabela() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        colData.setCellValueFactory(new PropertyValueFactory<>("data"));
+        colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        colAcoes.setCellFactory(param -> new TableCell<>() {
+            private final Button btnDetalhes = new Button("Detalhes");
+            {
+                btnDetalhes.getStyleClass().add("dashboard-link");
+                btnDetalhes.setOnAction(event -> navegarParaOrcamentos());
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnDetalhes);
+                }
+            }
+        });
+
+        tabelaUltimosOrcamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     public void setMainController(MainController mainController) {
@@ -123,7 +169,7 @@ public class DashboardController {
         if (tituloLabel != null) {
             String nome = usuarioLogado != null && usuarioLogado.getNome() != null && !usuarioLogado.getNome().isBlank()
                 ? usuarioLogado.getNome()
-                : "Grafica";
+                : "Gráfica";
             tituloLabel.setText("Olá, " + nome + "!");
         }
         if (subtituloLabel != null) {
@@ -182,11 +228,9 @@ public class DashboardController {
     }
 
     private void atualizarUltimosOrcamentos(List<Orcamento> orcamentos, Map<Integer, String> nomesClientes) {
-        if (ultimosOrcamentosContainer == null) {
+        if (tabelaUltimosOrcamentos == null) {
             return;
         }
-
-        ultimosOrcamentosContainer.getChildren().clear();
 
         List<Orcamento> ultimos = orcamentos.stream()
             .sorted(Comparator
@@ -195,58 +239,17 @@ public class DashboardController {
             .limit(5)
             .toList();
 
-        if (ultimos.isEmpty()) {
-            Label vazio = new Label("Nenhum orcamento registrado ainda.");
-            vazio.getStyleClass().add("dashboard-card-subtitle");
-            ultimosOrcamentosContainer.getChildren().add(vazio);
-            return;
+        ObservableList<OrcamentoRow> rows = FXCollections.observableArrayList();
+        for (Orcamento o : ultimos) {
+            String cliente = nomesClientes.getOrDefault(o.getIdCliente(), "Cliente não identificado");
+            String id = formatarCodigoOrcamento(o.getId());
+            String data = formatarDataResumo(o.getDataEmissao());
+            String valor = moeda.format(o.getValorFinal() != null ? o.getValorFinal() : BigDecimal.ZERO);
+            String status = formatarStatus(o.getStatus());
+            rows.add(new OrcamentoRow(id, cliente, data, valor, status));
         }
 
-        for (int i = 0; i < ultimos.size(); i++) {
-            Orcamento orcamento = ultimos.get(i);
-            boolean ultimoItem = i == ultimos.size() - 1;
-            ultimosOrcamentosContainer.getChildren().add(criarLinhaOrcamento(orcamento, nomesClientes, ultimoItem));
-        }
-    }
-
-    private HBox criarLinhaOrcamento(Orcamento orcamento, Map<Integer, String> nomesClientes, boolean ultimoItem) {
-        HBox linha = new HBox(12.0);
-        linha.setAlignment(Pos.CENTER_LEFT);
-        linha.getStyleClass().add("dashboard-table-row");
-        if (ultimoItem) {
-            linha.getStyleClass().add("dashboard-table-row-last");
-        }
-
-        Label idLabel = new Label(formatarCodigoOrcamento(orcamento.getId()));
-        idLabel.getStyleClass().add("dashboard-table-value");
-        idLabel.setPrefWidth(110.0);
-
-        Label clienteLabel = new Label(nomesClientes.getOrDefault(orcamento.getIdCliente(), "Cliente nao identificado"));
-        clienteLabel.getStyleClass().add("dashboard-table-value");
-        HBox.setHgrow(clienteLabel, Priority.ALWAYS);
-
-        Label dataLabel = new Label(formatarDataResumo(orcamento.getDataEmissao()));
-        dataLabel.getStyleClass().add("dashboard-table-value");
-        dataLabel.setPrefWidth(90.0);
-
-        BigDecimal valor = orcamento.getValorFinal() != null ? orcamento.getValorFinal() : BigDecimal.ZERO;
-        Label valorLabel = new Label(moeda.format(valor));
-        valorLabel.getStyleClass().add("dashboard-table-value");
-        valorLabel.setPrefWidth(90.0);
-
-        Label statusLabel = new Label(formatarStatus(orcamento.getStatus()));
-        statusLabel.getStyleClass().add("dashboard-pill");
-        if (isCancelado(orcamento.getStatus())) {
-            statusLabel.getStyleClass().add("dashboard-pill-danger");
-        }
-        statusLabel.setPrefWidth(90.0);
-
-        Button detalhesButton = new Button("Detalhes");
-        detalhesButton.getStyleClass().add("dashboard-link");
-        detalhesButton.setOnAction(event -> navegarParaOrcamentos());
-
-        linha.getChildren().addAll(idLabel, clienteLabel, dataLabel, valorLabel, statusLabel, detalhesButton);
-        return linha;
+        tabelaUltimosOrcamentos.setItems(rows);
     }
 
     private void atualizarAlertasCriticos(List<Orcamento> orcamentos, Map<Integer, String> nomesClientes) {
@@ -264,7 +267,7 @@ public class DashboardController {
             .toList();
 
         if (alertas.isEmpty()) {
-            alertasContainer.getChildren().add(criarAlerta("OK", "Nenhum alerta critico no momento.", "Atualizado agora"));
+            alertasContainer.getChildren().add(criarAlerta("OK", "Nenhum alerta crítico no momento.", "Atualizado agora"));
             return;
         }
 
@@ -275,20 +278,20 @@ public class DashboardController {
             String tempo;
 
             if (validade == null) {
-                tag = "ATENCAO";
+                tag = "ATENÇÃO";
                 tempo = "Sem data de validade";
             } else if (validade.isBefore(hoje)) {
                 tag = "URGENTE";
-                tempo = "Vencido ha " + (hoje.toEpochDay() - validade.toEpochDay()) + " dia(s)";
+                tempo = "Vencido há " + (hoje.toEpochDay() - validade.toEpochDay()) + " dia(s)";
             } else if (!validade.isAfter(hoje.plusDays(2))) {
-                tag = "REVISAO NECESSARIA";
+                tag = "REVISÃO NECESSÁRIA";
                 tempo = "Vence em " + (validade.toEpochDay() - hoje.toEpochDay()) + " dia(s)";
             } else {
-                tag = "LOGISTICA";
+                tag = "LOGÍSTICA";
                 tempo = "Validade: " + validade.format(DATA_LABEL_FORMATTER);
             }
 
-            String texto = "Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " de " + cliente + " esta pendente.";
+            String texto = "Orçamento " + formatarCodigoOrcamento(orcamento.getId()) + " de " + cliente + " está pendente.";
             alertasContainer.getChildren().add(criarAlerta(tag, texto, tempo));
         }
     }
@@ -322,16 +325,16 @@ public class DashboardController {
 
         int percentual = (int) Math.min(100, Math.round((emitidosHoje * 100.0) / META_DIARIA_ORCAMENTOS));
         if (emitidosHoje == 0) {
-            metaDiariaLabel.setText("Voce ainda nao tem orcamentos emitidos hoje.");
+            metaDiariaLabel.setText("Você ainda não tem orçamentos emitidos hoje.");
             return;
         }
 
         if (percentual >= 100) {
-            metaDiariaLabel.setText("Meta diaria atingida! " + emitidosHoje + " orcamento(s) emitido(s) hoje.");
+            metaDiariaLabel.setText("Meta diária atingida! " + emitidosHoje + " orçamento(s) emitido(s) hoje.");
             return;
         }
 
-        metaDiariaLabel.setText("Voce atingiu " + percentual + "% da sua meta diaria de orcamentos hoje.");
+        metaDiariaLabel.setText("Você atingiu " + percentual + "% da sua meta diária de orçamentos hoje.");
     }
 
     private String formatarCodigoOrcamento(Integer id) {
@@ -412,5 +415,28 @@ public class DashboardController {
         if (mainController != null) {
             mainController.abrirAjustesTela();
         }
+    }
+
+    // Inner class for table data
+    public static class OrcamentoRow {
+        private final String id;
+        private final String cliente;
+        private final String data;
+        private final String valor;
+        private final String status;
+
+        public OrcamentoRow(String id, String cliente, String data, String valor, String status) {
+            this.id = id;
+            this.cliente = cliente;
+            this.data = data;
+            this.valor = valor;
+            this.status = status;
+        }
+
+        public String getId() { return id; }
+        public String getCliente() { return cliente; }
+        public String getData() { return data; }
+        public String getValor() { return valor; }
+        public String getStatus() { return status; }
     }
 }

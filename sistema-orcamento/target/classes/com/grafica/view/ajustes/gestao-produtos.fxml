@@ -4,109 +4,202 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.ProdutoController">
+<VBox spacing="20.0" styleClass="settings-page" stylesheets="@../../style.css"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.grafica.controller.ProdutoController">
     <padding>
-        <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
+        <Insets top="28.0" right="28.0" bottom="28.0" left="28.0" />
     </padding>
 
     <children>
-        <HBox spacing="16.0" alignment="CENTER_LEFT">
-            <children>
-                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="materials-title" text="Gestão de Produtos" />
-                        <Label styleClass="materials-subtitle" text="Cadastre e gerencie os produtos (Cartão de Visita, Banner, etc.) disponíveis no sistema." wrapText="true" />
-                    </children>
-                </VBox>
-            </children>
+        <!-- ── Cabeçalho ── -->
+        <HBox alignment="CENTER_LEFT" spacing="12.0">
+            <VBox spacing="3.0">
+                <Label styleClass="settings-section-title" text="Gestão de Produtos" />
+                <Label styleClass="settings-section-text"
+                       text="Cadastre e gerencie os produtos (Cartão de Visita, Banner, etc.) disponíveis no sistema."
+                       wrapText="true" />
+            </VBox>
         </HBox>
 
-        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
-            <children>
-                <VBox spacing="10.0" styleClass="materials-card" HBox.hgrow="ALWAYS">
-                    <children>
-                        <HBox spacing="10.0" alignment="CENTER_LEFT">
-                            <children>
-                                <Label styleClass="materials-label" text="Filtrar por Categoria:" />
-                                <ComboBox fx:id="filtroCategoria" promptText="TODOS" styleClass="materials-input" />
-                                <Button onAction="#filtrarProdutos" text="Filtrar" styleClass="materials-secondary-button" />
-                            </children>
-                        </HBox>
-                        <TableView fx:id="produtosTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
-                            <columns>
-                                <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0" />
-                                <TableColumn fx:id="nomeColumn" text="Nome do Produto" prefWidth="250.0" />
-                                <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="180.0" />
-                            </columns>
-                        </TableView>
-                    </children>
-                </VBox>
+        <!-- ── SplitPane principal dentro de ScrollPane ── -->
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+            <padding>
+                <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
+            </padding>
+            <content>
+                <SplitPane dividerPositions="0.54" VBox.vgrow="ALWAYS" styleClass="produtos-split">
+                    <items>
 
-                <VBox spacing="14.0" styleClass="materials-card" prefWidth="380.0">
-                    <children>
-                        <Label styleClass="materials-title" text="Detalhes do Produto" />
-                        <Label styleClass="materials-subtitle" text="Defina o nome e a categoria do produto." wrapText="true" />
-
-                        <VBox spacing="6.0">
+                        <!-- ════ LADO ESQUERDO: lista de produtos ════ -->
+                        <AnchorPane styleClass="produtos-left-pane">
                             <children>
-                                <Label styleClass="materials-label" text="Nome do Produto" />
-                                <TextField fx:id="nomeField" promptText="Ex: Cartão de Visita" styleClass="materials-input" />
-                            </children>
-                        </VBox>
+                                <VBox spacing="12.0"
+                                      AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="12.0">
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="materials-label" text="Categoria" />
-                                <ComboBox fx:id="categoriaCombo" promptText="Selecione a categoria" maxWidth="Infinity" styleClass="materials-input" />
-                            </children>
-                        </VBox>
+                                    <!-- Toolbar: busca + filtro + novo -->
+                                    <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                        <TextField promptText="Buscar produto…"
+                                                   styleClass="settings-input"
+                                                   HBox.hgrow="ALWAYS" />
+                                        <ComboBox fx:id="filtroCategoria"
+                                                  promptText="Categoria"
+                                                  prefWidth="170.0"
+                                                  styleClass="settings-input" />
+                                        <Button text="+ Novo"
+                                                onAction="#limpar"
+                                                styleClass="settings-primary-action, settings-action-button" />
+                                    </HBox>
 
-                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
-                            <children>
-                                <Button onAction="#limpar" text="Novo" styleClass="materials-secondary-button" />
-                                <Button onAction="#salvarProduto" text="Salvar" styleClass="materials-primary-button" />
-                                <Button onAction="#deletarProduto" text="Excluir" styleClass="materials-danger-button" />
+                                    <!-- Tabela de produtos -->
+                                    <VBox VBox.vgrow="ALWAYS" styleClass="settings-table-card">
+                                        <TableView fx:id="produtosTable"
+                                                   VBox.vgrow="ALWAYS"
+                                                   styleClass="settings-table-view">
+                                            <columns>
+                                                <TableColumn fx:id="idColumn"       text="ID"        prefWidth="56"  />
+                                                <TableColumn fx:id="nomeColumn"     text="Produto"   prefWidth="260" />
+                                                <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="180" />
+                                            </columns>
+                                            <placeholder>
+                                                <Label text="Nenhum produto cadastrado." styleClass="settings-section-text" />
+                                            </placeholder>
+                                        </TableView>
+                                    </VBox>
+                                </VBox>
                             </children>
-                        </HBox>
+                        </AnchorPane>
 
-                        <Label styleClass="materials-subtitle" text="Materiais Base Associados" />
-                        <TableView fx:id="materiaisBaseTable" prefHeight="120.0" VBox.vgrow="ALWAYS" styleClass="materials-table">
-                            <columns>
-                                <TableColumn fx:id="materialBaseNomeColumn" text="Material" prefWidth="220.0" />
-                                <TableColumn fx:id="materialBasePadraoColumn" text="Padrão" prefWidth="60.0" />
-                                <TableColumn fx:id="materialBaseAcaoColumn" text="Ação" prefWidth="80.0" />
-                            </columns>
-                        </TableView>
-                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                        <!-- ════ LADO DIREITO: detalhe ════ -->
+                        <AnchorPane styleClass="produtos-right-pane">
                             <children>
-                                <ComboBox fx:id="comboAddMaterialBase" promptText="Selecione um material base" HBox.hgrow="ALWAYS" styleClass="materials-input" />
-                                <Button onAction="#adicionarMaterialBase" text="Adicionar" styleClass="materials-primary-button" />
-                            </children>
-                        </HBox>
+                                <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                                            styleClass="produtos-scroll"
+                                            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0">
+                                    <content>
+                                        <VBox spacing="16.0">
+                                            <padding><Insets top="2.0" bottom="8.0" /></padding>
 
-                        <Label styleClass="materials-subtitle" text="Acabamentos Associados" />
-                        <TableView fx:id="acabamentosTable" prefHeight="120.0" VBox.vgrow="ALWAYS" styleClass="materials-table">
-                            <columns>
-                                <TableColumn fx:id="acabamentoNomeColumn" text="Acabamento" prefWidth="220.0" />
-                                <TableColumn fx:id="acabamentoObrigatorioColumn" text="Obrigatório" prefWidth="80.0" />
-                                <TableColumn fx:id="acabamentoAcaoColumn" text="Ação" prefWidth="80.0" />
-                            </columns>
-                        </TableView>
-                        <HBox spacing="10.0" alignment="CENTER_LEFT">
-                            <children>
-                                <ComboBox fx:id="comboAddAcabamento" promptText="Selecione um acabamento" HBox.hgrow="ALWAYS" styleClass="materials-input" />
-                                <Button onAction="#adicionarAcabamento" text="Adicionar" styleClass="materials-primary-button" />
+                                            <!-- ── Card: dados do produto ── -->
+                                            <VBox spacing="14.0" styleClass="settings-form-card, produtos-detail-card">
+
+                                                <!-- Título do card -->
+                                                <VBox spacing="2.0">
+                                                    <Label styleClass="product-section-title" text="Produto" />
+                                                    <Label styleClass="settings-section-text" text="Informações básicas do produto" />
+                                                </VBox>
+
+                                                <!-- Nome -->
+                                                <VBox spacing="5.0">
+                                                    <Label styleClass="settings-form-label" text="Nome do Produto" />
+                                                    <TextField fx:id="nomeField"
+                                                               promptText="Ex: Cartão de Visita"
+                                                               styleClass="settings-input" />
+                                                </VBox>
+
+                                                <!-- Categoria -->
+                                                <VBox spacing="5.0">
+                                                    <Label styleClass="settings-form-label" text="Categoria" />
+                                                    <ComboBox fx:id="categoriaCombo"
+                                                              promptText="Selecione a categoria"
+                                                              maxWidth="Infinity"
+                                                              styleClass="settings-input" />
+                                                </VBox>
+
+                                                <!-- Botões -->
+                                                <HBox spacing="8.0" alignment="CENTER_RIGHT">
+                                                    <Button onAction="#limpar"        text="Novo"
+                                                            styleClass="settings-secondary-action, settings-action-button" />
+                                                    <Button onAction="#salvarProduto" text="Salvar"
+                                                            styleClass="settings-primary-action,  settings-action-button" />
+                                                    <Button onAction="#deletarProduto" text="Excluir"
+                                                            styleClass="settings-danger-action,   settings-action-button" />
+                                                </HBox>
+                                            </VBox>
+
+                                            <!-- ── Card: Materiais Base ── -->
+                                            <VBox spacing="10.0" styleClass="product-section-card">
+
+                                                <VBox spacing="2.0">
+                                                    <Label text="Materiais Base" styleClass="product-section-title" />
+                                                    <Label text="Defina o material padrão para este produto." styleClass="settings-section-text" />
+                                                </VBox>
+
+                                                <TableView fx:id="materiaisBaseTable"
+                                                           prefHeight="160.0"
+                                                           styleClass="settings-table-view">
+                                                    <columns>
+                                                        <TableColumn fx:id="materialBaseNomeColumn"   text="Material" prefWidth="200" />
+                                                        <TableColumn fx:id="materialBasePadraoColumn" text="Padrão"   prefWidth="72"  />
+                                                        <TableColumn fx:id="materialBaseAcaoColumn"   text="Ação"     prefWidth="120"  />
+                                                    </columns>
+                                                    <placeholder>
+                                                        <Label text="Nenhum material associado." styleClass="settings-section-text" />
+                                                    </placeholder>
+                                                </TableView>
+
+                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                                    <ComboBox fx:id="comboAddMaterialBase"
+                                                              promptText="Selecione um material base"
+                                                              HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                                              styleClass="settings-input" />
+                                                    <Button onAction="#adicionarMaterialBase" text="Adicionar"
+                                                            styleClass="settings-primary-action, settings-action-button" />
+                                                </HBox>
+                                            </VBox>
+
+                                            <!-- ── Card: Acabamentos ── -->
+                                            <VBox spacing="10.0" styleClass="product-section-card">
+
+                                                <VBox spacing="2.0">
+                                                    <Label text="Acabamentos" styleClass="product-section-title" />
+                                                    <Label text="Acabamentos opcionais ou obrigatórios para este produto." styleClass="settings-section-text" />
+                                                </VBox>
+
+                                                <TableView fx:id="acabamentosTable"
+                                                           prefHeight="160.0"
+                                                           styleClass="settings-table-view">
+                                                    <columns>
+                                                        <TableColumn fx:id="acabamentoNomeColumn"       text="Acabamento"  prefWidth="185" />
+                                                        <TableColumn fx:id="acabamentoObrigatorioColumn" text="Obrigatório" prefWidth="87"  />
+                                                        <TableColumn fx:id="acabamentoAcaoColumn"        text="Ação"        prefWidth="120"  />
+                                                    </columns>
+                                                    <placeholder>
+                                                        <Label text="Nenhum acabamento associado." styleClass="settings-section-text" />
+                                                    </placeholder>
+                                                </TableView>
+
+                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                                    <ComboBox fx:id="comboAddAcabamento"
+                                                              promptText="Selecione um acabamento"
+                                                              HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                                              styleClass="settings-input" />
+                                                    <Button onAction="#adicionarAcabamento" text="Adicionar"
+                                                            styleClass="settings-primary-action, settings-action-button" />
+                                                </HBox>
+                                            </VBox>
+
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
                             </children>
-                        </HBox>
-                    </children>
-                </VBox>
-            </children>
-        </HBox>
+                        </AnchorPane>
+
+                    </items>
+                </SplitPane>
+            </content>
+        </ScrollPane>
     </children>
 </VBox>

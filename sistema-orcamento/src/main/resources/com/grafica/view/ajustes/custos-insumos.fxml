@@ -6,13 +6,14 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.CustosInsumosController">
+<VBox spacing="18.0" styleClass="settings-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.CustosInsumosController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -24,192 +25,200 @@
 
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="materials-title" text="Tabela de Custos de Insumos" />
-                        <Label styleClass="materials-subtitle" text="Gerencie os preços base de materiais e suprimentos da gráfica." wrapText="true" />
+                        <Label styleClass="settings-section-title" text="Tabela de Custos de Insumos" />
+                        <Label styleClass="settings-section-text" text="Gerencie os preços base de materiais e suprimentos da gráfica." wrapText="true" />
                     </children>
                 </VBox>
 
-                <Button fx:id="btnHistoricoGeral" onAction="#abrirHistoricoGeral" text="Histórico Geral">
-                    <styleClass>
-                        <String fx:value="materials-button" />
-                    </styleClass>
-                </Button>
-
-                <Button fx:id="btnAdicionarNovoItem" onAction="#novoInsumo" text="+ Adicionar Novo Item">
-                    <styleClass>
-                        <String fx:value="materials-button" />
-                    </styleClass>
-                </Button>
+                <Button fx:id="btnAdicionarNovoItem" onAction="#novoInsumo" text="+ Adicionar Novo Item" styleClass="settings-primary-action, settings-action-button" />
 
             </children>
         </HBox>
 
-        <HBox spacing="12.0" alignment="CENTER_LEFT">
-            <children>
-
-                <TextField fx:id="txtBusca" onKeyReleased="#filtrarInsumos" promptText="Buscar material..." HBox.hgrow="ALWAYS">
-                    <styleClass>
-                        <String fx:value="materials-search" />
-                    </styleClass>
-                </TextField>
-
-                <CheckBox fx:id="chkMostrarInativos" onAction="#alternarMostrarInativos" text="Mostrar inativos" />
-
-                <Button fx:id="btnFiltros" onAction="#abrirFiltros" text="Filtros">
-                    <styleClass>
-                        <String fx:value="materials-button" />
-                    </styleClass>
-                </Button>
-
-                <Button fx:id="btnExportarCsv" onAction="#exportarCsv" text="Exportar CSV">
-                    <styleClass>
-                        <String fx:value="materials-button" />
-                    </styleClass>
-                </Button>
-
-            </children>
-        </HBox>
-
-        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
-            <children>
-
-                <VBox spacing="10.0" styleClass="materials-card" HBox.hgrow="ALWAYS">
+        <!-- Scrollable content area -->
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+            <padding>
+                <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
+            </padding>
+            <content>
+                <VBox spacing="14.0">
+                    <padding>
+                        <Insets top="0.0" right="4.0" bottom="4.0" left="4.0" />
+                    </padding>
                     <children>
 
-                        <TableView fx:id="tableInsumos" VBox.vgrow="ALWAYS" styleClass="materials-table">
-                            <columns>
-                                <TableColumn fx:id="colMaterial" prefWidth="310.0" text="Material" />
-                                <TableColumn fx:id="colUnidade" prefWidth="110.0" text="Unidade" />
-                                <TableColumn fx:id="colCustoBase" prefWidth="130.0" text="Custo Base (R$)" />
-                                <TableColumn fx:id="colUltimaAtualizacao" prefWidth="150.0" text="Última Atualização" />
-                                <TableColumn fx:id="colStatus" prefWidth="120.0" text="Status" />
-                            </columns>
-                        </TableView>
-
-                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                        <!-- Search + Filter row -->
+                        <HBox spacing="12.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="materials-footer" text="Mostrando itens cadastrados para a seção de custos." />
+
+                                <TextField fx:id="txtBusca" onKeyReleased="#filtrarInsumos" promptText="Buscar material..." HBox.hgrow="ALWAYS" styleClass="settings-input" />
+
+                                <CheckBox fx:id="chkMostrarInativos" onAction="#alternarMostrarInativos" text="Mostrar inativos" />
+
+                                <Button fx:id="btnFiltros" onAction="#abrirFiltros" text="Filtros" styleClass="settings-secondary-action, settings-action-button" />
+
+                                <Button fx:id="btnExportarCsv" onAction="#exportarCsv" text="Exportar CSV" styleClass="settings-secondary-action, settings-action-button" />
+
                             </children>
                         </HBox>
 
-                    </children>
-                </VBox>
-
-                <VBox spacing="14.0" styleClass="materials-card">
-                    <children>
-
-                        <Label styleClass="materials-title" text="Detalhes do Insumo" />
-
-                        <Label styleClass="materials-subtitle" text="Selecione um item na tabela para editar ou preencha os campos para criar um novo registro." wrapText="true" />
-
-                        <VBox spacing="6.0">
+                        <!-- Filter ComboBoxes row -->
+                        <HBox fx:id="filtrosContainer" spacing="12.0" alignment="CENTER_LEFT" visible="false" managed="false">
                             <children>
-                                <Label styleClass="materials-label" text="Material" />
-                                <TextField fx:id="txtMaterial" promptText="Nome do material" styleClass="materials-search" />
+                                <ComboBox fx:id="cmbFiltroCategoria" promptText="Categoria" styleClass="settings-input" prefWidth="200.0" onAction="#filtrarInsumos" />
+                                <ComboBox fx:id="cmbFiltroTipoItem" promptText="Tipo do Item" styleClass="settings-input" prefWidth="200.0" onAction="#filtrarInsumos" />
                             </children>
-                        </VBox>
+                        </HBox>
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="materials-label" text="Categoria" />
-                                <ComboBox fx:id="cmbCategoria" promptText="Selecione" styleClass="materials-search" />
-                            </children>
-                        </VBox>
-
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="materials-label" text="Tipo do Item" />
-                                <ComboBox fx:id="cmbTipoItem" promptText="Selecione" styleClass="materials-search" />
-                            </children>
-                        </VBox>
-
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="materials-label" text="Unidade" />
-                                <ComboBox fx:id="cmbUnidade" promptText="Selecione" styleClass="materials-search" />
-                            </children>
-                        </VBox>
-
-                        <HBox spacing="12.0">
+                        <HBox spacing="16.0" VBox.vgrow="ALWAYS">
                             <children>
 
-                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="10.0" styleClass="settings-table-card" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="materials-label" text="Custo Base" />
-                                        <TextField fx:id="txtCustoBase" promptText="0,00" styleClass="materials-search" />
+
+                                        <TableView fx:id="tableInsumos" VBox.vgrow="ALWAYS" styleClass="settings-table-view">
+                                            <columns>
+                                                <TableColumn fx:id="colMaterial" prefWidth="310.0" text="Material" />
+                                                <TableColumn fx:id="colUnidade" prefWidth="110.0" text="Unidade" />
+                                                <TableColumn fx:id="colCustoBase" prefWidth="130.0" text="Custo Base (R$)" />
+                                                <TableColumn fx:id="colUltimaAtualizacao" prefWidth="150.0" text="Última Atualização" />
+                                                <TableColumn fx:id="colStatus" prefWidth="120.0" text="Status" />
+                                            </columns>
+                                        </TableView>
+
+                                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                            <children>
+                                                <Label styleClass="settings-table-footer" text="Mostrando itens cadastrados para a seção de custos." />
+                                            </children>
+                                        </HBox>
+
                                     </children>
                                 </VBox>
 
-                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="14.0" styleClass="settings-form-card" style="-fx-border-color: transparent; -fx-border-width: 0;">
                                     <children>
-                                        <Label styleClass="materials-label" text="Custo Produção" />
-                                        <TextField fx:id="txtCustoProducao" promptText="0,00" styleClass="materials-search" />
+
+                                        <Label styleClass="settings-section-title" text="Detalhes do Insumo" />
+
+                                        <Label styleClass="settings-section-text" text="Selecione um item na tabela para editar ou preencha os campos para criar um novo registro." wrapText="true" />
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Material" />
+                                                <TextField fx:id="txtMaterial" promptText="Nome do material" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Categoria" />
+                                                <ComboBox fx:id="cmbCategoria" promptText="Selecione" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Tipo do Item" />
+                                                <ComboBox fx:id="cmbTipoItem" promptText="Selecione" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Unidade" />
+                                                <ComboBox fx:id="cmbUnidade" promptText="Selecione" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <HBox spacing="12.0">
+                                            <children>
+
+                                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label styleClass="settings-form-label" text="Custo Base" />
+                                                        <TextField fx:id="txtCustoBase" promptText="0,00" styleClass="settings-input" />
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                                    <children>
+                                                        <Label styleClass="settings-form-label" text="Custo Produção" />
+                                                        <TextField fx:id="txtCustoProducao" promptText="0,00" styleClass="settings-input" />
+                                                    </children>
+                                                </VBox>
+
+                                            </children>
+                                        </HBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Categoria de Lucro" />
+                                                <ComboBox fx:id="cmbCategoriaLucro" promptText="Selecione" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="6.0">
+                                            <children>
+                                                <Label styleClass="settings-form-label" text="Status" />
+                                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="settings-input" />
+                                            </children>
+                                        </VBox>
+
+                                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                            <children>
+
+                                                <Button fx:id="btnLimparFormulario" onAction="#novoInsumo" text="Cancelar" styleClass="settings-secondary-action, settings-action-button" />
+
+                                                <Button fx:id="btnSalvarInsumo" onAction="#salvarInsumo" text="Salvar" styleClass="settings-primary-action, settings-action-button" />
+
+                                                <Button fx:id="btnExcluirSelecionado" onAction="#excluirSelecionado" text="Excluir" styleClass="settings-danger-action, settings-action-button" />
+
+                                            </children>
+                                        </HBox>
+
                                     </children>
                                 </VBox>
 
                             </children>
                         </HBox>
 
-                        <VBox spacing="6.0">
+                        <!-- Warning alert for export CSV -->
+                        <HBox fx:id="csvWarning" visible="false" managed="false" spacing="12.0" styleClass="settings-warning">
                             <children>
-                                <Label styleClass="materials-label" text="Categoria de Lucro" />
-                                <ComboBox fx:id="cmbCategoriaLucro" promptText="Selecione" styleClass="materials-search" />
+
+                                <Label styleClass="settings-warning-icon" text="!" />
+
+                                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="settings-warning-title" text="Função Indisponível" />
+                                        <Label styleClass="settings-warning-text" text="A exportação para CSV ainda não foi implementada. Esta funcionalidade estará disponível em breve." wrapText="true" />
+                                    </children>
+                                </VBox>
+
                             </children>
-                        </VBox>
+                        </HBox>
 
-                        <VBox spacing="6.0">
-                            <children>
-                                <Label styleClass="materials-label" text="Status" />
-                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="materials-search" />
-                            </children>
-                        </VBox>
-
-                        <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                        <HBox spacing="12.0" styleClass="settings-alert-banner">
                             <children>
 
-                                <Button fx:id="btnExcluirSelecionado" onAction="#excluirSelecionado" text="Excluir">
-                                    <styleClass>
-                                        <String fx:value="materials-button" />
-                                    </styleClass>
-                                </Button>
+                                <Label styleClass="settings-alert-icon" text="i" />
 
-                                <Button fx:id="btnLimparFormulario" onAction="#novoInsumo" text="Cancelar">
-                                    <styleClass>
-                                        <String fx:value="materials-button" />
-                                    </styleClass>
-                                </Button>
+                                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="settings-alert-title" text="Atenção Administrativa" />
+                                        <Label styleClass="settings-alert-text" text="Os preços base impactam diretamente os cálculos dos novos orçamentos." wrapText="true" />
+                                    </children>
+                                </VBox>
 
-                                <Button fx:id="btnSalvarInsumo" onAction="#salvarInsumo" text="Salvar">
-                                    <styleClass>
-                                        <String fx:value="materials-button" />
-                                    </styleClass>
-                                </Button>
+                                <Label styleClass="settings-alert-link" text="Ver todos os desatualizados >" />
 
                             </children>
                         </HBox>
 
                     </children>
                 </VBox>
-
-            </children>
-        </HBox>
-
-        <HBox styleClass="materials-alert" spacing="12.0">
-            <children>
-
-                <Label styleClass="materials-alert-icon" text="i" />
-
-                <VBox spacing="2.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <Label styleClass="materials-alert-title" text="Atenção Administrativa" />
-                        <Label styleClass="materials-alert-text" text="Os preços base impactam diretamente os cálculos dos novos orçamentos." wrapText="true" />
-                    </children>
-                </VBox>
-
-                <Label styleClass="materials-alert-link" text="Ver todos os desatualizados &gt;" />
-
-            </children>
-        </HBox>
+            </content>
+        </ScrollPane>
 
     </children>
 </VBox>

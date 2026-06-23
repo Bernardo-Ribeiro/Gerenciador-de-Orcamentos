@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
@@ -111,8 +113,8 @@
                                             <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
                                                 <children>
                                                     <Label styleClass="dashboard-shortcut-icon" text="RL" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Gerar Relatorio" />
-                                                    <Label styleClass="dashboard-shortcut-text" text="Analise o desempenho de vendas do ultimo periodo." wrapText="true" />
+                                                    <Label styleClass="dashboard-shortcut-title" text="Gerar Relatório" />
+                                                    <Label styleClass="dashboard-shortcut-text" text="Analise o desempenho de vendas do último período." wrapText="true" />
                                                     <Button fx:id="btnRelatorios" text="Abrir" styleClass="dashboard-secondary-button" />
                                                 </children>
                                             </VBox>
@@ -135,26 +137,24 @@
                                         <children>
                                             <VBox spacing="2.0" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-card-title" text="Ultimos Orcamentos" />
-                                                    <Label styleClass="dashboard-card-subtitle" text="Resumo dos ultimos 5 registros processados no sistema." />
+                                                    <Label styleClass="dashboard-card-title" text="Últimos Orçamentos" />
+                                                    <Label styleClass="dashboard-card-subtitle" text="Resumo dos últimos 5 registros processados no sistema." />
                                                 </children>
                                             </VBox>
-                                            <Button fx:id="btnHistoricoCompleto" text="Ver Historico Completo" styleClass="dashboard-secondary-button" />
+                                            <Button fx:id="btnHistoricoCompleto" text="Ver Histórico Completo" styleClass="dashboard-secondary-button" />
                                         </children>
                                     </HBox>
 
-                                    <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="dashboard-table-header">
-                                        <children>
-                                            <Label styleClass="dashboard-table-label" text="ID" prefWidth="110.0" />
-                                            <Label styleClass="dashboard-table-label" text="Cliente" HBox.hgrow="ALWAYS" />
-                                            <Label styleClass="dashboard-table-label" text="Data" prefWidth="90.0" />
-                                            <Label styleClass="dashboard-table-label" text="Valor" prefWidth="90.0" />
-                                            <Label styleClass="dashboard-table-label" text="Status" prefWidth="90.0" />
-                                            <Label styleClass="dashboard-table-label" text="Acoes" prefWidth="70.0" />
-                                        </children>
-                                    </HBox>
-
-                                    <VBox fx:id="ultimosOrcamentosContainer" spacing="0.0" />
+                                    <TableView fx:id="tabelaUltimosOrcamentos" VBox.vgrow="ALWAYS" styleClass="settings-table-view" prefHeight="280.0">
+                                        <columns>
+                                            <TableColumn fx:id="colId" text="ID" prefWidth="110.0" />
+                                            <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200.0" />
+                                            <TableColumn fx:id="colData" text="Data" prefWidth="90.0" />
+                                            <TableColumn fx:id="colValor" text="Valor" prefWidth="110.0" />
+                                            <TableColumn fx:id="colStatus" text="Status" prefWidth="100.0" />
+                                            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="80.0" />
+                                        </columns>
+                                    </TableView>
                                 </children>
                             </VBox>
                         </VBox>
