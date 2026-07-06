@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Priority?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="reports-scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.VisualizarOrcamentoController">
+    <content>
+        <VBox spacing="18.0" styleClass="reports-page">
+            <padding>
+                <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+            </padding>
+            <children>
+                <Label styleClass="reports-breadcrumb" text="Relatórios   >   Visualizar Orçamento" />
+
+                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="reports-title" text="Visualização do Orçamento" />
+                                <Label fx:id="lblNumeroOrcamento" styleClass="reports-subtitle" text="Orçamento #0000" wrapText="true" />
+                            </children>
+                        </VBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="btnGerarPdf" onAction="#gerarPdf" text="Gerar PDF" styleClass="reports-primary-button" />
+                                <Button fx:id="btnDuplicar" onAction="#duplicarOrcamento" text="Criar Cópia" styleClass="reports-secondary-button" />
+                                <Button onAction="#fechar" text="Fechar" styleClass="reports-secondary-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+
+                <VBox spacing="10.0" styleClass="reports-card">
+                    <children>
+                        <Label styleClass="reports-card-title" text="Dados do Orçamento" />
+                        
+                        <HBox spacing="20.0">
+                            <children>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="reports-filter-label" text="Cliente" />
+                                        <Label fx:id="lblCliente" styleClass="reports-table-value" text="-" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="reports-filter-label" text="Data de Emissão" />
+                                        <Label fx:id="lblDataEmissao" styleClass="reports-table-value" text="-" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="reports-filter-label" text="Validade" />
+                                        <Label fx:id="lblDataValidade" styleClass="reports-table-value" text="-" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="reports-filter-label" text="Status" />
+                                        <Label fx:id="lblStatus" styleClass="reports-pill" text="-" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox spacing="10.0" styleClass="reports-card">
+                    <children>
+                        <Label styleClass="reports-card-title" text="Itens do Orçamento" />
+                        
+                        <TableView fx:id="tabelaItens" styleClass="reports-table-view" minHeight="200.0">
+                            <columns>
+                                <TableColumn fx:id="colProduto" text="Produto" prefWidth="200.0" />
+                                <TableColumn fx:id="colMaterial" text="Material" prefWidth="200.0" />
+                                <TableColumn fx:id="colDimensoes" text="Dimensões (mm)" prefWidth="120.0" />
+                                <TableColumn fx:id="colQuantidade" text="Qtd" prefWidth="60.0" />
+                                <TableColumn fx:id="colValorBruto" text="Vl. Bruto" prefWidth="100.0" />
+                                <TableColumn fx:id="colValorFinal" text="Vl. Final" prefWidth="100.0" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox spacing="10.0" styleClass="reports-card">
+                    <children>
+                        <Label styleClass="reports-card-title" text="Resumo Financeiro" />
+                        
+                        <VBox spacing="14.0">
+                            <children>
+                                <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Label styleClass="reports-table-value" text="Total Bruto:" />
+                                        <Label fx:id="lblTotalBruto" styleClass="reports-table-value" text="R$ 0,00" />
+                                    </children>
+                                </HBox>
+                                
+                                <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Label styleClass="reports-table-value" text="Desconto:" />
+                                        <Label fx:id="lblDesconto" styleClass="reports-table-value" text="0%" />
+                                    </children>
+                                </HBox>
+                                
+                                <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Label styleClass="reports-table-value" text="Margem de Lucro:" />
+                                        <Label fx:id="lblMargem" styleClass="reports-table-value" text="0%" />
+                                    </children>
+                                </HBox>
+                                
+                                <Region prefHeight="1.0" styleClass="reports-separator" HBox.hgrow="ALWAYS" />
+                                
+                                <HBox spacing="10.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Label styleClass="reports-card-title" text="TOTAL FINAL:" />
+                                        <Label fx:id="lblTotalFinal" styleClass="reports-card-title" text="R$ 0,00" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

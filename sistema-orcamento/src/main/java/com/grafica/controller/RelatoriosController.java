@@ -4,22 +4,25 @@ import com.grafica.dao.ClienteDAO;
 import com.grafica.dao.OrcamentoDAO;
 import com.grafica.model.Cliente;
 import com.grafica.model.Orcamento;
+import com.grafica.service.PdfService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -126,6 +129,18 @@ public class RelatoriosController {
         carregarDadosBase();
         configurarTabela();
         aplicarFiltros();
+        
+        if (btnGerarPdf != null) {
+            btnGerarPdf.setDisable(true);
+        }
+        
+        if (relatoriosTable != null) {
+            relatoriosTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                if (btnGerarPdf != null) {
+                    btnGerarPdf.setDisable(newSelection == null);
+                }
+            });
+        }
     }
 
     private void carregarDadosBase() {
@@ -213,8 +228,70 @@ public class RelatoriosController {
 
     @FXML
     private void gerarPdf() {
-        if (feedbackLabel != null) {
-            feedbackLabel.setText("Geracao de PDF sera implementada em seguida. Use Exportar CSV por enquanto.");
+        RelatorioOrcamentoView selecionado = relatoriosTable.getSelectionModel().getSelectedItem();
+        
+        if (selecionado == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um orçamento na tabela.", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
+        
+        Orcamento orcamento = selecionado.getOrcamento();
+        
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Selecionar local para salvar o PDF");
+            directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            
+            File diretorioSelecionado = directoryChooser.showDialog(null);
+            
+            if (diretorioSelecionado == null) {
+                return;
+            }
+            
+            String caminhoPdf = PdfService.gerarOrcamentoPdfPorId(orcamento.getId(), diretorioSelecionado.getAbsolutePath());
+            
+            File arquivoPdf = new File(caminhoPdf);
+            if (arquivoPdf.exists()) {
+                java.awt.Desktop.getDesktop().open(arquivoPdf);
+                if (feedbackLabel != null) {
+                    feedbackLabel.setText("PDF gerado com sucesso: " + caminhoPdf);
+                }
+            } else {
+                if (feedbackLabel != null) {
+                    feedbackLabel.setText("PDF gerado mas não foi possível abrir: " + caminhoPdf);
+                }
+            }
+            
+        } catch (Exception e) {
+            if (feedbackLabel != null) {
+                feedbackLabel.setText("Erro ao gerar PDF: " + e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirVisualizacaoOrcamento(Integer idOrcamento) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grafica/view/visualizar-orcamento.fxml"));
+            Parent root = loader.load();
+            
+            VisualizarOrcamentoController controller = loader.getController();
+            controller.carregarOrcamento(idOrcamento);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Visualizar Orçamento #" + String.format("%04d", idOrcamento));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText(null);
+            alert.setContentText("Erro ao abrir visualização do orçamento: " + e.getMessage());
+            alert.showAndWait();
+            e.printStackTrace();
         }
     }
 
@@ -400,12 +477,17 @@ public class RelatoriosController {
                 reprovar.getStyleClass().add("reports-action-reject");
 
                 ver.setOnAction(event -> {
-                    Orcamento orcamento = getTableView().getItems().get(getIndex()).getOrcamento();
-                    feedbackLabel.setText("Orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " selecionado.");
+                    RelatorioOrcamentoView view = getTableView().getItems().get(getIndex());
+                    if (view != null) {
+                        abrirVisualizacaoOrcamento(view.getOrcamento().getId());
+                    }
                 });
                 pdf.setOnAction(event -> {
-                    Orcamento orcamento = getTableView().getItems().get(getIndex()).getOrcamento();
-                    feedbackLabel.setText("PDF do orcamento " + formatarCodigoOrcamento(orcamento.getId()) + " em implementacao.");
+                    RelatorioOrcamentoView view = getTableView().getItems().get(getIndex());
+                    if (view != null) {
+                        relatoriosTable.getSelectionModel().select(view);
+                        gerarPdf();
+                    }
                 });
                 aprovar.setOnAction(event -> aprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));
                 reprovar.setOnAction(event -> reprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));

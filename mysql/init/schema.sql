@@ -82,7 +82,9 @@ CREATE TABLE orcamentos (
 CREATE TABLE itens_orcamento (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_orcamento INT NOT NULL,
+    id_produto INT NOT NULL,
     id_material INT NOT NULL,
+    id_layout INT,
     
     largura_mm INT DEFAULT 0,
     altura_mm INT DEFAULT 0,
@@ -104,6 +106,7 @@ CREATE TABLE itens_orcamento (
     ) NOT NULL,
     
     FOREIGN KEY (id_orcamento) REFERENCES orcamentos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_produto) REFERENCES produtos(id),
     FOREIGN KEY (id_material) REFERENCES materiais(id)
 );
 
@@ -130,3 +133,16 @@ CREATE INDEX idx_itens_orcamento_orc ON itens_orcamento(id_orcamento);
 CREATE INDEX idx_itens_orcamento_mat ON itens_orcamento(id_material);
 CREATE INDEX idx_escalas_material ON escalas_produtivas(id_material);
 CREATE INDEX idx_orcamentos_cliente ON orcamentos(id_cliente);
+
+CREATE TABLE configuracao_pdf (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome_empresa VARCHAR(150),
+    cnpj VARCHAR(20),
+    endereco VARCHAR(255),
+    telefone VARCHAR(20),
+    email VARCHAR(100),
+    logo_path VARCHAR(255),
+    rodape VARCHAR(255),
+    cores VARCHAR(20),
+    fonte VARCHAR(50)
+);

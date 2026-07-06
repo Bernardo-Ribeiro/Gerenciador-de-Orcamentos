@@ -8,6 +8,8 @@ import com.grafica.dao.CategoriaLucroDAO;
 import com.grafica.dao.ProdutoDAO;
 import com.grafica.dao.ProdutoMaterialDAO;
 import com.grafica.dao.ProdutoAcabamentoDAO;
+import com.grafica.dao.ConfiguracaoPdfDAO;
+import com.grafica.dao.ItemOrcamentoDAO;
 import com.grafica.model.Cliente;
 import com.grafica.model.LayoutProduto;
 import com.grafica.model.Material;
@@ -16,13 +18,17 @@ import com.grafica.model.Produto;
 import com.grafica.model.ProdutoMaterial;
 import com.grafica.model.ProdutoAcabamento;
 import com.grafica.model.CategoriaLucro;
+import com.grafica.model.ConfiguracaoPdf;
+import com.grafica.model.ItemOrcamento;
 import com.grafica.service.CalculoService;
+import com.grafica.service.PdfService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
 
@@ -68,6 +74,7 @@ public class OrcamentoController {
     private LayoutProdutoDAO layoutDAO;
     private MaterialDAO materialDAO;
     private CategoriaLucroDAO categoriaLucroDAO;
+    private ItemOrcamentoDAO itemOrcamentoDAO;
     private MainController mainController;
     private Orcamento orcamentoAtual;
 
@@ -88,6 +95,7 @@ public class OrcamentoController {
         layoutDAO = new LayoutProdutoDAO();
         materialDAO = new MaterialDAO();
         categoriaLucroDAO = new CategoriaLucroDAO();
+        itemOrcamentoDAO = new ItemOrcamentoDAO();
 
         configurarTabelaItens();
         configurarComboClientes();
@@ -408,7 +416,10 @@ public class OrcamentoController {
             altura.intValue(),
             quantidade.intValue(),
             valorBruto,
-            valorFinal
+            valorFinal,
+            produto.getId(),
+            material.getId(),
+            material.getTipoCobranca()
         ));
 
         limparCamposItem();
@@ -417,6 +428,10 @@ public class OrcamentoController {
 
     @FXML
     private void criarOrcamento() {
+        System.out.println("=== SALVAR ORÇAMENTO ===");
+        System.out.println("orcamentoAtual: " + (orcamentoAtual != null ? "ID " + orcamentoAtual.getId() : "null"));
+        System.out.println("Quantidade de itens na lista: " + itens.size());
+        
         Cliente cliente = clienteCombo.getValue();
         if (cliente == null) { mostrarErro("Selecione um cliente."); return; }
         if (itens.isEmpty()) { mostrarErro("Adicione pelo menos um item ao orçamento."); return; }
@@ -425,6 +440,7 @@ public class OrcamentoController {
             if (orcamentoAtual == null) orcamentoAtual = new Orcamento();
             orcamentoAtual.setIdCliente(cliente.getId());
             orcamentoAtual.setIdUsuario(1);
+            orcamentoAtual.setDataEmissao(LocalDate.now());
             orcamentoAtual.setDataValidade(LocalDate.now().plusDays(15));
             orcamentoAtual.setStatus("PENDENTE");
             orcamentoAtual.setMargemLucroPercentual(lerDecimal(margemField, "0"));
@@ -432,16 +448,26 @@ public class OrcamentoController {
             orcamentoAtual.setValorBruto(calcularTotalBruto());
             orcamentoAtual.setValorFinal(calcularTotalFinal());
 
-            if (orcamentoAtual.getId() == null) {
+            boolean novoOrcamento = orcamentoAtual.getId() == null;
+            System.out.println("É novo orçamento? " + novoOrcamento);
+            
+            if (novoOrcamento) {
                 orcamentoDAO.criar(orcamentoAtual);
+                System.out.println("Orçamento criado com ID: " + orcamentoAtual.getId());
                 mostrarInfo("Orçamento salvo com sucesso. ID: " + orcamentoAtual.getId());
             } else {
                 orcamentoDAO.atualizar(orcamentoAtual);
+                System.out.println("Orçamento atualizado ID: " + orcamentoAtual.getId());
                 mostrarInfo("Orçamento atualizado com sucesso. ID: " + orcamentoAtual.getId());
             }
             orcamentoBadgeLabel.setText("ID: #" + orcamentoAtual.getId());
+            
+            // Salva os itens sempre (novo ou existente)
+            salvarItensOrcamento();
+            
         } catch (Exception e) {
             mostrarErro("Erro ao salvar orçamento: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -454,6 +480,41 @@ public class OrcamentoController {
                 limparCampos();
             } catch (Exception e) { mostrarErro("Erro ao excluir: " + e.getMessage()); }
         } else { mostrarErro("Nenhum orçamento salvo para excluir."); }
+    }
+
+    private void salvarItensOrcamento() {
+        if (orcamentoAtual == null || orcamentoAtual.getId() == null) return;
+        
+        try {
+            System.out.println("=== Salvando itens do orçamento " + orcamentoAtual.getId() + " ===");
+            System.out.println("Quantidade de itens na lista: " + itens.size());
+            
+            // Deleta itens existentes antes de salvar os novos
+            new ItemOrcamentoDAO().deletarPorOrcamento(orcamentoAtual.getId());
+            System.out.println("Itens antigos deletados.");
+            
+            for (ItemOrcamentoView itemView : itens) {
+                ItemOrcamento item = new ItemOrcamento();
+                item.setIdOrcamento(orcamentoAtual.getId());
+                item.setIdProduto(itemView.getIdProduto());
+                item.setIdMaterial(itemView.getIdMaterial());
+                item.setLarguraMm(Integer.parseInt(itemView.getDimensoes().split(" x ")[0].replace(" mm", "")));
+                item.setAlturaMm(Integer.parseInt(itemView.getDimensoes().split(" x ")[1].replace(" mm", "")));
+                item.setQuantidade(itemView.getQuantidade());
+                item.setValorBrutoItem(itemView.getValorBruto());
+                item.setValorFinalItem(itemView.getValorFinal());
+                item.setCustoUnitario(itemView.getValorBruto().divide(BigDecimal.valueOf(itemView.getQuantidade()), 2, java.math.RoundingMode.HALF_UP));
+                item.setTipoCobrancaAplicado(itemView.getTipoCobranca());
+                
+                new ItemOrcamentoDAO().criar(item);
+                System.out.println("Item salvo: " + itemView.getProdutoDescricao() + " | " + itemView.getMaterialDescricao());
+            }
+            System.out.println("=== Fim salvamento de itens ===");
+            mostrarInfo("Itens salvos com sucesso!");
+        } catch (Exception e) {
+            mostrarErro("Erro ao salvar itens: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -509,7 +570,45 @@ public class OrcamentoController {
 
     @FXML
     private void gerarPropostaPdf() {
-        mostrarInfo("Geração de PDF será adicionada na próxima etapa.");
+        if (orcamentoAtual == null || orcamentoAtual.getId() == null) {
+            mostrarErro("Salve o orçamento antes de gerar o PDF.");
+            return;
+        }
+
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Selecionar local para salvar o PDF");
+            directoryChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
+            
+            java.io.File diretorioSelecionado = directoryChooser.showDialog(
+                orcamentoBadgeLabel.getScene().getWindow()
+            );
+            
+            if (diretorioSelecionado == null) {
+                return;
+            }
+            
+            ConfiguracaoPdfDAO configDAO = new ConfiguracaoPdfDAO();
+            ConfiguracaoPdf config = configDAO.obter();
+            
+            String caminhoLogo = (config != null && config.getLogoPath() != null && !config.getLogoPath().isEmpty()) 
+                ? config.getLogoPath() 
+                : null;
+
+            String caminhoArquivo = PdfService.gerarOrcamentoPdf(
+                orcamentoAtual, 
+                caminhoLogo, 
+                diretorioSelecionado.getAbsolutePath()
+            );
+            
+            mostrarInfo("PDF gerado com sucesso!\nArquivo salvo em: " + caminhoArquivo);
+            
+            java.awt.Desktop.getDesktop().open(new java.io.File(caminhoArquivo));
+            
+        } catch (Exception e) {
+            mostrarErro("Erro ao gerar PDF: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -542,6 +641,43 @@ public class OrcamentoController {
         alert.showAndWait();
     }
 
+    public void carregarOrcamentoParaEdicao(Integer idOrcamento) {
+        Orcamento orcamento = orcamentoDAO.buscarPorId(idOrcamento);
+        if (orcamento == null) {
+            mostrarErro("Orçamento não encontrado: " + idOrcamento);
+            return;
+        }
+        
+        List<ItemOrcamento> itens = itemOrcamentoDAO.listarPorOrcamento(idOrcamento);
+        
+        clienteCombo.setValue(clienteDAO.obterPorId(orcamento.getIdCliente()));
+        margemField.setText(orcamento.getMargemLucroPercentual().toString());
+        descuentoField.setText(orcamento.getDescontoProgressivo() != null ? orcamento.getDescontoProgressivo().toString() : "0");
+        
+        this.orcamentoAtual = orcamento;
+        
+        for (ItemOrcamento item : itens) {
+            ItemOrcamentoView view = new ItemOrcamentoView(
+                item.getProduto() != null ? item.getProduto().getNome() : "N/A",
+                item.getMaterial() != null ? item.getMaterial().getNome() : "N/A",
+                "",
+                item.getLarguraMm() != null ? item.getLarguraMm() : 0,
+                item.getAlturaMm() != null ? item.getAlturaMm() : 0,
+                item.getQuantidade() != null ? item.getQuantidade() : 1,
+                item.getValorBrutoItem(),
+                item.getValorFinalItem(),
+                item.getIdProduto(),
+                item.getIdMaterial(),
+                item.getTipoCobrancaAplicado()
+            );
+            this.itens.add(view);
+        }
+        
+        atualizarResumo();
+        
+        mostrarInfo("Orçamento #" + idOrcamento + " carregado para edição.\nFaça as alterações necessárias e clique em Salvar.");
+    }
+
     public static class ItemOrcamentoView {
         private final String produtoDescricao;
         private final String materialDescricao;
@@ -549,14 +685,20 @@ public class OrcamentoController {
         private final Integer quantidade;
         private final BigDecimal valorBruto;
         private final BigDecimal valorFinal;
+        private final Integer idProduto;
+        private final Integer idMaterial;
+        private final String tipoCobranca;
 
-        public ItemOrcamentoView(String produto, String material, String acabamentos, int largura, int altura, Integer quantidade, BigDecimal valorBruto, BigDecimal valorFinal) {
+        public ItemOrcamentoView(String produto, String material, String acabamentos, int largura, int altura, Integer quantidade, BigDecimal valorBruto, BigDecimal valorFinal, Integer idProduto, Integer idMaterial, String tipoCobranca) {
             this.produtoDescricao = produto;
             this.materialDescricao = acabamentos.isEmpty() ? material : material + " + " + acabamentos;
             this.dimensoes = largura + " x " + altura + " mm";
             this.quantidade = quantidade;
             this.valorBruto = valorBruto;
             this.valorFinal = valorFinal;
+            this.idProduto = idProduto;
+            this.idMaterial = idMaterial;
+            this.tipoCobranca = tipoCobranca;
         }
 
         public String getProdutoDescricao() { return produtoDescricao; }
@@ -565,5 +707,8 @@ public class OrcamentoController {
         public Integer getQuantidade() { return quantidade; }
         public BigDecimal getValorBruto() { return valorBruto; }
         public BigDecimal getValorFinal() { return valorFinal; }
+        public Integer getIdProduto() { return idProduto; }
+        public Integer getIdMaterial() { return idMaterial; }
+        public String getTipoCobranca() { return tipoCobranca; }
     }
 }

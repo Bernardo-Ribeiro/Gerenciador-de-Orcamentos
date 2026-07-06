@@ -52,6 +52,23 @@ public class OrcamentoDAO {
         return orcamentos;
     }
 
+    public Orcamento buscarPorId(Integer id) {
+        String sql = "SELECT * FROM orcamentos WHERE id = ? AND status != 'EXCLUIDO'";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapearOrcamento(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void atualizar(Orcamento orcamento) {
         String sql = "UPDATE orcamentos SET valor_final = ?, margem_lucro_percentual = ?, desconto_progressivo = ?, status = ? WHERE id = ?";
         try (Connection conn = DbConnection.getConnection();

@@ -1,6 +1,8 @@
 package com.grafica.dao;
 
 import com.grafica.model.ItemOrcamento;
+import com.grafica.model.Produto;
+import com.grafica.model.Material;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,9 +53,13 @@ public class ItemOrcamentoDAO {
 
     public List<ItemOrcamento> listarPorOrcamento(Integer idOrcamento) {
         List<ItemOrcamento> itens = new ArrayList<>();
-        String sql = "SELECT id, id_orcamento, id_produto, id_material, id_layout, largura_mm, altura_mm, " +
-                    "quantidade, area_calculada, valor_bruto_item, valor_final_item, custo_unitario, tipo_cobranca_aplicado " +
-                    "FROM itens_orcamento WHERE id_orcamento = ? ORDER BY id";
+        String sql = "SELECT i.id, i.id_orcamento, i.id_produto, i.id_material, i.id_layout, i.largura_mm, i.altura_mm, " +
+                    "i.quantidade, i.area_calculada, i.valor_bruto_item, i.valor_final_item, i.custo_unitario, i.tipo_cobranca_aplicado, " +
+                    "p.nome as produto_nome, m.nome as material_nome " +
+                    "FROM itens_orcamento i " +
+                    "LEFT JOIN produtos p ON i.id_produto = p.id " +
+                    "LEFT JOIN materiais m ON i.id_material = m.id " +
+                    "WHERE i.id_orcamento = ? ORDER BY i.id";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -159,6 +165,16 @@ public class ItemOrcamentoDAO {
         item.setValorFinalItem(rs.getBigDecimal("valor_final_item"));
         item.setCustoUnitario(rs.getBigDecimal("custo_unitario"));
         item.setTipoCobrancaAplicado(rs.getString("tipo_cobranca_aplicado"));
+
+        Produto produto = new Produto();
+        produto.setId(item.getIdProduto());
+        produto.setNome(rs.getString("produto_nome"));
+        item.setProduto(produto);
+
+        Material material = new Material();
+        material.setId(item.getIdMaterial());
+        material.setNome(rs.getString("material_nome"));
+        item.setMaterial(material);
 
         return item;
     }

@@ -15,7 +15,10 @@ public class ItemOrcamento {
     private BigDecimal valorBrutoItem;
     private BigDecimal valorFinalItem;
     private BigDecimal custoUnitario;
-    private String tipoCobrancaAplicado; // AREA, UNIDADE, TIRAGEM, FOLHA, PACOTE, SERVICO, CHAPA
+    private String tipoCobrancaAplicado;
+    
+    private Produto produto;
+    private Material material; // AREA, UNIDADE, TIRAGEM, FOLHA, PACOTE, SERVICO, CHAPA
 
     public ItemOrcamento() {}
 
@@ -142,6 +145,22 @@ public class ItemOrcamento {
         this.tipoCobrancaAplicado = tipoCobrancaAplicado;
     }
 
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
     @Override
     public String toString() {
         return "ItemOrcamento{" +
@@ -158,6 +177,8 @@ public class ItemOrcamento {
                 ", valorFinalItem=" + valorFinalItem +
                 ", custoUnitario=" + custoUnitario +
                 ", tipoCobrancaAplicado='" + tipoCobrancaAplicado + '\'' +
+                ", produto=" + (produto != null ? produto.getNome() : "null") +
+                ", material=" + (material != null ? material.getNome() : "null") +
                 '}';
     }
 }

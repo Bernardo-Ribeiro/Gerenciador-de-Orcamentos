@@ -24,6 +24,7 @@ com\grafica\controller\ProdutoController$3.class
 com\grafica\controller\EscalaProdutivaController$IntervaloRow.class
 com\grafica\model\EscalaProdutiva.class
 com\grafica\dao\ProdutoDAO.class
+com\grafica\controller\DashboardController$OrcamentoRow.class
 com\grafica\controller\OrcamentoController$7.class
 com\grafica\controller\ClienteController$1.class
 com\grafica\dao\LayoutProdutoDAO.class
@@ -33,8 +34,10 @@ com\grafica\controller\ProdutoController.class
 com\grafica\model\LayoutProduto.class
 com\grafica\model\ItemOrcamento.class
 com\grafica\controller\LoginController.class
+com\grafica\dao\ConfiguracaoPdfDAO.class
 com\grafica\controller\GestaoUsuariosController.class
 com\grafica\dao\UsuarioDAO.class
+com\grafica\service\PdfService.class
 com\grafica\controller\EscalaProdutivaController$Intervalo.class
 com\grafica\controller\OrcamentoController$6.class
 com\grafica\dao\ProdutoAcabamentoDAO.class
@@ -42,7 +45,6 @@ com\grafica\model\ItemOrcamentoAcabamento.class
 com\grafica\controller\GestaoLayoutsController.class
 com\grafica\controller\CustosInsumosController.class
 com\grafica\controller\GestaoLayoutsController$3.class
-module-info.class
 com\grafica\controller\MargensLucroController.class
 com\grafica\controller\ProdutoController$2.class
 com\grafica\model\Usuario.class
@@ -50,15 +52,18 @@ com\grafica\controller\ClienteController.class
 com\grafica\dao\ItemOrcamentoAcabamentoDAO.class
 com\grafica\dao\ProdutoMaterialDAO.class
 com\grafica\controller\CustosInsumosController$1.class
+com\grafica\controller\DashboardController$1.class
 com\grafica\controller\RelatoriosController$3.class
 com\grafica\controller\RelatoriosController$RelatorioOrcamentoView.class
 com\grafica\controller\RelatoriosController.class
 com\grafica\dao\ClienteDAO.class
 com\grafica\Main.class
 com\grafica\controller\ProdutoController$4.class
+com\grafica\controller\VisualizarOrcamentoController.class
 com\grafica\controller\OrcamentoController$8.class
 com\grafica\controller\ConfiguracoesPdfController.class
 com\grafica\dao\CategoriaLucroDAO.class
+com\grafica\model\ConfiguracaoPdf.class
 com\grafica\controller\OrcamentoController$5.class
 com\grafica\dao\EscalaProdutivaDAO.class
 com\grafica\controller\GestaoLayoutsController$1.class
