@@ -2,9 +2,14 @@ package com.grafica.controller;
 
 import com.grafica.dao.ClienteDAO;
 import com.grafica.dao.ItemOrcamentoDAO;
+import com.grafica.dao.MaterialDAO;
 import com.grafica.dao.OrcamentoDAO;
+import com.grafica.dao.ProdutoAcabamentoDAO;
 import com.grafica.model.ItemOrcamento;
+import com.grafica.model.Material;
+import com.grafica.model.ProdutoAcabamento;
 import com.grafica.model.Orcamento;
+import com.grafica.service.CalculoService;
 import com.grafica.service.PdfService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -88,6 +93,8 @@ public class VisualizarOrcamentoController {
     private OrcamentoDAO orcamentoDAO;
     private ClienteDAO clienteDAO;
     private ItemOrcamentoDAO itemOrcamentoDAO;
+    private MaterialDAO materialDAO;
+    private ProdutoAcabamentoDAO produtoAcabamentoDAO;
     
     private static final DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final NumberFormat MOEDA_FORMAT = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -97,6 +104,8 @@ public class VisualizarOrcamentoController {
         orcamentoDAO = new OrcamentoDAO();
         clienteDAO = new ClienteDAO();
         itemOrcamentoDAO = new ItemOrcamentoDAO();
+        materialDAO = new MaterialDAO();
+        produtoAcabamentoDAO = new ProdutoAcabamentoDAO();
         
         configurarTabela();
     }
@@ -232,12 +241,13 @@ public class VisualizarOrcamentoController {
             novoOrcamento.setDataEmissao(LocalDate.now());
             novoOrcamento.setDataValidade(LocalDate.now().plusDays(15));
             novoOrcamento.setStatus("PENDENTE");
-            novoOrcamento.setValorBruto(orcamento.getValorBruto());
             novoOrcamento.setMargemLucroPercentual(orcamento.getMargemLucroPercentual());
             novoOrcamento.setDescontoProgressivo(orcamento.getDescontoProgressivo());
-            novoOrcamento.setValorFinal(orcamento.getValorFinal());
             
             orcamentoDAO.criar(novoOrcamento);
+            
+            BigDecimal totalBruto = BigDecimal.ZERO;
+            BigDecimal totalFinal = BigDecimal.ZERO;
             
             for (ItemOrcamento item : itens) {
                 ItemOrcamento novoItem = new ItemOrcamento();
@@ -249,15 +259,43 @@ public class VisualizarOrcamentoController {
                 novoItem.setAlturaMm(item.getAlturaMm());
                 novoItem.setQuantidade(item.getQuantidade());
                 novoItem.setAreaCalculada(item.getAreaCalculada());
-                novoItem.setValorBrutoItem(item.getValorBrutoItem());
-                novoItem.setValorFinalItem(item.getValorFinalItem());
-                novoItem.setCustoUnitario(item.getCustoUnitario());
                 novoItem.setTipoCobrancaAplicado(item.getTipoCobrancaAplicado());
                 
+                Material materialAtual = materialDAO.obterPorId(item.getIdMaterial());
+                BigDecimal custoBaseAtual = materialAtual != null && materialAtual.getCustoBase() != null 
+                    ? materialAtual.getCustoBase() 
+                    : BigDecimal.ZERO;
+                
+                BigDecimal largura = new BigDecimal(item.getLarguraMm() != null ? item.getLarguraMm() : 0);
+                BigDecimal altura = new BigDecimal(item.getAlturaMm() != null ? item.getAlturaMm() : 0);
+                BigDecimal quantidade = new BigDecimal(item.getQuantidade() != null ? item.getQuantidade() : 1);
+                
+                BigDecimal valorBrutoCalculado = CalculoService.calcularValorBrutoItem(
+                    largura, altura, quantidade, custoBaseAtual
+                );
+                
+                BigDecimal valorFinalCalculado = CalculoService.calcularValorFinalItem(
+                    largura, altura, quantidade, custoBaseAtual,
+                    orcamento.getDescontoProgressivo() != null ? orcamento.getDescontoProgressivo() : BigDecimal.ZERO,
+                    orcamento.getMargemLucroPercentual() != null ? orcamento.getMargemLucroPercentual() : BigDecimal.ZERO
+                );
+                
+                novoItem.setValorBrutoItem(valorBrutoCalculado);
+                novoItem.setValorFinalItem(valorFinalCalculado);
+                novoItem.setCustoUnitario(custoBaseAtual);
+                
                 itemOrcamentoDAO.criar(novoItem);
+                
+                totalBruto = totalBruto.add(valorBrutoCalculado);
+                totalFinal = totalFinal.add(valorFinalCalculado);
             }
             
-            mostrarMensagem("Orçamento duplicado com sucesso! Novo ID: " + novoOrcamento.getId() + "\n\nRedirecionando para edição...");
+            novoOrcamento.setValorBruto(totalBruto);
+            novoOrcamento.setValorFinal(totalFinal);
+            orcamentoDAO.atualizar(novoOrcamento);
+            
+            mostrarMensagem("Orçamento duplicado com sucesso! Novo ID: " + novoOrcamento.getId() + 
+                "\n\nOs preços foram atualizados com os valores atuais dos materiais.\n\nRedirecionando para edição...");
             
             fechar();
             abrirEdicaoOrcamento(novoOrcamento.getId());

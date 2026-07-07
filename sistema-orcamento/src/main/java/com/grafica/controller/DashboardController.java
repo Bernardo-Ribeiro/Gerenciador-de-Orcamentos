@@ -8,11 +8,17 @@ import com.grafica.model.Usuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -116,7 +122,12 @@ public class DashboardController {
             private final Button btnDetalhes = new Button("Detalhes");
             {
                 btnDetalhes.getStyleClass().add("dashboard-link");
-                btnDetalhes.setOnAction(event -> navegarParaOrcamentos());
+                btnDetalhes.setOnAction(event -> {
+                    OrcamentoRow row = getTableView().getItems().get(getIndex());
+                    if (row != null && row.getIdOrcamento() != null) {
+                        abrirVisualizacaoOrcamento(row.getIdOrcamento());
+                    }
+                });
             }
 
             @Override
@@ -246,7 +257,7 @@ public class DashboardController {
             String data = formatarDataResumo(o.getDataEmissao());
             String valor = moeda.format(o.getValorFinal() != null ? o.getValorFinal() : BigDecimal.ZERO);
             String status = formatarStatus(o.getStatus());
-            rows.add(new OrcamentoRow(id, cliente, data, valor, status));
+            rows.add(new OrcamentoRow(o.getId(), id, cliente, data, valor, status));
         }
 
         tabelaUltimosOrcamentos.setItems(rows);
@@ -417,15 +428,41 @@ public class DashboardController {
         }
     }
 
+    private void abrirVisualizacaoOrcamento(Integer idOrcamento) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grafica/view/visualizar-orcamento.fxml"));
+            Parent root = loader.load();
+            
+            VisualizarOrcamentoController controller = loader.getController();
+            controller.carregarOrcamento(idOrcamento);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Visualizar Orçamento #" + String.format("%04d", idOrcamento));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root, 1000, 700));
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText(null);
+            alert.setContentText("Erro ao abrir visualização do orçamento: " + e.getMessage());
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
     // Inner class for table data
     public static class OrcamentoRow {
+        private final Integer idOrcamento;
         private final String id;
         private final String cliente;
         private final String data;
         private final String valor;
         private final String status;
 
-        public OrcamentoRow(String id, String cliente, String data, String valor, String status) {
+        public OrcamentoRow(Integer idOrcamento, String id, String cliente, String data, String valor, String status) {
+            this.idOrcamento = idOrcamento;
             this.id = id;
             this.cliente = cliente;
             this.data = data;
@@ -433,6 +470,7 @@ public class DashboardController {
             this.status = status;
         }
 
+        public Integer getIdOrcamento() { return idOrcamento; }
         public String getId() { return id; }
         public String getCliente() { return cliente; }
         public String getData() { return data; }

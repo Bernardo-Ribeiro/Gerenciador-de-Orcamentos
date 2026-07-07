@@ -2,6 +2,7 @@ package com.grafica.controller;
 
 import com.grafica.dao.UsuarioDAO;
 import com.grafica.model.Usuario;
+import com.grafica.ui.UiUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
@@ -107,10 +107,6 @@ public class LoginController {
     }
 
     private void exibirErro(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
+        UiUtils.mostrarErro(rootPane.getScene().getWindow(), mensagem);
     }
 }

@@ -24,30 +24,30 @@
 
     <Pane styleClass="background-overlay" />
 
-    <VBox styleClass="login-shell">
-        <VBox fx:id="glassCard">
+    <VBox styleClass="login-shell" alignment="CENTER">
+        <VBox fx:id="glassCard" alignment="CENTER">
             <styleClass>
                 <String fx:value="card" />
                 <String fx:value="glass" />
                 <String fx:value="glass-card" />
             </styleClass>
-            <VBox styleClass="hero-copy">
+            <VBox styleClass="hero-copy" alignment="CENTER">
                 <Label fx:id="titleLabel" id="titleLabel" text="Gerenciador de Orçamentos" textAlignment="CENTER" styleClass="title" />
                 <Label fx:id="subtitleLabel" id="subtitleLabel" styleClass="subtitle" text="Entrar no Sistema" />
                 <Label fx:id="descLabel" id="descLabel" styleClass="description" text="Acesse sua conta para gerenciar orçamentos e clientes" wrapText="true" />
             </VBox>
 
-            <VBox styleClass="field-group">
+            <VBox styleClass="field-group" alignment="CENTER_LEFT">
                 <Label styleClass="label" text="Email" />
-                <TextField fx:id="emailField" promptText="seu_email@grafica.com" styleClass="input" />
+                <TextField fx:id="emailField" promptText="seu_email@grafica.com" styleClass="input" maxWidth="280" />
             </VBox>
 
-            <VBox styleClass="field-group">
+            <VBox styleClass="field-group" alignment="CENTER_LEFT" spacing="10.0">
                 <Label styleClass="label" text="Senha" />
-                <PasswordField fx:id="senhaField" promptText="********" styleClass="input" />
+                <PasswordField fx:id="senhaField" promptText="********" styleClass="input" maxWidth="280" />
             </VBox>
 
-            <Button maxWidth="280.0" onAction="#fazerLogin" styleClass="btn" stylesheets="@../style.css" text="Acessar Dashboard →" />
+            <Button maxWidth="280.0" onAction="#fazerLogin" styleClass="btn" text="Login" />
 
             <Label fx:id="messageLabel" styleClass="feedback" text="" wrapText="true" />
 

@@ -2,6 +2,8 @@ package com.grafica.controller;
 
 import com.grafica.dao.ClienteDAO;
 import com.grafica.model.Cliente;
+import com.grafica.ui.TableUtils;
+import com.grafica.ui.UiUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -246,58 +248,14 @@ public class ClienteController {
     }
 
     private void atualizarPaginacao() {
-        int totalRegistros = clientesFiltrados.size();
-        totalPaginas = Math.max(1, (int) Math.ceil(totalRegistros / (double) itensPorPagina));
-        paginaAtual = Math.min(Math.max(paginaAtual, 1), totalPaginas);
-
-        int inicio = (paginaAtual - 1) * itensPorPagina;
-        int fim = Math.min(inicio + itensPorPagina, totalRegistros);
-        List<Cliente> pagina = totalRegistros == 0
-            ? new ArrayList<>()
-            : clientesFiltrados.subList(inicio, fim);
-
-        clientesTable.setItems(FXCollections.observableArrayList(pagina));
-        atualizarFooter(totalRegistros, inicio, fim);
+        TableUtils.atualizarTabelaPaginada(clientesTable, clientesFiltrados, paginaAtual, itensPorPagina, lblRegistros);
         atualizarBotoesPaginacao();
     }
 
-    private void atualizarFooter(int totalRegistros, int inicio, int fim) {
-        if (lblRegistros == null) {
-            return;
-        }
-        int exibindo = totalRegistros == 0 ? 0 : (fim - inicio);
-        lblRegistros.setText("Mostrando " + exibindo + " de " + totalRegistros + " registros");
-    }
-
     private void atualizarBotoesPaginacao() {
-        if (btnAnterior != null) {
-            btnAnterior.setDisable(paginaAtual <= 1);
-        }
-        if (btnProximo != null) {
-            btnProximo.setDisable(paginaAtual >= totalPaginas);
-        }
-
-        configurarBotaoPagina(btnPage1, paginaAtual);
-        configurarBotaoPagina(btnPage2, paginaAtual + 1);
-    }
-
-    private void configurarBotaoPagina(Button botao, int pagina) {
-        if (botao == null) {
-            return;
-        }
-        if (pagina > totalPaginas) {
-            botao.setVisible(false);
-            botao.setManaged(false);
-            return;
-        }
-
-        botao.setVisible(true);
-        botao.setManaged(true);
-        botao.setText(String.valueOf(pagina));
-        botao.getStyleClass().remove("clients-pagination-active");
-        if (pagina == paginaAtual) {
-            botao.getStyleClass().add("clients-pagination-active");
-        }
+        TableUtils.configurarPaginacao(btnAnterior, btnProximo, paginaAtual, totalPaginas);
+        TableUtils.configurarBotaoPagina(btnPage1, paginaAtual, paginaAtual, totalPaginas);
+        TableUtils.configurarBotaoPagina(btnPage2, paginaAtual + 1, paginaAtual, totalPaginas);
     }
 
     @FXML

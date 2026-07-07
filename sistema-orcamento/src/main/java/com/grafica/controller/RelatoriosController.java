@@ -5,6 +5,8 @@ import com.grafica.dao.OrcamentoDAO;
 import com.grafica.model.Cliente;
 import com.grafica.model.Orcamento;
 import com.grafica.service.PdfService;
+import com.grafica.ui.TableUtils;
+import com.grafica.ui.UiUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -372,32 +374,9 @@ public class RelatoriosController {
     }
 
     private void atualizarBotoesPaginacao() {
-        if (btnAnterior != null) {
-            btnAnterior.setDisable(paginaAtual <= 1);
-        }
-        if (btnProximo != null) {
-            btnProximo.setDisable(paginaAtual >= totalPaginas);
-        }
-        configurarBotaoPagina(btnPage1, paginaAtual);
-        configurarBotaoPagina(btnPage2, paginaAtual + 1);
-    }
-
-    private void configurarBotaoPagina(Button botao, int pagina) {
-        if (botao == null) {
-            return;
-        }
-        if (pagina > totalPaginas) {
-            botao.setVisible(false);
-            botao.setManaged(false);
-            return;
-        }
-        botao.setVisible(true);
-        botao.setManaged(true);
-        botao.setText(String.valueOf(pagina));
-        botao.getStyleClass().remove("reports-pagination-active");
-        if (pagina == paginaAtual) {
-            botao.getStyleClass().add("reports-pagination-active");
-        }
+        TableUtils.configurarPaginacao(btnAnterior, btnProximo, paginaAtual, totalPaginas);
+        TableUtils.configurarBotaoPagina(btnPage1, paginaAtual, paginaAtual, totalPaginas);
+        TableUtils.configurarBotaoPagina(btnPage2, paginaAtual + 1, paginaAtual, totalPaginas);
     }
 
     @FXML
