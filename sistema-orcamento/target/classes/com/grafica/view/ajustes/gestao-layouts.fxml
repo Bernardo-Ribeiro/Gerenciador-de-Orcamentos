@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="settings-page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoLayoutsController">
+<VBox spacing="18.0" styleClass="page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoLayoutsController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -22,8 +22,8 @@
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="settings-section-title" text="Gestão de Layouts / Tamanhos Padrão" />
-                        <Label styleClass="settings-section-text" text="Configure medidas pré-definidas para agilizar a criação de orçamentos." wrapText="true" />
+                        <Label styleClass="sectionpage-title" text="Gestão de Layouts / Tamanhos Padrão" />
+                        <Label styleClass="section-text" text="Configure medidas pré-definidas para agilizar a criação de orçamentos." wrapText="true" />
                     </children>
                 </VBox>
             </children>
@@ -36,12 +36,12 @@
             <content>
                 <HBox spacing="16.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <VBox spacing="10.0" HBox.hgrow="ALWAYS" styleClass="settings-table-card">
+                        <VBox spacing="10.0" HBox.hgrow="ALWAYS" styleClass="table card">
                             <padding>
                                 <Insets top="12.0" right="12.0" bottom="12.0" left="12.0" />
                             </padding>
                             <children>
-                                <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" prefHeight="600.0" styleClass="settings-table-view">
+                                <TableView fx:id="layoutsTable" VBox.vgrow="ALWAYS" prefHeight="600.0" styleClass="table-view">
                                     <columns>
                                         <TableColumn fx:id="produtoColumn" text="Produto" prefWidth="180.0" />
                                         <TableColumn fx:id="nomeColumn" text="Nome do Layout" prefWidth="200.0" />
@@ -53,25 +53,25 @@
                             </children>
                         </VBox>
 
-                        <VBox spacing="14.0" prefWidth="320.0" styleClass="settings-form-card">
+                        <VBox spacing="14.0" prefWidth="320.0" styleClass="form card">
                             <padding>
                                 <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
                             </padding>
                             <children>
-                                <Label styleClass="settings-section-title" text="Detalhes do Layout" />
-                                <Label styleClass="settings-section-text" text="Vincule um material e defina as dimensões padrão." wrapText="true" />
+                                <Label styleClass="sectionpage-title" text="Detalhes do Layout" />
+                                <Label styleClass="section-text" text="Vincule um material e defina as dimensões padrão." wrapText="true" />
 
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="settings-form-label" text="Produto Vinculado" />
-                                        <ComboBox fx:id="produtoCombo" promptText="Selecione o produto" maxWidth="Infinity" styleClass="settings-input" />
+                                        <Label styleClass="form-label" text="Produto Vinculado" />
+                                        <ComboBox fx:id="produtoCombo" promptText="Selecione o produto" maxWidth="Infinity" styleClass="input" />
                                     </children>
                                 </VBox>
 
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="settings-form-label" text="Nome do Layout" />
-                                        <TextField fx:id="nomeLayoutField" promptText="Ex: Cartão de Visita" styleClass="settings-input" />
+                                        <Label styleClass="form-label" text="Nome do Layout" />
+                                        <TextField fx:id="nomeLayoutField" promptText="Ex: Cartão de Visita" styleClass="input" />
                                     </children>
                                 </VBox>
 
@@ -79,14 +79,14 @@
                                     <children>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="settings-form-label" text="Largura (mm)" />
-                                                <TextField fx:id="larguraField" promptText="0" styleClass="settings-input" />
+                                                <Label styleClass="form-label" text="Largura (mm)" />
+                                                <TextField fx:id="larguraField" promptText="0" styleClass="input" />
                                             </children>
                                         </VBox>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="settings-form-label" text="Altura (mm)" />
-                                                <TextField fx:id="alturaField" promptText="0" styleClass="settings-input" />
+                                                <Label styleClass="form-label" text="Altura (mm)" />
+                                                <TextField fx:id="alturaField" promptText="0" styleClass="input" />
                                             </children>
                                         </VBox>
                                     </children>
@@ -94,8 +94,8 @@
 
                                 <HBox spacing="10.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <Button onAction="#limparCampos" text="Novo" styleClass="settings-secondary-action, settings-action-button" />
-                                        <Button fx:id="btnSalvar" onAction="#salvarLayout" text="Salvar" styleClass="settings-primary-action, settings-action-button" />
+                                        <Button onAction="#limparCampos" text="Novo" styleClass="secondary-action, action-button" />
+                                        <Button fx:id="btnSalvar" onAction="#salvarLayout" text="Salvar" styleClass="primary-action, action-button" />
                                     </children>
                                 </HBox>
                             </children>

@@ -12,116 +12,116 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="reports-scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.RelatoriosController">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.RelatoriosController">
     <content>
-        <VBox spacing="18.0" styleClass="reports-page">
+        <VBox spacing="18.0" styleClass="page">
             <padding>
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
             </padding>
             <children>
-        <Label styleClass="reports-breadcrumb" text="Início   >   Consultas   >   Histórico e Relatórios" />
+        <Label styleClass="breadcrumb" text="Início   >   Consultas   >   Histórico e Relatórios" />
 
         <HBox spacing="12.0" alignment="CENTER_LEFT">
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-title" text="Histórico e Relatórios" />
-                        <Label styleClass="reports-subtitle" text="Consulte orçamentos passados e analise o desempenho comercial." wrapText="true" />
+                        <Label styleClass="page-title" text="Histórico e Relatórios" />
+                        <Label styleClass="page-subtitle" text="Consulte orçamentos passados e analise o desempenho comercial." wrapText="true" />
                     </children>
                 </VBox>
-                <Button fx:id="btnExportarCsv" onAction="#exportarCsv" text="Exportar CSV" styleClass="reports-secondary-button" />
-                <Button fx:id="btnGerarPdf" onAction="#gerarPdf" text="Gerar PDF" styleClass="reports-secondary-button" />
+                <Button fx:id="btnExportarCsv" onAction="#exportarCsv" text="Exportar CSV" styleClass="btn-secondary" />
+                <Button fx:id="btnGerarPdf" onAction="#gerarPdf" text="Gerar PDF" styleClass="btn-secondary" />
             </children>
         </HBox>
 
         <HBox spacing="12.0" alignment="CENTER_LEFT">
             <children>
-                <VBox spacing="6.0" styleClass="reports-stat-card" HBox.hgrow="ALWAYS">
+                <VBox spacing="6.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="reports-stat-icon" text="R$" />
+                                <Label styleClass="stat-icon" text="R$" />
                             </children>
                         </HBox>
-                        <Label styleClass="reports-stat-label" text="Total Vendido (Mes)" />
-                        <Label fx:id="totalVendidoLabel" styleClass="reports-stat-value" text="R$ 0,00" />
+                        <Label styleClass="stat-label" text="Total Vendido (Mes)" />
+                        <Label fx:id="totalVendidoLabel" styleClass="stat-value" text="R$ 0,00" />
                     </children>
                 </VBox>
 
-                <VBox spacing="6.0" styleClass="reports-stat-card" HBox.hgrow="ALWAYS">
+                <VBox spacing="6.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="reports-stat-icon" text="!" />
+                                <Label styleClass="stat-icon" text="!" />
                             </children>
                         </HBox>
-                        <Label styleClass="reports-stat-label" text="Orcamentos Pendentes" />
-                        <Label fx:id="orcamentosPendentesLabel" styleClass="reports-stat-value" text="0" />
+                        <Label styleClass="stat-label" text="Orcamentos Pendentes" />
+                        <Label fx:id="orcamentosPendentesLabel" styleClass="stat-value" text="0" />
                     </children>
                 </VBox>
 
-                <VBox spacing="6.0" styleClass="reports-stat-card" HBox.hgrow="ALWAYS">
+                <VBox spacing="6.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="reports-stat-icon" text="\%" />
+                                <Label styleClass="stat-icon" text="\%" />
                             </children>
                         </HBox>
-                        <Label styleClass="reports-stat-label" text="Conversao Media" />
-                        <Label fx:id="conversaoMediaLabel" styleClass="reports-stat-value" text="0%" />
+                        <Label styleClass="stat-label" text="Conversao Media" />
+                        <Label fx:id="conversaoMediaLabel" styleClass="stat-value" text="0%" />
                     </children>
                 </VBox>
 
-                <VBox spacing="6.0" styleClass="reports-stat-card" HBox.hgrow="ALWAYS">
+                <VBox spacing="6.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                     <children>
                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                             <children>
-                                <Label styleClass="reports-stat-icon" text="CL" />
+                                <Label styleClass="stat-icon" text="CL" />
                             </children>
                         </HBox>
-                        <Label styleClass="reports-stat-label" text="Clientes Ativos" />
-                        <Label fx:id="clientesAtivosLabel" styleClass="reports-stat-value" text="0" />
+                        <Label styleClass="stat-label" text="Clientes Ativos" />
+                        <Label fx:id="clientesAtivosLabel" styleClass="stat-value" text="0" />
                     </children>
                 </VBox>
             </children>
         </HBox>
 
-        <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="reports-filter-row">
+        <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="filter-row">
             <children>
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-filter-label" text="Periodo" />
-                        <TextField fx:id="periodoField" promptText="Últimos 30 dias" styleClass="reports-input" />
+                        <Label styleClass="filter-label" text="Periodo" />
+                        <TextField fx:id="periodoField" promptText="Últimos 30 dias" styleClass="form-input" />
                     </children>
                 </VBox>
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-filter-label" text="Status" />
-                        <TextField fx:id="statusField" promptText="Todos os status" styleClass="reports-input" />
+                        <Label styleClass="filter-label" text="Status" />
+                        <TextField fx:id="statusField" promptText="Todos os status" styleClass="form-input" />
                     </children>
                 </VBox>
                 <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-filter-label" text="Cliente" />
-                        <TextField fx:id="clienteField" promptText="Buscar cliente..." styleClass="reports-input" />
+                        <Label styleClass="filter-label" text="Cliente" />
+                        <TextField fx:id="clienteField" promptText="Buscar cliente..." styleClass="form-input" />
                     </children>
                 </VBox>
-                <Button fx:id="btnAplicarFiltros" onAction="#aplicarFiltros" text="Aplicar Filtros" styleClass="reports-primary-button" />
+                <Button fx:id="btnAplicarFiltros" onAction="#aplicarFiltros" text="Aplicar Filtros" styleClass="btn-primary" />
             </children>
         </HBox>
 
-        <Label fx:id="feedbackLabel" styleClass="reports-card-subtitle" text="" />
+        <Label fx:id="feedbackLabel" styleClass="card-subtitle" text="" />
 
-        <VBox spacing="10.0" styleClass="reports-card">
+        <VBox spacing="10.0" styleClass="card">
             <children>
                 <VBox spacing="2.0">
                     <children>
-                        <Label styleClass="reports-card-title" text="Resultados da Consulta" />
-                        <Label fx:id="resultadosSubtitleLabel" styleClass="reports-card-subtitle" text="Mostrando 0 de 0 orcamentos encontrados." />
+                        <Label styleClass="card-title" text="Resultados da Consulta" />
+                        <Label fx:id="resultadosSubtitleLabel" styleClass="card-subtitle" text="Mostrando 0 de 0 orcamentos encontrados." />
                     </children>
                 </VBox>
 
-                <TableView fx:id="relatoriosTable" styleClass="reports-table-view" VBox.vgrow="ALWAYS" minHeight="300.0">
+                <TableView fx:id="relatoriosTable" styleClass="table" VBox.vgrow="ALWAYS" minHeight="300.0">
                     <columns>
                         <TableColumn fx:id="colCodigo" text="Nº ORÇAMENTO" prefWidth="120.0" />
                         <TableColumn fx:id="colCliente" text="CLIENTE" prefWidth="280.0" />
@@ -132,14 +132,14 @@
                     </columns>
                 </TableView>
 
-                <HBox spacing="16.0" alignment="CENTER_LEFT" styleClass="reports-table-row">
+                <HBox spacing="16.0" alignment="CENTER_LEFT" styleClass="table-row">
                     <children>
-                        <Label fx:id="lblPaginacao" styleClass="reports-footer" text="Página 1 de 1" />
+                        <Label fx:id="lblPaginacao" styleClass="footer" text="Página 1 de 1" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnAnterior" onAction="#paginaAnterior" text="Anterior" styleClass="reports-pagination" />
-                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="reports-pagination reports-pagination-active" />
-                        <Button fx:id="btnPage2" onAction="#irParaPagina" text="2" styleClass="reports-pagination" />
-                        <Button fx:id="btnProximo" onAction="#paginaProxima" text="Próximo" styleClass="reports-pagination" />
+                        <Button fx:id="btnAnterior" onAction="#paginaAnterior" text="Anterior" styleClass="btn-secondary" />
+                        <Button fx:id="btnPage1" onAction="#irParaPagina" text="1" styleClass="btn-secondary btn-secondary-dark" />
+                        <Button fx:id="btnPage2" onAction="#irParaPagina" text="2" styleClass="btn-secondary" />
+                        <Button fx:id="btnProximo" onAction="#paginaProxima" text="Próximo" styleClass="btn-secondary" />
                     </children>
                 </HBox>
             </children>
@@ -147,13 +147,13 @@
 
         <HBox spacing="12.0" alignment="TOP_LEFT">
             <children>
-                <VBox spacing="10.0" styleClass="reports-card" HBox.hgrow="ALWAYS">
+                <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="reports-card-title" text="Rankings de Principais Clientes" />
-                        <Label styleClass="reports-card-subtitle" text="Volume financeiro por cliente no periodo selecionado." />
+                        <Label styleClass="card-title" text="Rankings de Principais Clientes" />
+                        <Label styleClass="card-subtitle" text="Volume financeiro por cliente no periodo selecionado." />
 
                         <VBox fx:id="rankingClientesContainer" spacing="8.0" />
-                        <Label styleClass="reports-note" text="* Dados baseados em faturamento consolidado de orcamentos com status 'Vendido'." wrapText="true" />
+                        <Label styleClass="text-muted" text="* Dados baseados em faturamento consolidado de orcamentos com status 'Vendido'." wrapText="true" />
                     </children>
                 </VBox>
             </children>

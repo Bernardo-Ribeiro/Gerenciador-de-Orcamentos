@@ -4,6 +4,8 @@ import com.grafica.model.Orcamento;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,14 +106,28 @@ public class OrcamentoDAO {
         orcamento.setIdCliente(rs.getInt("id_cliente"));
         orcamento.setIdUsuario(rs.getInt("id_usuario"));
         
-        Date dataEmissao = rs.getDate("data_emissao");
-        if (dataEmissao != null) {
-            orcamento.setDataEmissao(dataEmissao.toLocalDate());
+        String dataEmissao = rs.getString("data_emissao");
+        if (dataEmissao != null && !dataEmissao.isBlank()) {
+            try {
+                orcamento.setDataEmissao(LocalDate.parse(dataEmissao));
+            } catch (Exception e) {
+                try {
+                    long timestamp = Long.parseLong(dataEmissao);
+                    orcamento.setDataEmissao(Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate());
+                } catch (Exception e2) {}
+            }
         }
-        
-        Date dataValidade = rs.getDate("data_validade");
-        if (dataValidade != null) {
-            orcamento.setDataValidade(dataValidade.toLocalDate());
+
+        String dataValidade = rs.getString("data_validade");
+        if (dataValidade != null && !dataValidade.isBlank()) {
+            try {
+                orcamento.setDataValidade(LocalDate.parse(dataValidade));
+            } catch (Exception e) {
+                try {
+                    long timestamp = Long.parseLong(dataValidade);
+                    orcamento.setDataValidade(Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate());
+                } catch (Exception e2) {}
+            }
         }
         
         orcamento.setStatus(rs.getString("status"));

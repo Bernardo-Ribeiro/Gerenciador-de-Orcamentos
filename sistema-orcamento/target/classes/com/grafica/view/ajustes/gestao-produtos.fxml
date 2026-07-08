@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="20.0" styleClass="settings-page" stylesheets="@../../style.css"
+<VBox spacing="20.0" styleClass="page" stylesheets="@../../style.css"
       xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.grafica.controller.ProdutoController">
     <padding>
@@ -25,24 +25,24 @@
         <!-- ── Cabeçalho ── -->
         <HBox alignment="CENTER_LEFT" spacing="12.0">
             <VBox spacing="3.0">
-                <Label styleClass="settings-section-title" text="Gestão de Produtos" />
-                <Label styleClass="settings-section-text"
+                <Label styleClass="sectionpage-title" text="Gestão de Produtos" />
+                <Label styleClass="section-text"
                        text="Cadastre e gerencie os produtos (Cartão de Visita, Banner, etc.) disponíveis no sistema."
                        wrapText="true" />
             </VBox>
         </HBox>
 
         <!-- ── SplitPane principal dentro de ScrollPane ── -->
-        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials card">
             <padding>
                 <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
             </padding>
             <content>
-                <SplitPane dividerPositions="0.54" VBox.vgrow="ALWAYS" styleClass="produtos-split">
+                <SplitPane dividerPositions="0.54" VBox.vgrow="ALWAYS" styleClass="split">
                     <items>
 
                         <!-- ════ LADO ESQUERDO: lista de produtos ════ -->
-                        <AnchorPane styleClass="produtos-left-pane">
+                        <AnchorPane styleClass="left-pane">
                             <children>
                                 <VBox spacing="12.0"
                                       AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
@@ -51,29 +51,29 @@
                                     <!-- Toolbar: busca + filtro + novo -->
                                     <HBox spacing="8.0" alignment="CENTER_LEFT">
                                         <TextField promptText="Buscar produto…"
-                                                   styleClass="settings-input"
+                                                   styleClass="input"
                                                    HBox.hgrow="ALWAYS" />
                                         <ComboBox fx:id="filtroCategoria"
                                                   promptText="Categoria"
                                                   prefWidth="170.0"
-                                                  styleClass="settings-input" />
+                                                  styleClass="input" />
                                         <Button text="+ Novo"
                                                 onAction="#limpar"
-                                                styleClass="settings-primary-action, settings-action-button" />
+                                                styleClass="primary-action, action-button" />
                                     </HBox>
 
                                     <!-- Tabela de produtos -->
-                                    <VBox VBox.vgrow="ALWAYS" styleClass="settings-table-card">
+                                    <VBox VBox.vgrow="ALWAYS" styleClass="table card">
                                         <TableView fx:id="produtosTable"
                                                    VBox.vgrow="ALWAYS"
-                                                   styleClass="settings-table-view">
+                                                   styleClass="table-view">
                                             <columns>
                                                 <TableColumn fx:id="idColumn"       text="ID"        prefWidth="56"  />
                                                 <TableColumn fx:id="nomeColumn"     text="Produto"   prefWidth="260" />
                                                 <TableColumn fx:id="categoriaColumn" text="Categoria" prefWidth="180" />
                                             </columns>
                                             <placeholder>
-                                                <Label text="Nenhum produto cadastrado." styleClass="settings-section-text" />
+                                                <Label text="Nenhum produto cadastrado." styleClass="section-text" />
                                             </placeholder>
                                         </TableView>
                                     </VBox>
@@ -82,10 +82,10 @@
                         </AnchorPane>
 
                         <!-- ════ LADO DIREITO: detalhe ════ -->
-                        <AnchorPane styleClass="produtos-right-pane">
+                        <AnchorPane styleClass="right-pane">
                             <children>
                                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-                                            styleClass="produtos-scroll"
+                                            styleClass="scroll"
                                             AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
                                             AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="0.0">
                                     <content>
@@ -93,60 +93,60 @@
                                             <padding><Insets top="2.0" bottom="8.0" /></padding>
 
                                             <!-- ── Card: dados do produto ── -->
-                                            <VBox spacing="14.0" styleClass="settings-form-card, produtos-detail-card">
+                                            <VBox spacing="14.0" styleClass="form card, card">
 
                                                 <!-- Título do card -->
                                                 <VBox spacing="2.0">
-                                                    <Label styleClass="product-section-title" text="Produto" />
-                                                    <Label styleClass="settings-section-text" text="Informações básicas do produto" />
+                                                    <Label styleClass="product pagepage-title" text="Produto" />
+                                                    <Label styleClass="section-text" text="Informações básicas do produto" />
                                                 </VBox>
 
                                                 <!-- Nome -->
                                                 <VBox spacing="5.0">
-                                                    <Label styleClass="settings-form-label" text="Nome do Produto" />
+                                                    <Label styleClass="form-label" text="Nome do Produto" />
                                                     <TextField fx:id="nomeField"
                                                                promptText="Ex: Cartão de Visita"
-                                                               styleClass="settings-input" />
+                                                               styleClass="input" />
                                                 </VBox>
 
                                                 <!-- Categoria -->
                                                 <VBox spacing="5.0">
-                                                    <Label styleClass="settings-form-label" text="Categoria" />
+                                                    <Label styleClass="form-label" text="Categoria" />
                                                     <ComboBox fx:id="categoriaCombo"
                                                               promptText="Selecione a categoria"
                                                               maxWidth="Infinity"
-                                                              styleClass="settings-input" />
+                                                              styleClass="input" />
                                                 </VBox>
 
                                                 <!-- Botões -->
                                                 <HBox spacing="8.0" alignment="CENTER_RIGHT">
                                                     <Button onAction="#limpar"        text="Novo"
-                                                            styleClass="settings-secondary-action, settings-action-button" />
+                                                            styleClass="secondary-action, action-button" />
                                                     <Button onAction="#salvarProduto" text="Salvar"
-                                                            styleClass="settings-primary-action,  settings-action-button" />
+                                                            styleClass="primary-action,  action-button" />
                                                     <Button onAction="#deletarProduto" text="Excluir"
-                                                            styleClass="settings-danger-action,   settings-action-button" />
+                                                            styleClass="danger-action,   action-button" />
                                                 </HBox>
                                             </VBox>
 
                                             <!-- ── Card: Materiais Base ── -->
-                                            <VBox spacing="10.0" styleClass="product-section-card">
+                                            <VBox spacing="10.0" styleClass="product page card">
 
                                                 <VBox spacing="2.0">
-                                                    <Label text="Materiais Base" styleClass="product-section-title" />
-                                                    <Label text="Defina o material padrão para este produto." styleClass="settings-section-text" />
+                                                    <Label text="Materiais Base" styleClass="product pagepage-title" />
+                                                    <Label text="Defina o material padrão para este produto." styleClass="section-text" />
                                                 </VBox>
 
                                                 <TableView fx:id="materiaisBaseTable"
                                                            prefHeight="160.0"
-                                                           styleClass="settings-table-view">
+                                                           styleClass="table-view">
                                                     <columns>
                                                         <TableColumn fx:id="materialBaseNomeColumn"   text="Material" prefWidth="200" />
                                                         <TableColumn fx:id="materialBasePadraoColumn" text="Padrão"   prefWidth="72"  />
                                                         <TableColumn fx:id="materialBaseAcaoColumn"   text="Ação"     prefWidth="120"  />
                                                     </columns>
                                                     <placeholder>
-                                                        <Label text="Nenhum material associado." styleClass="settings-section-text" />
+                                                        <Label text="Nenhum material associado." styleClass="section-text" />
                                                     </placeholder>
                                                 </TableView>
 
@@ -154,30 +154,30 @@
                                                     <ComboBox fx:id="comboAddMaterialBase"
                                                               promptText="Selecione um material base"
                                                               HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                                              styleClass="settings-input" />
+                                                              styleClass="input" />
                                                     <Button onAction="#adicionarMaterialBase" text="Adicionar"
-                                                            styleClass="settings-primary-action, settings-action-button" />
+                                                            styleClass="primary-action, action-button" />
                                                 </HBox>
                                             </VBox>
 
                                             <!-- ── Card: Acabamentos ── -->
-                                            <VBox spacing="10.0" styleClass="product-section-card">
+                                            <VBox spacing="10.0" styleClass="product page card">
 
                                                 <VBox spacing="2.0">
-                                                    <Label text="Acabamentos" styleClass="product-section-title" />
-                                                    <Label text="Acabamentos opcionais ou obrigatórios para este produto." styleClass="settings-section-text" />
+                                                    <Label text="Acabamentos" styleClass="product pagepage-title" />
+                                                    <Label text="Acabamentos opcionais ou obrigatórios para este produto." styleClass="section-text" />
                                                 </VBox>
 
                                                 <TableView fx:id="acabamentosTable"
                                                            prefHeight="160.0"
-                                                           styleClass="settings-table-view">
+                                                           styleClass="table-view">
                                                     <columns>
                                                         <TableColumn fx:id="acabamentoNomeColumn"       text="Acabamento"  prefWidth="185" />
                                                         <TableColumn fx:id="acabamentoObrigatorioColumn" text="Obrigatório" prefWidth="87"  />
                                                         <TableColumn fx:id="acabamentoAcaoColumn"        text="Ação"        prefWidth="120"  />
                                                     </columns>
                                                     <placeholder>
-                                                        <Label text="Nenhum acabamento associado." styleClass="settings-section-text" />
+                                                        <Label text="Nenhum acabamento associado." styleClass="section-text" />
                                                     </placeholder>
                                                 </TableView>
 
@@ -185,9 +185,9 @@
                                                     <ComboBox fx:id="comboAddAcabamento"
                                                               promptText="Selecione um acabamento"
                                                               HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                                              styleClass="settings-input" />
+                                                              styleClass="input" />
                                                     <Button onAction="#adicionarAcabamento" text="Adicionar"
-                                                            styleClass="settings-primary-action, settings-action-button" />
+                                                            styleClass="primary-action, action-button" />
                                                 </HBox>
                                             </VBox>
 

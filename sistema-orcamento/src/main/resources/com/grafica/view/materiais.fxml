@@ -11,120 +11,103 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="materials-page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MaterialController">
+<VBox spacing="18.0" styleClass="page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MaterialController">
     <padding>
         <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
     </padding>
     <children>
-        <Label styleClass="materials-breadcrumb" text="Dashboard   >   Cadastros   >   Materiais" />
+        <Label styleClass="breadcrumb" text="Dashboard   >   Cadastros   >   Materiais" />
 
         <VBox spacing="6.0">
             <children>
-                <Label styleClass="materials-title" text="Catálogo de Materiais" />
-                <Label styleClass="materials-subtitle" text="Gerencie os materiais e serviços para composição de orçamentos." wrapText="true" />
+                <Label styleClass="page-title" text="Catálogo de Materiais" />
+                <Label styleClass="page-subtitle" text="Gerencie os materiais e serviços para composição de orçamentos." wrapText="true" />
             </children>
         </VBox>
 
-        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS" styleClass="materials-content-row">
+        <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
             <children>
-                <VBox spacing="12.0" styleClass="materials-card materials-form-card">
+                <VBox spacing="12.0" styleClass="card form-card">
                     <children>
                         <VBox spacing="4.0">
                             <children>
-                                <Label styleClass="materials-card-title" text="Novo Cadastro" />
-                                <Label styleClass="materials-card-subtitle" text="Preencha os dados do material ou serviço." wrapText="true" />
+                                <Label styleClass="card-title" text="Novo Cadastro" />
+                                <Label styleClass="card-subtitle" text="Preencha os dados do material ou serviço." wrapText="true" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Nome" />
-                                <TextField fx:id="nomeField" promptText="Ex: Lona Brilho 440g" styleClass="materials-input" />
+                                <Label styleClass="form-label" text="Nome" />
+                                <TextField fx:id="nomeField" promptText="Ex: Lona Brilho 440g" styleClass="form-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Categoria" />
-                                <ComboBox fx:id="categoriaCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                                <Label styleClass="form-label" text="Categoria" />
+                                <ComboBox fx:id="categoriaCombo" promptText="Selecione" styleClass="form-input" maxWidth="Infinity" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Tipo de Item" />
-                                <ComboBox fx:id="tipoItemCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                                <Label styleClass="form-label" text="Tipo de Item" />
+                                <ComboBox fx:id="tipoItemCombo" promptText="Selecione" styleClass="form-input" maxWidth="Infinity" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Tipo de Cobrança" />
-                                <ComboBox fx:id="tipoCobrancaCombo" promptText="Selecione" styleClass="materials-input" maxWidth="Infinity" />
+                                <Label styleClass="form-label" text="Tipo de Cobrança" />
+                                <ComboBox fx:id="tipoCobrancaCombo" promptText="Selecione" styleClass="form-input" maxWidth="Infinity" />
                             </children>
                         </VBox>
 
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Custo Base (R$)" />
-                                <TextField fx:id="custoBaseField" promptText="0.00" styleClass="materials-input" />
+                                <Label styleClass="form-label" text="Custo Base (R$)" />
+                                <TextField fx:id="custoBaseField" promptText="0.00" styleClass="form-input" />
                             </children>
                         </VBox>
                         
                         <VBox spacing="6.0">
                             <children>
-                                <Label styleClass="materials-label" text="Custo Produção (R$)" />
-                                <TextField fx:id="custoProducaoField" promptText="0.00" styleClass="materials-input" />
+                                <Label styleClass="form-label" text="Custo Produção (R$)" />
+                                <TextField fx:id="custoProducaoField" promptText="0.00" styleClass="form-input" />
                             </children>
                         </VBox>
 
                         <VBox spacing="8.0">
                             <children>
-                                <Button text="Salvar Material" onAction="#salvarMaterial" maxWidth="Infinity">
-                                    <styleClass>
-                                        <String fx:value="materials-primary-button" />
-                                    </styleClass>
-                                </Button>
-                                <Button text="Limpar" onAction="#limpar" maxWidth="Infinity">
-                                    <styleClass>
-                                        <String fx:value="materials-secondary-button" />
-                                    </styleClass>
-                                </Button>
-                                <Button text="Deletar" onAction="#deletarMaterial" maxWidth="Infinity">
-                                    <styleClass>
-                                        <String fx:value="materials-secondary-button" />
-                                    </styleClass>
-                                </Button>
+                                <Button text="Salvar Material" onAction="#salvarMaterial" maxWidth="Infinity" styleClass="btn-primary" />
+                                <Button text="Limpar" onAction="#limpar" maxWidth="Infinity" styleClass="btn-secondary" />
+                                <Button text="Deletar" onAction="#deletarMaterial" maxWidth="Infinity" styleClass="btn-danger" />
                             </children>
                         </VBox>
                     </children>
                 </VBox>
 
-                <VBox spacing="12.0" styleClass="materials-card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <VBox spacing="12.0" styleClass="card" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                     <children>
                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                             <children>
                                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="materials-card-title" text="Base de Materiais" />
-                                        <Label styleClass="materials-card-subtitle" text="Visualize e filtre os itens cadastrados." wrapText="true" />
+                                        <Label styleClass="card-title" text="Base de Materiais" />
+                                        <Label styleClass="card-subtitle" text="Visualize e filtre os itens cadastrados." wrapText="true" />
                                     </children>
                                 </VBox>
                                 <HBox spacing="8.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <ComboBox fx:id="filtroCategoria" promptText="Filtrar por Categoria" styleClass="materials-input" />
-                                        <Button onAction="#filtrar" text="Filtrar">
-                                            <styleClass>
-                                                <String fx:value="materials-secondary-button" />
-                                                <String fx:value="materials-icon-button" />
-                                            </styleClass>
-                                        </Button>
+                                        <ComboBox fx:id="filtroCategoria" promptText="Filtrar por Categoria" styleClass="form-input" />
+                                        <Button onAction="#filtrar" text="Filtrar" styleClass="btn-secondary btn-icon" />
                                     </children>
                                 </HBox>
                             </children>
                         </HBox>
 
-                        <TableView fx:id="materiaisTable" VBox.vgrow="ALWAYS" styleClass="materials-table">
+                        <TableView fx:id="materiaisTable" VBox.vgrow="ALWAYS" styleClass="table">
                             <columns>
                                 <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0" visible="false" />
                                 <TableColumn fx:id="nomeColumn" text="Nome" prefWidth="200.0" />

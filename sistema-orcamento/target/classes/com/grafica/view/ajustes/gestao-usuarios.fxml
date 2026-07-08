@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="users-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoUsuariosController">
+<VBox spacing="18.0" styleClass="page" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.GestaoUsuariosController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -21,15 +21,15 @@
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="users-title" text="Gestão de Usuários" />
-                        <Label styleClass="users-subtitle" text="Gerencie acessos, status e credenciais dos colaboradores." wrapText="true" />
+                        <Label styleClass="page-title" text="Gestão de Usuários" />
+                        <Label styleClass="page-subtitle" text="Gerencie acessos, status e credenciais dos colaboradores." wrapText="true" />
                     </children>
                 </VBox>
-                <Button text="Novo" onAction="#novoUsuario" styleClass="users-primary-button" />
+                <Button text="Novo" onAction="#novoUsuario" styleClass="btn-primary" />
             </children>
         </HBox>
 
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="card">
             <padding>
                 <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
             </padding>
@@ -41,16 +41,16 @@
                     <children>
                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                             <children>
-                                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="users-input" />
-                                <Button text="Atualizar" onAction="#recarregar" styleClass="users-action-button" />
+                                <TextField fx:id="txtBusca" onKeyReleased="#filtrarUsuarios" promptText="Buscar por nome ou e-mail" HBox.hgrow="ALWAYS" styleClass="form-input" />
+                                <Button text="Atualizar" onAction="#recarregar" styleClass="btn-ghost" />
                             </children>
                         </HBox>
 
                         <HBox spacing="16.0" VBox.vgrow="ALWAYS">
                             <children>
-                                <VBox spacing="10.0" styleClass="users-table-card" HBox.hgrow="ALWAYS">
+                                <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="users-table-view">
+                                        <TableView fx:id="tabelaUsuarios" VBox.vgrow="ALWAYS" styleClass="table">
                                             <columns>
                                                 <TableColumn fx:id="colNome" text="Nome" prefWidth="170.0" />
                                                 <TableColumn fx:id="colEmail" text="E-mail" prefWidth="210.0" />
@@ -61,49 +61,49 @@
                                     </children>
                                 </VBox>
 
-                                <VBox spacing="12.0" styleClass="users-table-card" style="-fx-border-color: transparent; -fx-border-width: 0;" prefWidth="320.0">
+                                <VBox spacing="12.0" styleClass="card" style="-fx-border-color: transparent; -fx-border-width: 0;" prefWidth="320.0">
                                     <children>
-                                        <Label styleClass="users-title" text="Detalhes do Usuário" />
+                                        <Label styleClass="page-title" text="Detalhes do Usuário" />
 
                                         <VBox spacing="6.0">
                                             <children>
-                                                <Label styleClass="users-form-label" text="Nome" />
-                                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="users-input" />
+                                                <Label styleClass="form-label" text="Nome" />
+                                                <TextField fx:id="txtNome" promptText="Nome completo" styleClass="form-input" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="6.0">
                                             <children>
-                                                <Label styleClass="users-form-label" text="E-mail" />
-                                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="users-input" />
+                                                <Label styleClass="form-label" text="E-mail" />
+                                                <TextField fx:id="txtEmail" promptText="email@empresa.com" styleClass="form-input" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="6.0">
                                             <children>
-                                                <Label styleClass="users-form-label" text="Senha" />
-                                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="users-input" />
+                                                <Label styleClass="form-label" text="Senha" />
+                                                <TextField fx:id="txtSenha" promptText="Senha inicial" styleClass="form-input" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="6.0">
                                             <children>
-                                                <Label styleClass="users-form-label" text="Cargo" />
-                                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="users-input" />
+                                                <Label styleClass="form-label" text="Cargo" />
+                                                <ComboBox fx:id="cmbCargo" promptText="Selecione" styleClass="form-input" />
                                             </children>
                                         </VBox>
 
                                         <VBox spacing="6.0">
                                             <children>
-                                                <Label styleClass="users-form-label" text="Status" />
-                                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="users-input" />
+                                                <Label styleClass="form-label" text="Status" />
+                                                <ComboBox fx:id="cmbStatus" promptText="Selecione" styleClass="form-input" />
                                             </children>
                                         </VBox>
 
                                         <HBox spacing="10.0" alignment="CENTER_RIGHT">
                                             <children>
-                                                <Button text="Excluir" onAction="#excluirSelecionado" styleClass="users-action-button" />
-                                                <Button text="Salvar" onAction="#salvarUsuario" styleClass="users-primary-button" />
+                                                <Button text="Excluir" onAction="#excluirSelecionado" styleClass="btn-ghost" />
+                                                <Button text="Salvar" onAction="#salvarUsuario" styleClass="btn-primary" />
                                             </children>
                                         </HBox>
                                     </children>

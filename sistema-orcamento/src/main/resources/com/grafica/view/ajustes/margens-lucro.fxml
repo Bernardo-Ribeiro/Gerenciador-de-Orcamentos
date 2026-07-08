@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" styleClass="profit-section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MargensLucroController">
+<VBox spacing="18.0" styleClass="section" stylesheets="@../../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.MargensLucroController">
     <padding>
         <Insets top="4.0" right="4.0" bottom="4.0" left="4.0" />
     </padding>
@@ -20,29 +20,29 @@
             <children>
                 <VBox spacing="4.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="profit-title" text="Margens de Lucro Padrão" />
-                        <Label styleClass="profit-subtitle" text="Gerencie as porcentagens de lucro por categoria para automatizar orçamentos." wrapText="true" />
+                        <Label styleClass="title" text="Margens de Lucro Padrão" />
+                        <Label styleClass="subtitle" text="Gerencie as porcentagens de lucro por categoria para automatizar orçamentos." wrapText="true" />
                     </children>
                 </VBox>
-                <Button text="+ Nova Categoria" onAction="#novaCategoria" styleClass="profit-primary-button" />
+                <Button text="+ Nova Categoria" onAction="#novaCategoria" styleClass="primary-button" />
             </children>
         </HBox>
 
-        <HBox fx:id="alertSuccess" visible="false" managed="false" spacing="10.0" alignment="CENTER_LEFT" styleClass="profit-alert">
+        <HBox fx:id="alertSuccess" visible="false" managed="false" spacing="10.0" alignment="CENTER_LEFT" styleClass="alert">
             <children>
-                <Label styleClass="profit-alert-icon" text="OK" />
+                <Label styleClass="alert-icon" text="OK" />
                 <VBox spacing="2.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="profit-alert-title" text="Configurações Atualizadas" />
-                        <Label styleClass="profit-alert-text" text="As margens foram salvas com sucesso e já estão ativas para novos orçamentos." wrapText="true" />
+                        <Label styleClass="alertpage-title" text="Configurações Atualizadas" />
+                        <Label styleClass="alert-text" text="As margens foram salvas com sucesso e já estão ativas para novos orçamentos." wrapText="true" />
                     </children>
                 </VBox>
-                <Label styleClass="profit-alert-link" text="Dispensar" onMouseClicked="#ocultarAlerta" />
+                <Label styleClass="alert-link" text="Dispensar" onMouseClicked="#ocultarAlerta" />
             </children>
         </HBox>
 
         <!-- Scrollable area: inline form + bulk actions + category list -->
-        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials-card">
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="materials card">
             <padding>
                 <Insets top="0.0" right="0.0" bottom="0.0" left="0.0" />
             </padding>
@@ -53,55 +53,55 @@
                     </padding>
                     <children>
                         <!-- Inline form for new category -->
-                        <VBox fx:id="novoCategoriaForm" visible="false" managed="false" spacing="14.0" styleClass="profit-list-card">
+                        <VBox fx:id="novoCategoriaForm" visible="false" managed="false" spacing="14.0" styleClass="list card">
                             <padding>
                                 <Insets top="16.0" right="16.0" bottom="16.0" left="16.0" />
                             </padding>
                             <children>
-                                <Label styleClass="profit-row-title" text="Nova Categoria de Lucro" />
+                                <Label styleClass="rowpage-title" text="Nova Categoria de Lucro" />
                                 <HBox spacing="12.0">
                                     <children>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="settings-form-label" text="Nome da Categoria" />
-                                                <TextField fx:id="txtNovaCategoriaNome" promptText="Ex: Comunicação Visual" styleClass="settings-input" />
+                                                <Label styleClass="form-label" text="Nome da Categoria" />
+                                                <TextField fx:id="txtNovaCategoriaNome" promptText="Ex: Comunicação Visual" styleClass="input" />
                                             </children>
                                         </VBox>
                                         <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label styleClass="settings-form-label" text="Margem Padrão (%)" />
-                                                <TextField fx:id="txtNovaCategoriaMargem" promptText="50,00" styleClass="settings-input" prefWidth="100" />
+                                                <Label styleClass="form-label" text="Margem Padrão (%)" />
+                                                <TextField fx:id="txtNovaCategoriaMargem" promptText="50,00" styleClass="input" prefWidth="100" />
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
                                 <VBox spacing="6.0">
                                     <children>
-                                        <Label styleClass="settings-form-label" text="Descrição" />
-                                        <TextField fx:id="txtNovaCategoriaDescricao" promptText="Descrição opcional da categoria" styleClass="settings-input" />
+                                        <Label styleClass="form-label" text="Descrição" />
+                                        <TextField fx:id="txtNovaCategoriaDescricao" promptText="Descrição opcional da categoria" styleClass="input" />
                                     </children>
                                 </VBox>
                                 <HBox spacing="10.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <Button text="Cancelar" onAction="#cancelarNovaCategoria" styleClass="settings-secondary-action, settings-action-button" />
-                                        <Button text="Salvar" onAction="#salvarNovaCategoria" styleClass="settings-primary-action, settings-action-button" />
+                                        <Button text="Cancelar" onAction="#cancelarNovaCategoria" styleClass="secondary-action, action-button" />
+                                        <Button text="Salvar" onAction="#salvarNovaCategoria" styleClass="primary-action, action-button" />
                                     </children>
                                 </HBox>
                             </children>
                         </VBox>
 
-                        <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="profit-bulk-row">
+                        <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="bulk table-row">
                             <children>
-                                <CheckBox styleClass="profit-checkbox" />
-                                <Label styleClass="profit-bulk-label" text="AÇÕES EM MASSA" />
-                                <Label styleClass="profit-bulk-action" text="Aumentar 5%" />
-                                <Label styleClass="profit-bulk-danger" text="Excluir Selecionados" />
+                                <CheckBox styleClass="checkbox" />
+                                <Label styleClass="bulk-label" text="AÇÕES EM MASSA" />
+                                <Label styleClass="bulk-action" text="Aumentar 5%" />
+                                <Label styleClass="bulk-danger" text="Excluir Selecionados" />
                                 <Region HBox.hgrow="ALWAYS" />
-                                <Label fx:id="lblCount" styleClass="profit-bulk-count" text="0 categorias listadas" />
+                                <Label fx:id="lblCount" styleClass="bulk-count" text="0 categorias listadas" />
                             </children>
                         </HBox>
 
-                        <VBox fx:id="categoriasContainer" spacing="0.0" styleClass="profit-list-card">
+                        <VBox fx:id="categoriasContainer" spacing="0.0" styleClass="list card">
                             <children>
                                 <!-- Categorias dinâmicas aqui -->
                             </children>
@@ -111,16 +111,16 @@
             </content>
         </ScrollPane>
 
-        <HBox alignment="CENTER_LEFT" styleClass="profit-footer">
+        <HBox alignment="CENTER_LEFT" styleClass="footer">
             <children>
                 <HBox spacing="6.0" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                     <children>
-                        <Label styleClass="profit-footer-icon" text="i" />
-                        <Label styleClass="profit-footer-text" text="As alterações afetarão todos os orçamentos baseados nestas margens." />
+                        <Label styleClass="footer-icon" text="i" />
+                        <Label styleClass="footer-text" text="As alterações afetarão todos os orçamentos baseados nestas margens." />
                     </children>
                 </HBox>
-                <Button text="Cancelar Alterações" onAction="#cancelarAlteracoes" styleClass="profit-secondary-button" />
-                <Button text="Salvar padrões" onAction="#salvarPadroes" styleClass="profit-primary-button" />
+                <Button text="Cancelar Alterações" onAction="#cancelarAlteracoes" styleClass="secondary-button" />
+                <Button text="Salvar padrões" onAction="#salvarPadroes" styleClass="primary-button" />
             </children>
         </HBox>
     </children>

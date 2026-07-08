@@ -11,69 +11,69 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="dashboard-scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.DashboardController">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.DashboardController">
     <content>
-        <VBox spacing="18.0" styleClass="dashboard-page">
+        <VBox spacing="18.0" styleClass="page">
             <padding>
                 <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
             </padding>
             <children>
-                <Label styleClass="dashboard-breadcrumb" text="Dashboard   >   Visão Geral" />
+                <Label styleClass="breadcrumb" text="Dashboard   >   Visão Geral" />
 
                 <VBox spacing="4.0">
                     <children>
-                        <Label fx:id="tituloLabel" styleClass="dashboard-title" text="Olá!" />
-                        <Label fx:id="subtituloLabel" styleClass="dashboard-subtitle" text="Aqui está o que está acontecendo com seus orçamentos hoje." wrapText="true" />
+                        <Label fx:id="tituloLabel" styleClass="page-title" text="Olá!" />
+                        <Label fx:id="subtituloLabel" styleClass="page-subtitle" text="Aqui está o que está acontecendo com seus orçamentos hoje." wrapText="true" />
                     </children>
                 </VBox>
 
                 <HBox spacing="12.0" alignment="CENTER_LEFT">
                     <children>
-                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label styleClass="dashboard-stat-icon" text="RS" />
+                                        <Label styleClass="stat-icon" text="RS" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Vendas Totais (Mês)" />
-                                <Label fx:id="vendasTotaisLabel" styleClass="dashboard-stat-value" text="R$ 45.230,00" />
+                                <Label styleClass="stat-label" text="Vendas Totais (Mês)" />
+                                <Label fx:id="vendasTotaisLabel" styleClass="stat-value" text="R$ 45.230,00" />
                             </children>
                         </VBox>
 
-                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label styleClass="dashboard-stat-icon" text="!" />
+                                        <Label styleClass="stat-icon" text="!" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Orçamentos Pendentes" />
-                                <Label fx:id="orcamentosPendentesLabel" styleClass="dashboard-stat-value" text="24" />
+                                <Label styleClass="stat-label" text="Orçamentos Pendentes" />
+                                <Label fx:id="orcamentosPendentesLabel" styleClass="stat-value" text="24" />
                             </children>
                         </VBox>
 
-                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label styleClass="dashboard-stat-icon" text="TX" />
+                                        <Label styleClass="stat-icon" text="TX" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Taxa de Conversão" />
-                                <Label fx:id="taxaConversaoLabel" styleClass="dashboard-stat-value" text="68%" />
+                                <Label styleClass="stat-label" text="Taxa de Conversão" />
+                                <Label fx:id="taxaConversaoLabel" styleClass="stat-value" text="68%" />
                             </children>
                         </VBox>
 
-                        <VBox spacing="6.0" styleClass="dashboard-stat-card" HBox.hgrow="ALWAYS">
+                        <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                             <children>
                                 <HBox spacing="6.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label styleClass="dashboard-stat-icon" text="CL" />
+                                        <Label styleClass="stat-icon" text="CL" />
                                     </children>
                                 </HBox>
-                                <Label styleClass="dashboard-stat-label" text="Novos Clientes" />
-                                <Label fx:id="novosClientesLabel" styleClass="dashboard-stat-value" text="12" />
+                                <Label styleClass="stat-label" text="Novos Clientes" />
+                                <Label fx:id="novosClientesLabel" styleClass="stat-value" text="12" />
                             </children>
                         </VBox>
                     </children>
@@ -82,48 +82,48 @@
                 <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
                     <children>
                         <VBox spacing="16.0" HBox.hgrow="ALWAYS">
-                            <VBox spacing="10.0" styleClass="dashboard-card">
+                            <VBox spacing="10.0" styleClass="card">
                                 <children>
                                     <HBox alignment="CENTER_LEFT">
                                         <children>
-                                            <Label styleClass="dashboard-card-title" text="Atalhos Estratégicos" />
+                                            <Label styleClass="card-title" text="Atalhos Estratégicos" />
                                             <Region HBox.hgrow="ALWAYS" />
-                                            <Label styleClass="dashboard-link" text="Ver todos os módulos" />
+                                            <Label styleClass="btn-link" text="Ver todos os módulos" />
                                         </children>
                                     </HBox>
 
                                     <HBox spacing="10.0">
                                         <children>
-                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                            <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-shortcut-icon" text="+" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Novo Orçamento" />
-                                                    <Label styleClass="dashboard-shortcut-text" text="Inicie a calculadora produtiva para fechar uma nova venda." wrapText="true" />
-                                                    <Button fx:id="btnNovoOrcamento" text="Abrir" styleClass="dashboard-secondary-button" />
+                                                    <Label styleClass="shortcut-icon" text="+" />
+                                                    <Label styleClass="shortcut-title" text="Novo Orçamento" />
+                                                    <Label styleClass="shortcut-text" text="Inicie a calculadora produtiva para fechar uma nova venda." wrapText="true" />
+                                                    <Button fx:id="btnNovoOrcamento" text="Abrir" styleClass="btn-secondary" />
                                                 </children>
                                             </VBox>
-                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                            <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-shortcut-icon" text="CL" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Cadastrar Cliente" />
-                                                    <Label styleClass="dashboard-shortcut-text" text="Adicione novos prospectos ou empresas a sua base de dados." wrapText="true" />
-                                                    <Button fx:id="btnClientes" text="Abrir" styleClass="dashboard-secondary-button" />
+                                                    <Label styleClass="shortcut-icon" text="CL" />
+                                                    <Label styleClass="shortcut-title" text="Cadastrar Cliente" />
+                                                    <Label styleClass="shortcut-text" text="Adicione novos prospectos ou empresas a sua base de dados." wrapText="true" />
+                                                    <Button fx:id="btnClientes" text="Abrir" styleClass="btn-secondary" />
                                                 </children>
                                             </VBox>
-                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                            <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-shortcut-icon" text="RL" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Gerar Relatório" />
-                                                    <Label styleClass="dashboard-shortcut-text" text="Analise o desempenho de vendas do último período." wrapText="true" />
-                                                    <Button fx:id="btnRelatorios" text="Abrir" styleClass="dashboard-secondary-button" />
+                                                    <Label styleClass="shortcut-icon" text="RL" />
+                                                    <Label styleClass="shortcut-title" text="Gerar Relatório" />
+                                                    <Label styleClass="shortcut-text" text="Analise o desempenho de vendas do último período." wrapText="true" />
+                                                    <Button fx:id="btnRelatorios" text="Abrir" styleClass="btn-secondary" />
                                                 </children>
                                             </VBox>
-                                            <VBox spacing="6.0" styleClass="dashboard-shortcut-card" HBox.hgrow="ALWAYS">
+                                            <VBox spacing="6.0" styleClass="card" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-shortcut-icon" text="MT" />
-                                                    <Label styleClass="dashboard-shortcut-title" text="Materiais" />
-                                                    <Label styleClass="dashboard-shortcut-text" text="Acesse o catálogo de materiais e mantenha os custos atualizados." wrapText="true" />
-                                                    <Button fx:id="btnMateriais" text="Abrir" styleClass="dashboard-secondary-button" />
+                                                    <Label styleClass="shortcut-icon" text="MT" />
+                                                    <Label styleClass="shortcut-title" text="Materiais" />
+                                                    <Label styleClass="shortcut-text" text="Acesse o catálogo de materiais e mantenha os custos atualizados." wrapText="true" />
+                                                    <Button fx:id="btnMateriais" text="Abrir" styleClass="btn-secondary" />
                                                 </children>
                                             </VBox>
                                         </children>
@@ -131,21 +131,21 @@
                                 </children>
                             </VBox>
 
-                            <VBox spacing="10.0" styleClass="dashboard-card">
+                            <VBox spacing="10.0" styleClass="card">
                                 <children>
                                     <HBox alignment="CENTER_LEFT">
                                         <children>
                                             <VBox spacing="2.0" HBox.hgrow="ALWAYS">
                                                 <children>
-                                                    <Label styleClass="dashboard-card-title" text="Últimos Orçamentos" />
-                                                    <Label styleClass="dashboard-card-subtitle" text="Resumo dos últimos 5 registros processados no sistema." />
+                                                    <Label styleClass="card-title" text="Últimos Orçamentos" />
+                                                    <Label styleClass="card-subtitle" text="Resumo dos últimos 5 registros processados no sistema." />
                                                 </children>
                                             </VBox>
-                                            <Button fx:id="btnHistoricoCompleto" text="Ver Histórico Completo" styleClass="dashboard-secondary-button" />
+                                            <Button fx:id="btnHistoricoCompleto" text="Ver Histórico Completo" styleClass="btn-secondary" />
                                         </children>
                                     </HBox>
 
-                                    <TableView fx:id="tabelaUltimosOrcamentos" VBox.vgrow="ALWAYS" styleClass="settings-table-view" prefHeight="280.0">
+                                    <TableView fx:id="tabelaUltimosOrcamentos" VBox.vgrow="ALWAYS" styleClass="table" prefHeight="280.0">
                                         <columns>
                                             <TableColumn fx:id="colId" text="ID" prefWidth="110.0" />
                                             <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200.0" />
