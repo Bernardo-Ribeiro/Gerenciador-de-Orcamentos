@@ -2092,6 +2092,75 @@ Button.btn-sair:hover {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 2);
 }
 
+/* ========== ORÇAMENTOS - TABELA COM SCROLLBAR ========== */
+/* ScrollPane principal da tela de orçamentos */
+.scroll-pane.scroll {
+    -fx-background-color: transparent;
+    -fx-fit-to-width: true;
+}
+
+.scroll-pane.scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ScrollPane de acabamentos - altura dinâmica */
+#acabamentosContainer {
+    -fx-padding: 4px;
+}
+
+.scroll-pane.acabamentos-scroll {
+    -fx-pref-height: 120px;
+    -fx-max-height: 150px;
+}
+
+.scroll-pane.acabamentos-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Garantir que a tabela de itens tenha altura mínima e scrollbar */
+#itensTable {
+    -fx-min-height: 200px;
+    -fx-pref-height: 300px;
+    -fx-max-height: 400px;
+}
+
+#itensTable > .virtual-flow > .scroll-bar > .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 4;
+}
+
+#itensTable > .virtual-flow > .scroll-bar > .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Sidebar fixa com largura definida */
+.sidebar {
+    -fx-pref-width: 280px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+}
+
+/* ========== MONITOR DE VALORES - PADDING INTERNO ========== */
+/* Adicionar padding nos cards do sidebar para evitar texto colado na borda */
+.sidebar .summary-card,
+.sidebar .total-card,
+.sidebar .note-card {
+    -fx-padding: 14px 16px;
+    -fx-spacing: 8px;
+}
+
+/* Aumentar espaçamento interno dos labels do monitor */
+.sidebar .summary-label,
+.sidebar .total-label,
+.sidebar .note-label {
+    -fx-padding: 0 2px;
+}
+
+.sidebar .summary-value,
+.sidebar .total-value {
+    -fx-padding: 4px 2px;
+}
+
 .stat-card:hover {
     -fx-background-color: rgba(255, 255, 255, 0.1) !important;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 0, 3);

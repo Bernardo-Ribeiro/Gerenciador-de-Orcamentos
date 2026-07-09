@@ -18,23 +18,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<VBox spacing="18.0" styleClass="page" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.OrcamentoController">
-    <padding>
-        <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
-    </padding>
-    <children>
-        <Label styleClass="breadcrumb" text="Operacional   >   Novo Orçamento   >   Calculadora" />
-
-        <VBox spacing="6.0">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="scroll" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grafica.controller.OrcamentoController">
+    <content>
+        <VBox spacing="18.0" styleClass="page">
+            <padding>
+                <Insets top="24.0" right="24.0" bottom="24.0" left="24.0" />
+            </padding>
             <children>
-                <Label styleClass="page-title" text="Calculadora de Orçamentos" />
-                <Label styleClass="page-subtitle" text="Monte propostas seguindo o fluxo: Produto → Layout → Material → Acabamentos → Quantidade." wrapText="true" />
-            </children>
-        </VBox>
+                <Label styleClass="breadcrumb" text="Operacional   >   Novo Orçamento   >   Calculadora" />
 
-        <HBox spacing="18.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
-            <children>
-                <VBox spacing="14.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                <VBox spacing="6.0">
+                    <children>
+                        <Label styleClass="page-title" text="Calculadora de Orçamentos" />
+                        <Label styleClass="page-subtitle" text="Monte propostas seguindo o fluxo: Produto → Layout → Material → Acabamentos → Quantidade." wrapText="true" />
+                    </children>
+                </VBox>
+
+                <HBox spacing="18.0" alignment="TOP_LEFT">
+                    <children>
+                        <VBox spacing="14.0" HBox.hgrow="ALWAYS">
                     <VBox spacing="10.0" styleClass="card">
                         <children>
                             <Label styleClass="card-title" text="Identificação do Cliente" />
@@ -84,7 +86,7 @@
                                     <VBox spacing="6.0">
                                         <children>
                                             <Label styleClass="form-label" text="4. Acabamentos" />
-                                            <ScrollPane fitToWidth="true" prefHeight="320.0" VBox.vgrow="ALWAYS">
+                                            <ScrollPane fitToWidth="true" prefHeight="120.0" styleClass="acabamentos-scroll" VBox.vgrow="NEVER">
                                                 <content>
                                                     <VBox fx:id="acabamentosContainer" spacing="4.0" />
                                                 </content>
@@ -175,7 +177,7 @@
                     </VBox>
                 </VBox>
 
-                <VBox spacing="12.0" styleClass="sidebar">
+                <VBox spacing="12.0" styleClass="sidebar" prefWidth="280.0" minWidth="280.0">
                     <children>
                         <Label styleClass="sidebar-title" text="Monitor de Valores" />
 
@@ -228,3 +230,5 @@
         </HBox>
     </children>
 </VBox>
+    </content>
+</ScrollPane>
