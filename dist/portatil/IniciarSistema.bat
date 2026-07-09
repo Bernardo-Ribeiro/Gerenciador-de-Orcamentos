@@ -24,8 +24,8 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-REM Executa o sistema
-java -jar "%~dp0sistema-orcamento-1.0-SNAPSHOT.jar"
+REM Executa o sistema com JavaFX (sem console)
+javaw --enable-native-access=javafx.graphics --module-path "%~dp0lib\javafx" --add-modules javafx.controls,javafx.fxml -jar "%~dp0sistema-orcamento-1.0-SNAPSHOT.jar"
 
 if %errorlevel% neq 0 (
     echo.

@@ -14,16 +14,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.2</version>
             <classifier>win</classifier>
         </dependency>
         <dependency>
@@ -159,6 +149,12 @@
                                             <exclude>META-INF/*.RSA</exclude>
                                         </excludes>
                                     </filter>
+                                    <filter>
+                                        <artifact>org.openjfx:*</artifact>
+                                        <excludes>
+                                            <exclude>**</exclude>
+                                        </excludes>
+                                    </filter>
                                 </filters>
                                 <shadedArtifactAttached>false</shadedArtifactAttached>
                             </configuration>
@@ -183,7 +179,7 @@
                                 <errTitle>Erro</errTitle>
                                 <classPath>
                                     <mainClass>com.grafica.Main</mainClass>
-                                    <addDependencies>false</addDependencies>
+                                    <addDependencies>true</addDependencies>
                                 </classPath>
                                 <jre>
                                     <minVersion>21</minVersion>
