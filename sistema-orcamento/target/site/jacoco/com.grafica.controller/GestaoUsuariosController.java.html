@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestaoUsuariosController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">GestaoUsuariosController.java</span></div><h1>GestaoUsuariosController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import com.grafica.dao.UsuarioDAO;
+import com.grafica.model.Usuario;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.time.LocalDateTime;
+
+<span class="nc" id="L17">public class GestaoUsuariosController {</span>
+
+    @FXML
+    private TextField txtBusca;
+
+    @FXML
+    private TableView&lt;Usuario&gt; tabelaUsuarios;
+
+    @FXML
+    private TableColumn&lt;Usuario, String&gt; colNome;
+
+    @FXML
+    private TableColumn&lt;Usuario, String&gt; colEmail;
+
+    @FXML
+    private TableColumn&lt;Usuario, String&gt; colCargo;
+
+    @FXML
+    private TableColumn&lt;Usuario, String&gt; colStatus;
+
+    @FXML
+    private TextField txtNome;
+
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private TextField txtSenha;
+
+    @FXML
+    private ComboBox&lt;String&gt; cmbCargo;
+
+    @FXML
+    private ComboBox&lt;String&gt; cmbStatus;
+
+<span class="nc" id="L52">    private final UsuarioDAO usuarioDAO = new UsuarioDAO();</span>
+<span class="nc" id="L53">    private final ObservableList&lt;Usuario&gt; usuarios = FXCollections.observableArrayList();</span>
+    private Usuario selecionado;
+
+    @FXML
+    private void initialize() {
+<span class="nc" id="L58">        cmbCargo.setItems(FXCollections.observableArrayList(</span>
+            &quot;Administrador&quot;,
+            &quot;Vendedor Senior&quot;,
+            &quot;Vendedor Junior&quot;,
+            &quot;Financeiro&quot;,
+            &quot;Producao&quot;
+        ));
+<span class="nc" id="L65">        cmbStatus.setItems(FXCollections.observableArrayList(&quot;ATIVO&quot;, &quot;INATIVO&quot;));</span>
+
+<span class="nc" id="L67">        colNome.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nome&quot;));</span>
+<span class="nc" id="L68">        colEmail.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;email&quot;));</span>
+<span class="nc" id="L69">        colCargo.setCellValueFactory(cell -&gt; new javafx.beans.property.SimpleStringProperty(obterCargo(cell.getValue())));</span>
+<span class="nc" id="L70">        colStatus.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;status&quot;));</span>
+
+<span class="nc" id="L72">        tabelaUsuarios.setColumnResizePolicy(</span>
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
+<span class="nc" id="L75">        tabelaUsuarios.setItems(usuarios);</span>
+<span class="nc" id="L76">        tabelaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -&gt; preencherFormulario(newValue));</span>
+<span class="nc" id="L77">        recarregar();</span>
+<span class="nc" id="L78">    }</span>
+
+    @FXML
+    private void recarregar() {
+<span class="nc" id="L82">        usuarios.setAll(usuarioDAO.listarTodos());</span>
+<span class="nc" id="L83">        filtrarUsuarios();</span>
+<span class="nc" id="L84">    }</span>
+
+    @FXML
+    private void novoUsuario() {
+<span class="nc" id="L88">        selecionado = null;</span>
+<span class="nc" id="L89">        tabelaUsuarios.getSelectionModel().clearSelection();</span>
+<span class="nc" id="L90">        limparFormulario();</span>
+<span class="nc" id="L91">    }</span>
+
+    @FXML
+    private void filtrarUsuarios() {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        String busca = txtBusca.getText() == null ? &quot;&quot; : txtBusca.getText().trim().toLowerCase();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (busca.isEmpty()) {</span>
+<span class="nc" id="L97">            tabelaUsuarios.setItems(usuarios);</span>
+<span class="nc" id="L98">            return;</span>
+        }
+
+<span class="nc" id="L101">        ObservableList&lt;Usuario&gt; filtrados = FXCollections.observableArrayList();</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        for (Usuario usuario : usuarios) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            String nome = usuario.getNome() != null ? usuario.getNome().toLowerCase() : &quot;&quot;;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            String email = usuario.getEmail() != null ? usuario.getEmail().toLowerCase() : &quot;&quot;;</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">            if (nome.contains(busca) || email.contains(busca)) {</span>
+<span class="nc" id="L106">                filtrados.add(usuario);</span>
+            }
+<span class="nc" id="L108">        }</span>
+<span class="nc" id="L109">        tabelaUsuarios.setItems(filtrados);</span>
+<span class="nc" id="L110">    }</span>
+
+    @FXML
+    private void salvarUsuario() {
+        try {
+<span class="nc bnc" id="L115" title="All 4 branches missed.">            if (txtNome.getText() == null || txtNome.getText().trim().isEmpty() ||</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">                txtEmail.getText() == null || txtEmail.getText().trim().isEmpty()) {</span>
+<span class="nc" id="L117">                mostrarErro(&quot;Nome e e-mail são obrigatórios.&quot;);</span>
+<span class="nc" id="L118">                return;</span>
+            }
+
+<span class="nc bnc" id="L121" title="All 4 branches missed.">            if (cmbCargo.getValue() == null || cmbStatus.getValue() == null) {</span>
+<span class="nc" id="L122">                mostrarErro(&quot;Selecione cargo e status.&quot;);</span>
+<span class="nc" id="L123">                return;</span>
+            }
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (selecionado == null) {</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">                if (txtSenha.getText() == null || txtSenha.getText().trim().isEmpty()) {</span>
+<span class="nc" id="L128">                    mostrarErro(&quot;Informe uma senha inicial.&quot;);</span>
+<span class="nc" id="L129">                    return;</span>
+                }
+
+<span class="nc" id="L132">                Usuario usuario = new Usuario(</span>
+<span class="nc" id="L133">                    txtNome.getText().trim(),</span>
+<span class="nc" id="L134">                    txtEmail.getText().trim().toLowerCase(),</span>
+<span class="nc" id="L135">                    txtSenha.getText().trim(),</span>
+<span class="nc" id="L136">                    cmbStatus.getValue()</span>
+                );
+<span class="nc" id="L138">                usuario.setDataCadastro(LocalDateTime.now());</span>
+<span class="nc" id="L139">                usuarioDAO.criar(usuario);</span>
+<span class="nc" id="L140">            } else {</span>
+<span class="nc" id="L141">                selecionado.setNome(txtNome.getText().trim());</span>
+<span class="nc" id="L142">                selecionado.setEmail(txtEmail.getText().trim().toLowerCase());</span>
+<span class="nc" id="L143">                selecionado.setStatus(cmbStatus.getValue());</span>
+<span class="nc" id="L144">                usuarioDAO.atualizar(selecionado);</span>
+            }
+
+<span class="nc" id="L147">            recarregar();</span>
+<span class="nc" id="L148">            novoUsuario();</span>
+<span class="nc" id="L149">            mostrarInfo(&quot;Usuário salvo com sucesso.&quot;);</span>
+<span class="nc" id="L150">        } catch (Exception e) {</span>
+<span class="nc" id="L151">            mostrarErro(&quot;Erro ao salvar usuário: &quot; + e.getMessage());</span>
+<span class="nc" id="L152">        }</span>
+<span class="nc" id="L153">    }</span>
+
+    @FXML
+    private void excluirSelecionado() {
+<span class="nc" id="L157">        Usuario usuario = tabelaUsuarios.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (usuario == null) {</span>
+<span class="nc" id="L159">            mostrarErro(&quot;Selecione um usuário para excluir.&quot;);</span>
+<span class="nc" id="L160">            return;</span>
+        }
+
+<span class="nc" id="L163">        usuarioDAO.deletar(usuario.getId());</span>
+<span class="nc" id="L164">        recarregar();</span>
+<span class="nc" id="L165">        novoUsuario();</span>
+<span class="nc" id="L166">    }</span>
+
+    private void preencherFormulario(Usuario usuario) {
+<span class="nc" id="L169">        selecionado = usuario;</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        if (usuario == null) {</span>
+<span class="nc" id="L171">            return;</span>
+        }
+<span class="nc" id="L173">        txtNome.setText(usuario.getNome());</span>
+<span class="nc" id="L174">        txtEmail.setText(usuario.getEmail());</span>
+<span class="nc" id="L175">        txtSenha.clear();</span>
+<span class="nc" id="L176">        cmbStatus.setValue(usuario.getStatus());</span>
+<span class="nc" id="L177">        cmbCargo.setValue(obterCargo(usuario));</span>
+<span class="nc" id="L178">    }</span>
+
+    private void limparFormulario() {
+<span class="nc" id="L181">        txtNome.clear();</span>
+<span class="nc" id="L182">        txtEmail.clear();</span>
+<span class="nc" id="L183">        txtSenha.clear();</span>
+<span class="nc" id="L184">        cmbCargo.setValue(null);</span>
+<span class="nc" id="L185">        cmbStatus.setValue(null);</span>
+<span class="nc" id="L186">    }</span>
+
+    private String obterCargo(Usuario usuario) {
+<span class="nc bnc" id="L189" title="All 4 branches missed.">        if (usuario == null || usuario.getEmail() == null) {</span>
+<span class="nc" id="L190">            return &quot;Administrador&quot;;</span>
+        }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (usuario.getEmail().equalsIgnoreCase(&quot;admin@grafica.com&quot;)) {</span>
+<span class="nc" id="L193">            return &quot;Administrador&quot;;</span>
+        }
+<span class="nc" id="L195">        return &quot;Colaborador&quot;;</span>
+    }
+
+    private void mostrarErro(String mensagem) {
+<span class="nc" id="L199">        Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L200">        alert.setTitle(&quot;Erro&quot;);</span>
+<span class="nc" id="L201">        alert.setHeaderText(null);</span>
+<span class="nc" id="L202">        alert.setContentText(mensagem);</span>
+<span class="nc" id="L203">        alert.showAndWait();</span>
+<span class="nc" id="L204">    }</span>
+
+    private void mostrarInfo(String mensagem) {
+<span class="nc" id="L207">        Alert alert = new Alert(Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L208">        alert.setTitle(&quot;Usuários&quot;);</span>
+<span class="nc" id="L209">        alert.setHeaderText(null);</span>
+<span class="nc" id="L210">        alert.setContentText(mensagem);</span>
+<span class="nc" id="L211">        alert.showAndWait();</span>
+<span class="nc" id="L212">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

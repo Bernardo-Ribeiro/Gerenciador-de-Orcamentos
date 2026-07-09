@@ -1,0 +1,12 @@
+com\grafica\model\ProdutoTest.class
+com\grafica\service\RegrasNegocioTest.class
+com\grafica\service\PdfServiceTest.class
+com\grafica\model\ClienteTest.class
+com\grafica\service\PdfServiceTest$PdfServiceTestHelper.class
+com\grafica\dao\TestDbConnection.class
+com\grafica\service\CalculoServiceTest.class
+com\grafica\model\UsuarioTest.class
+com\grafica\model\EscalaProdutivaTest.class
+com\grafica\model\OrcamentoTest.class
+com\grafica\model\MaterialTest.class
+com\grafica\model\ItemOrcamentoTest.class

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemOrcamentoDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.dao</a> &gt; <span class="el_source">ItemOrcamentoDAO.java</span></div><h1>ItemOrcamentoDAO.java</h1><pre class="source lang-java linenums">package com.grafica.dao;
+
+import com.grafica.model.ItemOrcamento;
+import com.grafica.model.Produto;
+import com.grafica.model.Material;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L11">public class ItemOrcamentoDAO {</span>
+
+    public void criar(ItemOrcamento item) {
+<span class="nc" id="L14">        String sql = &quot;INSERT INTO itens_orcamento (id_orcamento, id_produto, id_material, id_layout, largura_mm, altura_mm, &quot; +</span>
+                    &quot;quantidade, area_calculada, valor_bruto_item, valor_final_item, custo_unitario, tipo_cobranca_aplicado) &quot; +
+                    &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;
+
+<span class="nc" id="L18">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L19">             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+
+<span class="nc" id="L21">            stmt.setInt(1, item.getIdOrcamento());</span>
+<span class="nc" id="L22">            stmt.setInt(2, item.getIdProduto());</span>
+<span class="nc" id="L23">            stmt.setInt(3, item.getIdMaterial());</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">            if (item.getIdLayout() != null) {</span>
+<span class="nc" id="L25">                stmt.setInt(4, item.getIdLayout());</span>
+            } else {
+<span class="nc" id="L27">                stmt.setNull(4, Types.INTEGER);</span>
+            }
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            stmt.setInt(5, item.getLarguraMm() != null ? item.getLarguraMm() : 0);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            stmt.setInt(6, item.getAlturaMm() != null ? item.getAlturaMm() : 0);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">            stmt.setInt(7, item.getQuantidade() != null ? item.getQuantidade() : 1);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">            if (item.getAreaCalculada() != null) {</span>
+<span class="nc" id="L33">                stmt.setBigDecimal(8, item.getAreaCalculada());</span>
+            } else {
+<span class="nc" id="L35">                stmt.setNull(8, Types.DECIMAL);</span>
+            }
+<span class="nc" id="L37">            stmt.setBigDecimal(9, item.getValorBrutoItem());</span>
+<span class="nc" id="L38">            stmt.setBigDecimal(10, item.getValorFinalItem());</span>
+<span class="nc" id="L39">            stmt.setBigDecimal(11, item.getCustoUnitario());</span>
+<span class="nc" id="L40">            stmt.setString(12, item.getTipoCobrancaAplicado());</span>
+
+<span class="nc" id="L42">            stmt.executeUpdate();</span>
+
+<span class="nc" id="L44">            try (ResultSet rs = stmt.getGeneratedKeys()) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L46">                    item.setId(rs.getInt(1));</span>
+                }
+            }
+<span class="nc" id="L49">        } catch (SQLException e) {</span>
+<span class="nc" id="L50">            e.printStackTrace();</span>
+<span class="nc" id="L51">        }</span>
+<span class="nc" id="L52">    }</span>
+
+    public List&lt;ItemOrcamento&gt; listarPorOrcamento(Integer idOrcamento) {
+<span class="nc" id="L55">        List&lt;ItemOrcamento&gt; itens = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L56">        String sql = &quot;SELECT i.id, i.id_orcamento, i.id_produto, i.id_material, i.id_layout, i.largura_mm, i.altura_mm, &quot; +</span>
+                    &quot;i.quantidade, i.area_calculada, i.valor_bruto_item, i.valor_final_item, i.custo_unitario, i.tipo_cobranca_aplicado, &quot; +
+                    &quot;p.nome as produto_nome, m.nome as material_nome &quot; +
+                    &quot;FROM itens_orcamento i &quot; +
+                    &quot;LEFT JOIN produtos p ON i.id_produto = p.id &quot; +
+                    &quot;LEFT JOIN materiais m ON i.id_material = m.id &quot; +
+                    &quot;WHERE i.id_orcamento = ? ORDER BY i.id&quot;;
+
+<span class="nc" id="L64">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L65">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L67">            stmt.setInt(1, idOrcamento);</span>
+<span class="nc" id="L68">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                while (rs.next()) {</span>
+<span class="nc" id="L70">                    itens.add(mapearItem(rs));</span>
+                }
+            }
+<span class="nc" id="L73">        } catch (SQLException e) {</span>
+<span class="nc" id="L74">            e.printStackTrace();</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">        return itens;</span>
+    }
+
+    public void deletar(Integer id) {
+<span class="nc" id="L80">        String sql = &quot;DELETE FROM itens_orcamento WHERE id = ?&quot;;</span>
+
+<span class="nc" id="L82">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L83">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L85">            stmt.setInt(1, id);</span>
+<span class="nc" id="L86">            stmt.executeUpdate();</span>
+<span class="nc" id="L87">        } catch (SQLException e) {</span>
+<span class="nc" id="L88">            e.printStackTrace();</span>
+<span class="nc" id="L89">        }</span>
+<span class="nc" id="L90">    }</span>
+
+    public void deletarPorOrcamento(Integer idOrcamento) {
+<span class="nc" id="L93">        String sql = &quot;DELETE FROM itens_orcamento WHERE id_orcamento = ?&quot;;</span>
+
+<span class="nc" id="L95">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L96">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L98">            stmt.setInt(1, idOrcamento);</span>
+<span class="nc" id="L99">            stmt.executeUpdate();</span>
+<span class="nc" id="L100">        } catch (SQLException e) {</span>
+<span class="nc" id="L101">            e.printStackTrace();</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">    }</span>
+
+    public void inserirEmLote(List&lt;ItemOrcamento&gt; itens) {
+<span class="nc" id="L106">        String sql = &quot;INSERT INTO itens_orcamento (id_orcamento, id_produto, id_material, id_layout, largura_mm, altura_mm, &quot; +</span>
+                    &quot;quantidade, area_calculada, valor_bruto_item, valor_final_item, custo_unitario, tipo_cobranca_aplicado) &quot; +
+                    &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;
+
+<span class="nc" id="L110">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L111">             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            for (ItemOrcamento item : itens) {</span>
+<span class="nc" id="L114">                stmt.setInt(1, item.getIdOrcamento());</span>
+<span class="nc" id="L115">                stmt.setInt(2, item.getIdProduto());</span>
+<span class="nc" id="L116">                stmt.setInt(3, item.getIdMaterial());</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                if (item.getIdLayout() != null) {</span>
+<span class="nc" id="L118">                    stmt.setInt(4, item.getIdLayout());</span>
+                } else {
+<span class="nc" id="L120">                    stmt.setNull(4, Types.INTEGER);</span>
+                }
+<span class="nc bnc" id="L122" title="All 2 branches missed.">                stmt.setInt(5, item.getLarguraMm() != null ? item.getLarguraMm() : 0);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                stmt.setInt(6, item.getAlturaMm() != null ? item.getAlturaMm() : 0);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                stmt.setInt(7, item.getQuantidade() != null ? item.getQuantidade() : 1);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                if (item.getAreaCalculada() != null) {</span>
+<span class="nc" id="L126">                    stmt.setBigDecimal(8, item.getAreaCalculada());</span>
+                } else {
+<span class="nc" id="L128">                    stmt.setNull(8, Types.DECIMAL);</span>
+                }
+<span class="nc" id="L130">                stmt.setBigDecimal(9, item.getValorBrutoItem());</span>
+<span class="nc" id="L131">                stmt.setBigDecimal(10, item.getValorFinalItem());</span>
+<span class="nc" id="L132">                stmt.setBigDecimal(11, item.getCustoUnitario());</span>
+<span class="nc" id="L133">                stmt.setString(12, item.getTipoCobrancaAplicado());</span>
+<span class="nc" id="L134">                stmt.addBatch();</span>
+<span class="nc" id="L135">            }</span>
+
+<span class="nc" id="L137">            stmt.executeBatch();</span>
+<span class="nc" id="L138">        } catch (SQLException e) {</span>
+<span class="nc" id="L139">            e.printStackTrace();</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">    }</span>
+
+    private ItemOrcamento mapearItem(ResultSet rs) throws SQLException {
+<span class="nc" id="L144">        ItemOrcamento item = new ItemOrcamento();</span>
+<span class="nc" id="L145">        item.setId(rs.getInt(&quot;id&quot;));</span>
+<span class="nc" id="L146">        item.setIdOrcamento(rs.getInt(&quot;id_orcamento&quot;));</span>
+<span class="nc" id="L147">        item.setIdProduto(rs.getInt(&quot;id_produto&quot;));</span>
+<span class="nc" id="L148">        item.setIdMaterial(rs.getInt(&quot;id_material&quot;));</span>
+
+<span class="nc" id="L150">        int idLayout = rs.getInt(&quot;id_layout&quot;);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (!rs.wasNull()) {</span>
+<span class="nc" id="L152">            item.setIdLayout(idLayout);</span>
+        }
+
+<span class="nc" id="L155">        item.setLarguraMm(rs.getInt(&quot;largura_mm&quot;));</span>
+<span class="nc" id="L156">        item.setAlturaMm(rs.getInt(&quot;altura_mm&quot;));</span>
+<span class="nc" id="L157">        item.setQuantidade(rs.getInt(&quot;quantidade&quot;));</span>
+
+<span class="nc" id="L159">        BigDecimal area = rs.getBigDecimal(&quot;area_calculada&quot;);</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (area != null) {</span>
+<span class="nc" id="L161">            item.setAreaCalculada(area);</span>
+        }
+
+<span class="nc" id="L164">        item.setValorBrutoItem(rs.getBigDecimal(&quot;valor_bruto_item&quot;));</span>
+<span class="nc" id="L165">        item.setValorFinalItem(rs.getBigDecimal(&quot;valor_final_item&quot;));</span>
+<span class="nc" id="L166">        item.setCustoUnitario(rs.getBigDecimal(&quot;custo_unitario&quot;));</span>
+<span class="nc" id="L167">        item.setTipoCobrancaAplicado(rs.getString(&quot;tipo_cobranca_aplicado&quot;));</span>
+
+<span class="nc" id="L169">        Produto produto = new Produto();</span>
+<span class="nc" id="L170">        produto.setId(item.getIdProduto());</span>
+<span class="nc" id="L171">        produto.setNome(rs.getString(&quot;produto_nome&quot;));</span>
+<span class="nc" id="L172">        item.setProduto(produto);</span>
+
+<span class="nc" id="L174">        Material material = new Material();</span>
+<span class="nc" id="L175">        material.setId(item.getIdMaterial());</span>
+<span class="nc" id="L176">        material.setNome(rs.getString(&quot;material_nome&quot;));</span>
+<span class="nc" id="L177">        item.setMaterial(material);</span>
+
+<span class="nc" id="L179">        return item;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

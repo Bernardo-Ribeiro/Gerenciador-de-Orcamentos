@@ -11,9 +11,25 @@ import java.util.List;
 
 public class OrcamentoDAO {
 
+    private Connection connection;
+
+    public OrcamentoDAO() {
+    }
+
+    public OrcamentoDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    private Connection getConnection() throws SQLException {
+        if (connection != null) {
+            return connection;
+        }
+        return DbConnection.getConnection();
+    }
+
     public void criar(Orcamento orcamento) {
         String sql = "INSERT INTO orcamentos (id_cliente, id_usuario, data_emissao, data_validade, status, valor_bruto, margem_lucro_percentual, desconto_progressivo, valor_final) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DbConnection.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             pstmt.setInt(1, orcamento.getIdCliente());
@@ -41,7 +57,7 @@ public class OrcamentoDAO {
         List<Orcamento> orcamentos = new ArrayList<>();
         String sql = "SELECT * FROM orcamentos WHERE status != 'EXCLUIDO' ORDER BY data_emissao DESC";
         
-        try (Connection conn = DbConnection.getConnection();
+        try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
@@ -56,7 +72,7 @@ public class OrcamentoDAO {
 
     public Orcamento buscarPorId(Integer id) {
         String sql = "SELECT * FROM orcamentos WHERE id = ? AND status != 'EXCLUIDO'";
-        try (Connection conn = DbConnection.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);
@@ -73,7 +89,7 @@ public class OrcamentoDAO {
 
     public void atualizar(Orcamento orcamento) {
         String sql = "UPDATE orcamentos SET valor_final = ?, margem_lucro_percentual = ?, desconto_progressivo = ?, status = ? WHERE id = ?";
-        try (Connection conn = DbConnection.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setBigDecimal(1, orcamento.getValorFinal());
@@ -90,7 +106,7 @@ public class OrcamentoDAO {
 
     public void deletar(Integer id) {
         String sql = "UPDATE orcamentos SET status = 'EXCLUIDO' WHERE id = ?";
-        try (Connection conn = DbConnection.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);

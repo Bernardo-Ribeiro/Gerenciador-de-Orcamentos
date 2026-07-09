@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FormUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.ui</a> &gt; <span class="el_source">FormUtils.java</span></div><h1>FormUtils.java</h1><pre class="source lang-java linenums">package com.grafica.ui;
+
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
+
+/**
+ * Utility class for form validation and field handling
+ */
+public class FormUtils {
+    
+<span class="nc" id="L12">    private FormUtils() {</span>
+<span class="nc" id="L13">        throw new UnsupportedOperationException(&quot;Utility class&quot;);</span>
+    }
+    
+    /**
+     * Checks if a text field is empty or null
+     */
+    public static boolean isEmpty(TextField campo) {
+<span class="nc bnc" id="L20" title="All 6 branches missed.">        return campo == null || campo.getText() == null || campo.getText().trim().isEmpty();</span>
+    }
+    
+    /**
+     * Checks if a combo box has no selection
+     */
+    public static boolean isEmpty(ComboBox&lt;?&gt; campo) {
+<span class="nc bnc" id="L27" title="All 4 branches missed.">        return campo == null || campo.getValue() == null;</span>
+    }
+    
+    /**
+     * Validates required fields
+     * @return error message if invalid, null if valid
+     */
+    public static String validarObrigatorios(String nomeCampo, TextField... campos) {
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        for (TextField campo : campos) {</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            if (isEmpty(campo)) {</span>
+<span class="nc" id="L37">                return nomeCampo + &quot; é obrigatório.&quot;;</span>
+            }
+        }
+<span class="nc" id="L40">        return null;</span>
+    }
+    
+    /**
+     * Validates if a combo box has a selection
+     * @return error message if invalid, null if valid
+     */
+    public static String validarObrigatorios(String nomeCampo, ComboBox&lt;?&gt;... campos) {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        for (ComboBox&lt;?&gt; campo : campos) {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (isEmpty(campo)) {</span>
+<span class="nc" id="L50">                return nomeCampo + &quot; é obrigatório.&quot;;</span>
+            }
+        }
+<span class="nc" id="L53">        return null;</span>
+    }
+    
+    /**
+     * Configures a TextField to accept only numeric input
+     */
+    public static void configurarCampoNumerico(TextField campo, boolean permitirDecimal) {
+<span class="nc" id="L60">        campo.textProperty().addListener((obs, oldVal, newVal) -&gt; {</span>
+<span class="nc bnc" id="L61" title="All 4 branches missed.">            if (newVal == null || newVal.isEmpty()) {</span>
+<span class="nc" id="L62">                return;</span>
+            }
+            
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            String texto = permitirDecimal </span>
+<span class="nc" id="L66">                ? newVal.replaceAll(&quot;[^0-9.,]&quot;, &quot;&quot;) </span>
+<span class="nc" id="L67">                : newVal.replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+            
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (permitirDecimal) {</span>
+                // Ensure only one decimal separator
+<span class="nc" id="L71">                int lastComma = texto.lastIndexOf(',');</span>
+<span class="nc" id="L72">                int lastDot = texto.lastIndexOf('.');</span>
+<span class="nc" id="L73">                int decimalPos = Math.max(lastComma, lastDot);</span>
+                
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                if (decimalPos &gt;= 0) {</span>
+<span class="nc" id="L76">                    String parteInteira = texto.substring(0, decimalPos);</span>
+<span class="nc" id="L77">                    String parteDecimal = texto.substring(decimalPos + 1).replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+<span class="nc" id="L78">                    texto = parteInteira + &quot;.&quot; + parteDecimal;</span>
+                }
+            }
+            
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            if (!texto.equals(newVal)) {</span>
+<span class="nc" id="L83">                campo.setText(texto);</span>
+            }
+<span class="nc" id="L85">        });</span>
+<span class="nc" id="L86">    }</span>
+    
+    /**
+     * Configures a TextField to accept only integer input
+     */
+    public static void configurarCampoInteiro(TextField campo) {
+<span class="nc" id="L92">        configurarCampoNumerico(campo, false);</span>
+<span class="nc" id="L93">    }</span>
+    
+    /**
+     * Configures a TextField for currency input (R$)
+     */
+    public static void configurarCampoMoeda(TextField campo) {
+<span class="nc" id="L99">        configurarCampoNumerico(campo, true);</span>
+<span class="nc" id="L100">    }</span>
+    
+    /**
+     * Configures a StringConverter for a ComboBox
+     */
+    public static &lt;T&gt; void configurarConverter(ComboBox&lt;T&gt; combo, 
+                                                java.util.function.Function&lt;T, String&gt; toStringFunc) {
+<span class="nc" id="L107">        combo.setConverter(new StringConverter&lt;&gt;() {</span>
+            @Override
+            public String toString(T object) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                return object == null ? &quot;&quot; : toStringFunc.apply(object);</span>
+            }
+            
+            @Override
+            public T fromString(String string) {
+<span class="nc" id="L115">                return null;</span>
+            }
+        });
+<span class="nc" id="L118">    }</span>
+    
+    /**
+     * Gets trimmed text from a TextField or empty string if null
+     */
+    public static String getTexto(TextField campo) {
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        if (campo == null || campo.getText() == null) {</span>
+<span class="nc" id="L125">            return &quot;&quot;;</span>
+        }
+<span class="nc" id="L127">        return campo.getText().trim();</span>
+    }
+    
+    /**
+     * Gets selected value from a ComboBox or null if not selected
+     */
+    public static &lt;T&gt; T getValor(ComboBox&lt;T&gt; combo) {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        return combo == null ? null : combo.getValue();</span>
+    }
+    
+    /**
+     * Sets text to a TextField handling null values
+     */
+    public static void setTexto(TextField campo, String valor) {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (campo != null) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            campo.setText(valor == null ? &quot;&quot; : valor);</span>
+        }
+<span class="nc" id="L144">    }</span>
+    
+    /**
+     * Sets value to a ComboBox handling null values
+     */
+    public static &lt;T&gt; void setValor(ComboBox&lt;T&gt; combo, T valor) {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (combo != null) {</span>
+<span class="nc" id="L151">            combo.setValue(valor);</span>
+        }
+<span class="nc" id="L153">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

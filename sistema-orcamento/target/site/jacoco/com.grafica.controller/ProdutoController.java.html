@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProdutoController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">ProdutoController.java</span></div><h1>ProdutoController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import com.grafica.dao.MaterialDAO;
+import com.grafica.dao.ProdutoDAO;
+import com.grafica.dao.ProdutoAcabamentoDAO;
+import com.grafica.dao.ProdutoMaterialDAO;
+import com.grafica.model.Material;
+import com.grafica.model.Produto;
+import com.grafica.model.ProdutoAcabamento;
+import com.grafica.model.ProdutoMaterial;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L23">public class ProdutoController {</span>
+    @FXML
+    private TextField nomeField;
+    @FXML
+    private ComboBox&lt;String&gt; categoriaCombo;
+    @FXML
+    private ComboBox&lt;String&gt; filtroCategoria;
+    @FXML
+    private TableView&lt;Produto&gt; produtosTable;
+    @FXML
+    private TableColumn&lt;Produto, Integer&gt; idColumn;
+    @FXML
+    private TableColumn&lt;Produto, String&gt; nomeColumn;
+    @FXML
+    private TableColumn&lt;Produto, String&gt; categoriaColumn;
+
+    // Tabelas de associação
+    @FXML private TableView&lt;ProdutoMaterial&gt; materiaisBaseTable;
+    @FXML private TableColumn&lt;ProdutoMaterial, String&gt; materialBaseNomeColumn;
+    @FXML private TableColumn&lt;ProdutoMaterial, Boolean&gt; materialBasePadraoColumn;
+    @FXML private TableColumn&lt;ProdutoMaterial, Void&gt; materialBaseAcaoColumn;
+
+    @FXML private TableView&lt;ProdutoAcabamento&gt; acabamentosTable;
+    @FXML private TableColumn&lt;ProdutoAcabamento, String&gt; acabamentoNomeColumn;
+    @FXML private TableColumn&lt;ProdutoAcabamento, Boolean&gt; acabamentoObrigatorioColumn;
+    @FXML private TableColumn&lt;ProdutoAcabamento, Void&gt; acabamentoAcaoColumn;
+
+    // Combos para adicionar
+    @FXML private ComboBox&lt;Material&gt; comboAddMaterialBase;
+    @FXML private ComboBox&lt;Material&gt; comboAddAcabamento;
+
+    private ProdutoDAO produtoDAO;
+    private MaterialDAO materialDAO;
+    private ProdutoMaterialDAO produtoMaterialDAO;
+    private ProdutoAcabamentoDAO produtoAcabamentoDAO;
+
+<span class="nc" id="L59">    private ObservableList&lt;Produto&gt; todosProdutos = FXCollections.observableArrayList();</span>
+    private Produto produtoSelecionado;
+
+    private List&lt;Material&gt; todosMateriais;
+<span class="nc" id="L63">    private ObservableList&lt;ProdutoMaterial&gt; materiaisBaseAssociados = FXCollections.observableArrayList();</span>
+<span class="nc" id="L64">    private ObservableList&lt;ProdutoAcabamento&gt; acabamentosAssociados = FXCollections.observableArrayList();</span>
+
+    @FXML
+    public void initialize() {
+<span class="nc" id="L68">        produtoDAO = new ProdutoDAO();</span>
+<span class="nc" id="L69">        materialDAO = new MaterialDAO();</span>
+<span class="nc" id="L70">        produtoMaterialDAO = new ProdutoMaterialDAO();</span>
+<span class="nc" id="L71">        produtoAcabamentoDAO = new ProdutoAcabamentoDAO();</span>
+
+<span class="nc" id="L73">        categoriaCombo.setItems(FXCollections.observableArrayList(</span>
+            &quot;IMPRESSOS&quot;, &quot;COMUNICACAO_VISUAL&quot;, &quot;RIGIDOS&quot;
+        ));
+
+<span class="nc" id="L77">        filtroCategoria.setItems(FXCollections.observableArrayList(</span>
+            &quot;TODOS&quot;, &quot;IMPRESSOS&quot;, &quot;COMUNICACAO_VISUAL&quot;, &quot;RIGIDOS&quot;
+        ));
+<span class="nc" id="L80">        filtroCategoria.setValue(&quot;TODOS&quot;);</span>
+<span class="nc" id="L81">        filtroCategoria.valueProperty().addListener((obs, oldVal, newVal) -&gt; filtrarProdutos());</span>
+
+        // Configurar colunas da tabela de produtos
+<span class="nc" id="L84">        idColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L85">        nomeColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nome&quot;));</span>
+<span class="nc" id="L86">        categoriaColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;categoria&quot;));</span>
+
+<span class="nc" id="L88">        configurarControles();</span>
+<span class="nc" id="L89">        carregarDados();</span>
+<span class="nc" id="L90">    }</span>
+
+    private void configurarControles() {
+        // Seleção na tabela de produtos
+<span class="nc" id="L94">        produtosTable.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -&gt; {</span>
+<span class="nc" id="L95">            produtoSelecionado = newV;</span>
+<span class="nc" id="L96">            preencherFormulario(newV);</span>
+<span class="nc" id="L97">            carregarAssociacoes(newV);</span>
+<span class="nc" id="L98">        });</span>
+
+        // Combos para adicionar materiais
+<span class="nc" id="L101">        StringConverter&lt;Material&gt; materialConverter = new StringConverter&lt;&gt;() {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            @Override public String toString(Material m) { return m == null ? &quot;&quot; : m.getNome(); }</span>
+<span class="nc" id="L103">            @Override public Material fromString(String s) { return null; }</span>
+        };
+<span class="nc" id="L105">        comboAddMaterialBase.setConverter(materialConverter);</span>
+<span class="nc" id="L106">        comboAddAcabamento.setConverter(materialConverter);</span>
+
+        // Tabela de materiais base
+<span class="nc" id="L109">        materialBaseNomeColumn.setCellValueFactory(cell -&gt; new javafx.beans.property.SimpleStringProperty(getMaterialNome(cell.getValue().getIdMaterial())));</span>
+<span class="nc" id="L110">        materialBasePadraoColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;materialPadrao&quot;));</span>
+<span class="nc" id="L111">        materialBasePadraoColumn.setCellFactory(col -&gt; createRadioButtonCell(true));</span>
+<span class="nc" id="L112">        materialBaseAcaoColumn.setCellFactory(col -&gt; createButtonCell(&quot;Remover&quot;, this::removerMaterialBase));</span>
+
+        // Tabela de acabamentos
+<span class="nc" id="L115">        acabamentoNomeColumn.setCellValueFactory(cell -&gt; new javafx.beans.property.SimpleStringProperty(getMaterialNome(cell.getValue().getIdMaterial())));</span>
+<span class="nc" id="L116">        acabamentoObrigatorioColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;obrigatorio&quot;));</span>
+<span class="nc" id="L117">        acabamentoObrigatorioColumn.setCellFactory(col -&gt; createCheckBoxCell());</span>
+<span class="nc" id="L118">        acabamentoAcaoColumn.setCellFactory(col -&gt; createButtonCell(&quot;Remover&quot;, this::removerAcabamento));</span>
+
+<span class="nc" id="L120">        materiaisBaseTable.setItems(materiaisBaseAssociados);</span>
+<span class="nc" id="L121">        acabamentosTable.setItems(acabamentosAssociados);</span>
+<span class="nc" id="L122">    }</span>
+
+    private void carregarDados() {
+<span class="nc" id="L125">        todosProdutos.setAll(produtoDAO.listarTodos());</span>
+<span class="nc" id="L126">        produtosTable.setItems(todosProdutos);</span>
+
+<span class="nc" id="L128">        todosMateriais = materialDAO.listarTodos();</span>
+<span class="nc" id="L129">        comboAddMaterialBase.setItems(FXCollections.observableArrayList(</span>
+<span class="nc" id="L130">            todosMateriais.stream().filter(m -&gt; &quot;BASE&quot;.equals(m.getTipoItem())).collect(Collectors.toList())</span>
+        ));
+<span class="nc" id="L132">        comboAddAcabamento.setItems(FXCollections.observableArrayList(</span>
+<span class="nc" id="L133">            todosMateriais.stream().filter(m -&gt; &quot;ACABAMENTO&quot;.equals(m.getTipoItem())).collect(Collectors.toList())</span>
+        ));
+<span class="nc" id="L135">    }</span>
+
+    private void preencherFormulario(Produto produto) {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (produto == null) {</span>
+<span class="nc" id="L139">            limparFormulario();</span>
+<span class="nc" id="L140">            return;</span>
+        }
+<span class="nc" id="L142">        nomeField.setText(produto.getNome());</span>
+<span class="nc" id="L143">        categoriaCombo.setValue(produto.getCategoria());</span>
+<span class="nc" id="L144">    }</span>
+
+    private void limparFormulario() {
+<span class="nc" id="L147">        nomeField.clear();</span>
+<span class="nc" id="L148">        categoriaCombo.setValue(null);</span>
+<span class="nc" id="L149">        produtoSelecionado = null;</span>
+<span class="nc" id="L150">        produtosTable.getSelectionModel().clearSelection();</span>
+<span class="nc" id="L151">        materiaisBaseAssociados.clear();</span>
+<span class="nc" id="L152">        acabamentosAssociados.clear();</span>
+<span class="nc" id="L153">    }</span>
+
+    @FXML
+    private void limpar() {
+<span class="nc" id="L157">        limparFormulario();</span>
+<span class="nc" id="L158">    }</span>
+
+    @FXML
+    private void salvarProduto() {
+<span class="nc bnc" id="L162" title="All 4 branches missed.">        if (nomeField.getText().isEmpty() || categoriaCombo.getValue() == null) {</span>
+<span class="nc" id="L163">            mostrarAlerta(&quot;Nome e Categoria são obrigatórios.&quot;);</span>
+<span class="nc" id="L164">            return;</span>
+        }
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (produtoSelecionado == null) { // Criar</span>
+<span class="nc" id="L168">            Produto novo = new Produto();</span>
+<span class="nc" id="L169">            novo.setNome(nomeField.getText());</span>
+<span class="nc" id="L170">            novo.setCategoria(categoriaCombo.getValue());</span>
+<span class="nc" id="L171">            produtoDAO.criar(novo);</span>
+<span class="nc" id="L172">        } else { // Atualizar</span>
+<span class="nc" id="L173">            produtoSelecionado.setNome(nomeField.getText());</span>
+<span class="nc" id="L174">            produtoSelecionado.setCategoria(categoriaCombo.getValue());</span>
+<span class="nc" id="L175">            produtoDAO.atualizar(produtoSelecionado);</span>
+        }
+<span class="nc" id="L177">        carregarDados();</span>
+<span class="nc" id="L178">        limparFormulario();</span>
+<span class="nc" id="L179">    }</span>
+
+    @FXML
+    private void deletarProduto() {
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (produtoSelecionado == null) {</span>
+<span class="nc" id="L184">            mostrarAlerta(&quot;Selecione um produto para excluir.&quot;);</span>
+<span class="nc" id="L185">            return;</span>
+        }
+<span class="nc" id="L187">        produtoDAO.deletar(produtoSelecionado.getId());</span>
+<span class="nc" id="L188">        carregarDados();</span>
+<span class="nc" id="L189">        limparFormulario();</span>
+<span class="nc" id="L190">    }</span>
+
+    @FXML
+    private void filtrarProdutos() {
+<span class="nc" id="L194">        String categoria = filtroCategoria.getValue();</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">        if (categoria == null || &quot;TODOS&quot;.equals(categoria)) {</span>
+<span class="nc" id="L196">            produtosTable.setItems(todosProdutos);</span>
+        } else {
+<span class="nc" id="L198">            produtosTable.setItems(todosProdutos.filtered(p -&gt; categoria.equals(p.getCategoria())));</span>
+        }
+<span class="nc" id="L200">    }</span>
+
+    // --- Lógica de Associação ---
+
+    private void carregarAssociacoes(Produto produto) {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (produto == null) {</span>
+<span class="nc" id="L206">            materiaisBaseAssociados.clear();</span>
+<span class="nc" id="L207">            acabamentosAssociados.clear();</span>
+<span class="nc" id="L208">            return;</span>
+        }
+<span class="nc" id="L210">        materiaisBaseAssociados.setAll(produtoMaterialDAO.listarPorProduto(produto.getId()));</span>
+<span class="nc" id="L211">        acabamentosAssociados.setAll(produtoAcabamentoDAO.listarPorProduto(produto.getId()));</span>
+<span class="nc" id="L212">    }</span>
+
+    @FXML
+    private void adicionarMaterialBase() {
+<span class="nc bnc" id="L216" title="All 4 branches missed.">        if (produtoSelecionado == null || comboAddMaterialBase.getValue() == null) return;</span>
+<span class="nc" id="L217">        ProdutoMaterial pm = new ProdutoMaterial(produtoSelecionado.getId(), comboAddMaterialBase.getValue().getId());</span>
+<span class="nc" id="L218">        produtoMaterialDAO.criar(pm);</span>
+<span class="nc" id="L219">        carregarAssociacoes(produtoSelecionado);</span>
+<span class="nc" id="L220">        comboAddMaterialBase.setValue(null);</span>
+<span class="nc" id="L221">    }</span>
+
+    @FXML
+    private void adicionarAcabamento() {
+<span class="nc bnc" id="L225" title="All 4 branches missed.">        if (produtoSelecionado == null || comboAddAcabamento.getValue() == null) return;</span>
+<span class="nc" id="L226">        ProdutoAcabamento pa = new ProdutoAcabamento(produtoSelecionado.getId(), comboAddAcabamento.getValue().getId());</span>
+<span class="nc" id="L227">        produtoAcabamentoDAO.criar(pa);</span>
+<span class="nc" id="L228">        carregarAssociacoes(produtoSelecionado);</span>
+<span class="nc" id="L229">        comboAddAcabamento.setValue(null);</span>
+<span class="nc" id="L230">    }</span>
+
+    private void removerMaterialBase(ProdutoMaterial pm) {
+<span class="nc" id="L233">        produtoMaterialDAO.deletar(pm.getIdProduto(), pm.getIdMaterial());</span>
+<span class="nc" id="L234">        carregarAssociacoes(produtoSelecionado);</span>
+<span class="nc" id="L235">    }</span>
+
+    private void removerAcabamento(ProdutoAcabamento pa) {
+<span class="nc" id="L238">        produtoAcabamentoDAO.deletar(pa.getIdProduto(), pa.getIdMaterial());</span>
+<span class="nc" id="L239">        carregarAssociacoes(produtoSelecionado);</span>
+<span class="nc" id="L240">    }</span>
+
+    private void setMaterialPadrao(ProdutoMaterial pm) {
+        // Desmarca todos os outros
+<span class="nc" id="L244">        materiaisBaseAssociados.forEach(item -&gt; {</span>
+<span class="nc bnc" id="L245" title="All 4 branches missed.">            if (!item.equals(pm) &amp;&amp; Boolean.TRUE.equals(item.getMaterialPadrao())) {</span>
+<span class="nc" id="L246">                item.setMaterialPadrao(false);</span>
+<span class="nc" id="L247">                produtoMaterialDAO.atualizar(item);</span>
+            }
+<span class="nc" id="L249">        });</span>
+        // Marca o selecionado
+<span class="nc" id="L251">        pm.setMaterialPadrao(true);</span>
+<span class="nc" id="L252">        produtoMaterialDAO.atualizar(pm);</span>
+<span class="nc" id="L253">        materiaisBaseTable.refresh();</span>
+<span class="nc" id="L254">    }</span>
+
+    private void setAcabamentoObrigatorio(ProdutoAcabamento pa, boolean isObrigatorio) {
+<span class="nc" id="L257">        pa.setObrigatorio(isObrigatorio);</span>
+<span class="nc" id="L258">        produtoAcabamentoDAO.atualizar(pa);</span>
+<span class="nc" id="L259">        acabamentosTable.refresh();</span>
+<span class="nc" id="L260">    }</span>
+
+    // --- Helpers ---
+
+    private String getMaterialNome(int idMaterial) {
+<span class="nc" id="L265">        return todosMateriais.stream()</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">            .filter(m -&gt; m.getId() == idMaterial)</span>
+<span class="nc" id="L267">            .map(Material::getNome)</span>
+<span class="nc" id="L268">            .findFirst()</span>
+<span class="nc" id="L269">            .orElse(&quot;Desconhecido&quot;);</span>
+    }
+
+    private &lt;T&gt; TableCell&lt;T, Void&gt; createButtonCell(String label, java.util.function.Consumer&lt;T&gt; action) {
+<span class="nc" id="L273">        return new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L274">            private final Button button = new Button(label);</span>
+            {
+<span class="nc" id="L276">                button.getStyleClass().add(&quot;materials-link-button&quot;);</span>
+<span class="nc" id="L277">                button.setOnAction(evt -&gt; action.accept(getTableView().getItems().get(getIndex())));</span>
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+<span class="nc" id="L281">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                setGraphic(empty ? null : button);</span>
+<span class="nc" id="L283">            }</span>
+        };
+    }
+
+    private TableCell&lt;ProdutoMaterial, Boolean&gt; createRadioButtonCell(boolean isMaterialBase) {
+<span class="nc" id="L288">        return new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L289">            private final RadioButton radio = new RadioButton();</span>
+            {
+<span class="nc" id="L291">                radio.setOnAction(evt -&gt; {</span>
+<span class="nc" id="L292">                    setMaterialPadrao(getTableView().getItems().get(getIndex()));</span>
+<span class="nc" id="L293">                });</span>
+            }
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+<span class="nc" id="L297">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L298" title="All 4 branches missed.">                if (empty || item == null) {</span>
+<span class="nc" id="L299">                    setGraphic(null);</span>
+                } else {
+<span class="nc" id="L301">                    radio.setSelected(item);</span>
+<span class="nc" id="L302">                    setGraphic(radio);</span>
+                }
+<span class="nc" id="L304">            }</span>
+        };
+    }
+
+    private TableCell&lt;ProdutoAcabamento, Boolean&gt; createCheckBoxCell() {
+<span class="nc" id="L309">        return new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L310">            private final CheckBox check = new CheckBox();</span>
+            {
+<span class="nc" id="L312">                check.setOnAction(evt -&gt; {</span>
+<span class="nc" id="L313">                    setAcabamentoObrigatorio(getTableView().getItems().get(getIndex()), check.isSelected());</span>
+<span class="nc" id="L314">                });</span>
+            }
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+<span class="nc" id="L318">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L319" title="All 4 branches missed.">                if (empty || item == null) {</span>
+<span class="nc" id="L320">                    setGraphic(null);</span>
+                } else {
+<span class="nc" id="L322">                    check.setSelected(item);</span>
+<span class="nc" id="L323">                    setGraphic(check);</span>
+                }
+<span class="nc" id="L325">            }</span>
+        };
+    }
+
+    private void mostrarAlerta(String mensagem) {
+<span class="nc" id="L330">        Alert alert = new Alert(Alert.AlertType.WARNING);</span>
+<span class="nc" id="L331">        alert.setTitle(&quot;Atenção&quot;);</span>
+<span class="nc" id="L332">        alert.setHeaderText(null);</span>
+<span class="nc" id="L333">        alert.setContentText(mensagem);</span>
+<span class="nc" id="L334">        alert.showAndWait();</span>
+<span class="nc" id="L335">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

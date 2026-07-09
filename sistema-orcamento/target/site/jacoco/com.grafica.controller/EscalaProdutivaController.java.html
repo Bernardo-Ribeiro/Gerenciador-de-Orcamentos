@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EscalaProdutivaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">EscalaProdutivaController.java</span></div><h1>EscalaProdutivaController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+<span class="nc" id="L16">public class EscalaProdutivaController {</span>
+    @FXML
+    private VBox rowsContainer;
+
+    @FXML
+    private TextField txtQuantidadeSimulacao;
+
+    @FXML
+    private TextField txtValorBaseSimulacao;
+
+    @FXML
+    private Label lblDescontoTitulo;
+
+    @FXML
+    private Label lblDescontoValor;
+
+    @FXML
+    private Label lblTotalValor;
+
+<span class="nc" id="L35">    private final List&lt;IntervaloRow&gt; linhas = new ArrayList&lt;&gt;();</span>
+
+    @FXML
+    private void initialize() {
+<span class="nc" id="L39">        adicionarIntervaloComValores(1, 100, new BigDecimal(&quot;0&quot;));</span>
+<span class="nc" id="L40">        adicionarIntervaloComValores(101, 500, new BigDecimal(&quot;5&quot;));</span>
+<span class="nc" id="L41">        adicionarIntervaloComValores(501, 2000, new BigDecimal(&quot;12&quot;));</span>
+<span class="nc" id="L42">        atualizarSimulacao();</span>
+<span class="nc" id="L43">    }</span>
+
+    @FXML
+    private void adicionarIntervalo() {
+<span class="nc" id="L47">        adicionarIntervaloComValores(null, null, null);</span>
+<span class="nc" id="L48">    }</span>
+
+    private void adicionarIntervaloComValores(Integer inicio, Integer fim, BigDecimal desconto) {
+<span class="nc" id="L51">        TextField txtInicio = criarCampoNumero(&quot;Inicial&quot;, 110);</span>
+<span class="nc" id="L52">        TextField txtFim = criarCampoNumero(&quot;Final&quot;, 110);</span>
+<span class="nc" id="L53">        TextField txtPercent = criarCampoNumero(&quot;%&quot;, 70);</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (inicio != null) {</span>
+<span class="nc" id="L56">            txtInicio.setText(String.valueOf(inicio));</span>
+        }
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (fim != null) {</span>
+<span class="nc" id="L59">            txtFim.setText(String.valueOf(fim));</span>
+        }
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (desconto != null) {</span>
+<span class="nc" id="L62">            txtPercent.setText(desconto.stripTrailingZeros().toPlainString());</span>
+        }
+
+<span class="nc" id="L65">        Label lblPercent = new Label(&quot;%&quot;);</span>
+<span class="nc" id="L66">        lblPercent.getStyleClass().add(&quot;scale-suffix&quot;);</span>
+
+<span class="nc" id="L68">        HBox percentBox = new HBox(6, txtPercent, lblPercent);</span>
+<span class="nc" id="L69">        percentBox.getStyleClass().add(&quot;scale-percent-box&quot;);</span>
+<span class="nc" id="L70">        percentBox.setPrefWidth(130);</span>
+
+<span class="nc" id="L72">        Button btnExcluir = new Button(&quot;Excluir&quot;);</span>
+<span class="nc" id="L73">        btnExcluir.getStyleClass().add(&quot;scale-delete-button&quot;);</span>
+<span class="nc" id="L74">        btnExcluir.setPrefWidth(90);</span>
+
+<span class="nc" id="L76">        HBox row = new HBox(12, txtInicio, txtFim, percentBox, btnExcluir);</span>
+<span class="nc" id="L77">        row.getStyleClass().add(&quot;scale-row&quot;);</span>
+
+<span class="nc" id="L79">        IntervaloRow intervaloRow = new IntervaloRow(row, txtInicio, txtFim, txtPercent);</span>
+<span class="nc" id="L80">        btnExcluir.setOnAction(event -&gt; removerIntervalo(intervaloRow));</span>
+
+<span class="nc" id="L82">        rowsContainer.getChildren().add(row);</span>
+<span class="nc" id="L83">        linhas.add(intervaloRow);</span>
+<span class="nc" id="L84">        atualizarSeparadores();</span>
+<span class="nc" id="L85">        atualizarSimulacao();</span>
+<span class="nc" id="L86">    }</span>
+
+    private TextField criarCampoNumero(String prompt, double width) {
+<span class="nc" id="L89">        TextField field = new TextField();</span>
+<span class="nc" id="L90">        field.setPromptText(prompt);</span>
+<span class="nc" id="L91">        field.setPrefWidth(width);</span>
+<span class="nc" id="L92">        field.getStyleClass().add(&quot;settings-input&quot;);</span>
+<span class="nc" id="L93">        field.getStyleClass().add(&quot;scale-input&quot;);</span>
+<span class="nc" id="L94">        return field;</span>
+    }
+
+    private void removerIntervalo(IntervaloRow intervaloRow) {
+<span class="nc" id="L98">        rowsContainer.getChildren().remove(intervaloRow.container);</span>
+<span class="nc" id="L99">        linhas.remove(intervaloRow);</span>
+<span class="nc" id="L100">        atualizarSeparadores();</span>
+<span class="nc" id="L101">        atualizarSimulacao();</span>
+<span class="nc" id="L102">    }</span>
+
+    private void atualizarSeparadores() {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        for (int i = 0; i &lt; linhas.size(); i++) {</span>
+<span class="nc" id="L106">            HBox row = linhas.get(i).container;</span>
+<span class="nc" id="L107">            row.getStyleClass().remove(&quot;scale-row-last&quot;);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (i == linhas.size() - 1) {</span>
+<span class="nc" id="L109">                row.getStyleClass().add(&quot;scale-row-last&quot;);</span>
+            }
+        }
+<span class="nc" id="L112">    }</span>
+
+    @FXML
+    private void salvarEscala() {
+<span class="nc" id="L116">        List&lt;Intervalo&gt; intervalos = validarIntervalos();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (intervalos == null) {</span>
+<span class="nc" id="L118">            return;</span>
+        }
+
+<span class="nc" id="L121">        Alert alert = new Alert(Alert.AlertType.INFORMATION);</span>
+<span class="nc" id="L122">        alert.setTitle(&quot;Escala salva&quot;);</span>
+<span class="nc" id="L123">        alert.setHeaderText(null);</span>
+<span class="nc" id="L124">        alert.setContentText(&quot;Intervalos validados com sucesso.&quot;);</span>
+<span class="nc" id="L125">        alert.showAndWait();</span>
+<span class="nc" id="L126">    }</span>
+
+    @FXML
+    private void atualizarSimulacao() {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        int quantidade = parseIntSafe(txtQuantidadeSimulacao != null ? txtQuantidadeSimulacao.getText() : null, 0);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        BigDecimal valorBase = parseDecimalSafe(txtValorBaseSimulacao != null ? txtValorBaseSimulacao.getText() : null, BigDecimal.ZERO);</span>
+
+<span class="nc" id="L133">        BigDecimal descontoPercentual = encontrarDescontoParaQuantidade(quantidade);</span>
+<span class="nc" id="L134">        BigDecimal descontoValor = valorBase.multiply(descontoPercentual)</span>
+<span class="nc" id="L135">            .divide(new BigDecimal(&quot;100&quot;), 2, RoundingMode.HALF_UP);</span>
+<span class="nc" id="L136">        BigDecimal totalFinal = valorBase.subtract(descontoValor).max(BigDecimal.ZERO);</span>
+
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (lblDescontoTitulo != null) {</span>
+<span class="nc" id="L139">            lblDescontoTitulo.setText(&quot;Desconto (&quot; + descontoPercentual.stripTrailingZeros().toPlainString() + &quot;%):&quot;);</span>
+        }
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (lblDescontoValor != null) {</span>
+<span class="nc" id="L142">            lblDescontoValor.setText(&quot;- R$ &quot; + formatarDecimal(descontoValor));</span>
+        }
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (lblTotalValor != null) {</span>
+<span class="nc" id="L145">            lblTotalValor.setText(&quot;R$ &quot; + formatarDecimal(totalFinal));</span>
+        }
+<span class="nc" id="L147">    }</span>
+
+    private BigDecimal encontrarDescontoParaQuantidade(int quantidade) {
+<span class="nc" id="L150">        List&lt;Intervalo&gt; intervalos = coletarIntervalosValidos();</span>
+<span class="nc" id="L151">        intervalos.sort(Comparator.comparingInt(intervalo -&gt; intervalo.inicio));</span>
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        for (Intervalo intervalo : intervalos) {</span>
+<span class="nc bnc" id="L154" title="All 4 branches missed.">            if (quantidade &gt;= intervalo.inicio &amp;&amp; quantidade &lt;= intervalo.fim) {</span>
+<span class="nc" id="L155">                return intervalo.desconto;</span>
+            }
+<span class="nc" id="L157">        }</span>
+
+<span class="nc" id="L159">        return BigDecimal.ZERO;</span>
+    }
+
+    private List&lt;Intervalo&gt; validarIntervalos() {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (linhas.isEmpty()) {</span>
+<span class="nc" id="L164">            mostrarErro(&quot;Adicione pelo menos um intervalo.&quot;);</span>
+<span class="nc" id="L165">            return null;</span>
+        }
+
+<span class="nc" id="L168">        List&lt;Intervalo&gt; intervalos = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        for (IntervaloRow row : linhas) {</span>
+<span class="nc" id="L170">            String inicioText = row.txtInicio.getText();</span>
+<span class="nc" id="L171">            String fimText = row.txtFim.getText();</span>
+<span class="nc" id="L172">            String descontoText = row.txtPercent.getText();</span>
+
+<span class="nc bnc" id="L174" title="All 6 branches missed.">            if (isBlank(inicioText) || isBlank(fimText) || isBlank(descontoText)) {</span>
+<span class="nc" id="L175">                mostrarErro(&quot;Preencha todos os campos dos intervalos.&quot;);</span>
+<span class="nc" id="L176">                return null;</span>
+            }
+
+            int inicio;
+            int fim;
+            BigDecimal desconto;
+            try {
+<span class="nc" id="L183">                inicio = Integer.parseInt(inicioText.trim());</span>
+<span class="nc" id="L184">                fim = Integer.parseInt(fimText.trim());</span>
+<span class="nc" id="L185">                desconto = parseDecimal(descontoText);</span>
+<span class="nc" id="L186">            } catch (NumberFormatException ex) {</span>
+<span class="nc" id="L187">                mostrarErro(&quot;Use apenas numeros nos intervalos e no desconto.&quot;);</span>
+<span class="nc" id="L188">                return null;</span>
+<span class="nc" id="L189">            }</span>
+
+<span class="nc bnc" id="L191" title="All 6 branches missed.">            if (inicio &lt; 0 || fim &lt; 0 || fim &lt; inicio) {</span>
+<span class="nc" id="L192">                mostrarErro(&quot;Informe intervalos validos (inicio &lt;= fim).&quot; );</span>
+<span class="nc" id="L193">                return null;</span>
+            }
+
+<span class="nc bnc" id="L196" title="All 4 branches missed.">            if (desconto.compareTo(BigDecimal.ZERO) &lt; 0 || desconto.compareTo(new BigDecimal(&quot;100&quot;)) &gt; 0) {</span>
+<span class="nc" id="L197">                mostrarErro(&quot;O desconto deve estar entre 0 e 100.&quot;);</span>
+<span class="nc" id="L198">                return null;</span>
+            }
+
+<span class="nc" id="L201">            intervalos.add(new Intervalo(inicio, fim, desconto));</span>
+<span class="nc" id="L202">        }</span>
+
+        // Ordena e verifica sobreposição
+<span class="nc" id="L205">        intervalos.sort(Comparator.comparingInt(intervalo -&gt; intervalo.inicio));</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        for (int i = 1; i &lt; intervalos.size(); i++) {</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (intervalos.get(i).inicio &lt;= intervalos.get(i - 1).fim) {</span>
+<span class="nc" id="L208">                mostrarErro(&quot;Intervalos nao podem se sobrepor. Verifique os valores '&quot; + intervalos.get(i-1).fim + &quot;' e '&quot; + intervalos.get(i).inicio + &quot;'.&quot;);</span>
+<span class="nc" id="L209">                return null;</span>
+            }
+        }
+
+<span class="nc" id="L213">        intervalos.sort(Comparator.comparingInt(intervalo -&gt; intervalo.inicio));</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        for (int i = 1; i &lt; intervalos.size(); i++) {</span>
+<span class="nc" id="L215">            Intervalo anterior = intervalos.get(i - 1);</span>
+<span class="nc" id="L216">            Intervalo atual = intervalos.get(i);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (atual.inicio &lt;= anterior.fim) {</span>
+<span class="nc" id="L218">                mostrarErro(&quot;Intervalos nao podem se sobrepor.&quot;);</span>
+<span class="nc" id="L219">                return null;</span>
+            }
+        }
+
+<span class="nc" id="L223">        return intervalos;</span>
+    }
+
+    private List&lt;Intervalo&gt; coletarIntervalosValidos() {
+<span class="nc" id="L227">        List&lt;Intervalo&gt; intervalos = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        for (IntervaloRow row : linhas) {</span>
+            try {
+<span class="nc" id="L230">                int inicio = Integer.parseInt(row.txtInicio.getText().trim());</span>
+<span class="nc" id="L231">                int fim = Integer.parseInt(row.txtFim.getText().trim());</span>
+<span class="nc" id="L232">                BigDecimal desconto = parseDecimal(row.txtPercent.getText());</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                if (fim &gt;= inicio) {</span>
+<span class="nc" id="L234">                    intervalos.add(new Intervalo(inicio, fim, desconto));</span>
+                }
+<span class="nc" id="L236">            } catch (Exception ignored) {</span>
+<span class="nc" id="L237">            }</span>
+<span class="nc" id="L238">        }</span>
+<span class="nc" id="L239">        return intervalos;</span>
+    }
+
+    private BigDecimal parseDecimal(String value) {
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L244">            throw new NumberFormatException(&quot;empty&quot;);</span>
+        }
+<span class="nc" id="L246">        String normalized = value.trim().replace(&quot;,&quot;, &quot;.&quot;);</span>
+<span class="nc" id="L247">        return new BigDecimal(normalized);</span>
+    }
+
+    private BigDecimal parseDecimalSafe(String value, BigDecimal fallback) {
+        try {
+<span class="nc" id="L252">            return parseDecimal(value);</span>
+<span class="nc" id="L253">        } catch (Exception ex) {</span>
+<span class="nc" id="L254">            return fallback;</span>
+        }
+    }
+
+    private int parseIntSafe(String value, int fallback) {
+        try {
+<span class="nc" id="L260">            return Integer.parseInt(value.trim());</span>
+<span class="nc" id="L261">        } catch (Exception ex) {</span>
+<span class="nc" id="L262">            return fallback;</span>
+        }
+    }
+
+    private boolean isBlank(String value) {
+<span class="nc bnc" id="L267" title="All 4 branches missed.">        return value == null || value.trim().isEmpty();</span>
+    }
+
+    private String formatarDecimal(BigDecimal valor) {
+<span class="nc" id="L271">        return valor.setScale(2, RoundingMode.HALF_UP).toPlainString();</span>
+    }
+
+    private void mostrarErro(String mensagem) {
+<span class="nc" id="L275">        Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L276">        alert.setTitle(&quot;Erro&quot;);</span>
+<span class="nc" id="L277">        alert.setHeaderText(null);</span>
+<span class="nc" id="L278">        alert.setContentText(mensagem);</span>
+<span class="nc" id="L279">        alert.showAndWait();</span>
+<span class="nc" id="L280">    }</span>
+
+    private static class IntervaloRow {
+        private final HBox container;
+        private final TextField txtInicio;
+        private final TextField txtFim;
+        private final TextField txtPercent;
+
+<span class="nc" id="L288">        private IntervaloRow(HBox container, TextField txtInicio, TextField txtFim, TextField txtPercent) {</span>
+<span class="nc" id="L289">            this.container = container;</span>
+<span class="nc" id="L290">            this.txtInicio = txtInicio;</span>
+<span class="nc" id="L291">            this.txtFim = txtFim;</span>
+<span class="nc" id="L292">            this.txtPercent = txtPercent;</span>
+<span class="nc" id="L293">        }</span>
+    }
+
+    private static class Intervalo {
+        private final int inicio;
+        private final int fim;
+        private final BigDecimal desconto;
+
+<span class="nc" id="L301">        private Intervalo(int inicio, int fim, BigDecimal desconto) {</span>
+<span class="nc" id="L302">            this.inicio = inicio;</span>
+<span class="nc" id="L303">            this.fim = fim;</span>
+<span class="nc" id="L304">            this.desconto = desconto;</span>
+<span class="nc" id="L305">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

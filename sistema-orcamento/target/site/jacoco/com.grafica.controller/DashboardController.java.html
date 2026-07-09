@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">DashboardController.java</span></div><h1>DashboardController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import com.grafica.dao.ClienteDAO;
+import com.grafica.dao.OrcamentoDAO;
+import com.grafica.model.Cliente;
+import com.grafica.model.Orcamento;
+import com.grafica.model.Usuario;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L34">public class DashboardController {</span>
+
+    @FXML
+    private Label tituloLabel;
+
+    @FXML
+    private Label subtituloLabel;
+
+    @FXML
+    private Label vendasTotaisLabel;
+
+    @FXML
+    private Label orcamentosPendentesLabel;
+
+    @FXML
+    private Label taxaConversaoLabel;
+
+    @FXML
+    private Label novosClientesLabel;
+
+    @FXML
+    private TableView&lt;OrcamentoRow&gt; tabelaUltimosOrcamentos;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, String&gt; colId;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, String&gt; colCliente;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, String&gt; colData;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, String&gt; colValor;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, String&gt; colStatus;
+
+    @FXML
+    private TableColumn&lt;OrcamentoRow, Void&gt; colAcoes;
+
+    @FXML
+    private VBox alertasContainer;
+
+    @FXML
+    private Label metaDiariaLabel;
+
+    @FXML
+    private Button btnNovoOrcamento;
+
+    @FXML
+    private Button btnClientes;
+
+    @FXML
+    private Button btnMateriais;
+
+    @FXML
+    private Button btnRelatorios;
+
+    @FXML
+    private Button btnHistoricoCompleto;
+
+    @FXML
+    private Button btnConfiguracoes;
+
+<span class="nc" id="L99">    private final ClienteDAO clienteDAO = new ClienteDAO();</span>
+<span class="nc" id="L100">    private final OrcamentoDAO orcamentoDAO = new OrcamentoDAO();</span>
+<span class="nc" id="L101">    private final NumberFormat moeda = NumberFormat.getCurrencyInstance(new Locale(&quot;pt&quot;, &quot;BR&quot;));</span>
+<span class="nc" id="L102">    private static final DateTimeFormatter DATA_LABEL_FORMATTER = DateTimeFormatter.ofPattern(&quot;dd/MM&quot;);</span>
+    private static final int META_DIARIA_ORCAMENTOS = 5;
+
+    private MainController mainController;
+    private Usuario usuarioLogado;
+
+    @FXML
+    private void initialize() {
+<span class="nc" id="L110">        configurarTabela();</span>
+<span class="nc" id="L111">        atualizarPainel();</span>
+<span class="nc" id="L112">    }</span>
+
+    private void configurarTabela() {
+<span class="nc" id="L115">        colId.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L116">        colCliente.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;cliente&quot;));</span>
+<span class="nc" id="L117">        colData.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;data&quot;));</span>
+<span class="nc" id="L118">        colValor.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;valor&quot;));</span>
+<span class="nc" id="L119">        colStatus.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;status&quot;));</span>
+
+<span class="nc" id="L121">        colAcoes.setCellFactory(param -&gt; new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L122">            private final Button btnDetalhes = new Button(&quot;Detalhes&quot;);</span>
+            {
+<span class="nc" id="L124">                btnDetalhes.getStyleClass().add(&quot;dashboard-link&quot;);</span>
+<span class="nc" id="L125">                btnDetalhes.setOnAction(event -&gt; {</span>
+<span class="nc" id="L126">                    OrcamentoRow row = getTableView().getItems().get(getIndex());</span>
+<span class="nc bnc" id="L127" title="All 4 branches missed.">                    if (row != null &amp;&amp; row.getIdOrcamento() != null) {</span>
+<span class="nc" id="L128">                        abrirVisualizacaoOrcamento(row.getIdOrcamento());</span>
+                    }
+<span class="nc" id="L130">                });</span>
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+<span class="nc" id="L135">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                if (empty) {</span>
+<span class="nc" id="L137">                    setGraphic(null);</span>
+                } else {
+<span class="nc" id="L139">                    setGraphic(btnDetalhes);</span>
+                }
+<span class="nc" id="L141">            }</span>
+        });
+
+<span class="nc" id="L144">        tabelaUltimosOrcamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);</span>
+<span class="nc" id="L145">    }</span>
+
+    public void setMainController(MainController mainController) {
+<span class="nc" id="L148">        this.mainController = mainController;</span>
+<span class="nc" id="L149">        configurarAcoesRapidas();</span>
+<span class="nc" id="L150">    }</span>
+
+    public void setUsuarioLogado(Usuario usuarioLogado) {
+<span class="nc" id="L153">        this.usuarioLogado = usuarioLogado;</span>
+<span class="nc" id="L154">        atualizarCabecalho();</span>
+<span class="nc" id="L155">        atualizarPainel();</span>
+<span class="nc" id="L156">    }</span>
+
+    private void configurarAcoesRapidas() {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (btnNovoOrcamento != null) {</span>
+<span class="nc" id="L160">            btnNovoOrcamento.setOnAction(event -&gt; navegarParaOrcamentos());</span>
+        }
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (btnClientes != null) {</span>
+<span class="nc" id="L163">            btnClientes.setOnAction(event -&gt; navegarParaClientes());</span>
+        }
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (btnMateriais != null) {</span>
+<span class="nc" id="L166">            btnMateriais.setOnAction(event -&gt; navegarParaMateriais());</span>
+        }
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        if (btnRelatorios != null) {</span>
+<span class="nc" id="L169">            btnRelatorios.setOnAction(event -&gt; navegarParaRelatorios());</span>
+        }
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (btnHistoricoCompleto != null) {</span>
+<span class="nc" id="L172">            btnHistoricoCompleto.setOnAction(event -&gt; navegarParaRelatorios());</span>
+        }
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (btnConfiguracoes != null) {</span>
+<span class="nc" id="L175">            btnConfiguracoes.setOnAction(event -&gt; navegarParaAjustes());</span>
+        }
+<span class="nc" id="L177">    }</span>
+
+    private void atualizarCabecalho() {
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        if (tituloLabel != null) {</span>
+<span class="nc bnc" id="L181" title="All 6 branches missed.">            String nome = usuarioLogado != null &amp;&amp; usuarioLogado.getNome() != null &amp;&amp; !usuarioLogado.getNome().isBlank()</span>
+<span class="nc" id="L182">                ? usuarioLogado.getNome()</span>
+<span class="nc" id="L183">                : &quot;Gráfica&quot;;</span>
+<span class="nc" id="L184">            tituloLabel.setText(&quot;Olá, &quot; + nome + &quot;!&quot;);</span>
+        }
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (subtituloLabel != null) {</span>
+<span class="nc" id="L187">            subtituloLabel.setText(&quot;Aqui está o que está acontecendo com seus orçamentos hoje.&quot;);</span>
+        }
+<span class="nc" id="L189">    }</span>
+
+    private void atualizarPainel() {
+        try {
+<span class="nc" id="L193">            List&lt;Orcamento&gt; orcamentos = orcamentoDAO.listarTodos();</span>
+<span class="nc" id="L194">            List&lt;Cliente&gt; clientes = clienteDAO.listarTodos();</span>
+<span class="nc" id="L195">            Map&lt;Integer, String&gt; nomesClientes = clientes.stream()</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                .filter(cliente -&gt; cliente.getId() != null)</span>
+<span class="nc" id="L197">                .collect(Collectors.toMap(Cliente::getId, Cliente::getNome, (atual, substituto) -&gt; atual));</span>
+
+<span class="nc" id="L199">            BigDecimal totalVendas = orcamentos.stream()</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">                .map(orcamento -&gt; orcamento.getValorFinal() != null ? orcamento.getValorFinal() : BigDecimal.ZERO)</span>
+<span class="nc" id="L201">                .reduce(BigDecimal.ZERO, BigDecimal::add);</span>
+
+<span class="nc" id="L203">            long pendentes = orcamentos.stream()</span>
+<span class="nc" id="L204">                .filter(orcamento -&gt; &quot;PENDENTE&quot;.equalsIgnoreCase(orcamento.getStatus()))</span>
+<span class="nc" id="L205">                .count();</span>
+
+<span class="nc" id="L207">            long concluidos = orcamentos.stream()</span>
+<span class="nc" id="L208">                .filter(orcamento -&gt; isConcluido(orcamento.getStatus()))</span>
+<span class="nc" id="L209">                .count();</span>
+
+<span class="nc" id="L211">            long clientesNovos = clientes.stream()</span>
+<span class="nc bnc" id="L212" title="All 4 branches missed.">                .filter(cliente -&gt; cliente.getDataCadastro() != null &amp;&amp; cliente.getDataCadastro().isAfter(java.time.LocalDateTime.now().minusDays(30)))</span>
+<span class="nc" id="L213">                .count();</span>
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if (vendasTotaisLabel != null) {</span>
+<span class="nc" id="L216">                vendasTotaisLabel.setText(moeda.format(totalVendas));</span>
+            }
+<span class="nc bnc" id="L218" title="All 2 branches missed.">            if (orcamentosPendentesLabel != null) {</span>
+<span class="nc" id="L219">                orcamentosPendentesLabel.setText(String.valueOf(pendentes));</span>
+            }
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (taxaConversaoLabel != null) {</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">                BigDecimal taxa = orcamentos.isEmpty()</span>
+<span class="nc" id="L223">                    ? BigDecimal.ZERO</span>
+<span class="nc" id="L224">                    : BigDecimal.valueOf(concluidos)</span>
+<span class="nc" id="L225">                        .multiply(BigDecimal.valueOf(100))</span>
+<span class="nc" id="L226">                        .divide(BigDecimal.valueOf(orcamentos.size()), 1, RoundingMode.HALF_UP);</span>
+<span class="nc" id="L227">                taxaConversaoLabel.setText(taxa.stripTrailingZeros().toPlainString() + &quot;%&quot;);</span>
+            }
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            if (novosClientesLabel != null) {</span>
+<span class="nc" id="L230">                novosClientesLabel.setText(String.valueOf(clientesNovos));</span>
+            }
+
+<span class="nc" id="L233">            atualizarUltimosOrcamentos(orcamentos, nomesClientes);</span>
+<span class="nc" id="L234">            atualizarAlertasCriticos(orcamentos, nomesClientes);</span>
+<span class="nc" id="L235">            atualizarMetaDiaria(orcamentos);</span>
+<span class="nc" id="L236">        } catch (Exception e) {</span>
+<span class="nc" id="L237">            System.err.println(&quot;Erro ao atualizar dashboard: &quot; + e.getMessage());</span>
+<span class="nc" id="L238">        }</span>
+<span class="nc" id="L239">    }</span>
+
+    private void atualizarUltimosOrcamentos(List&lt;Orcamento&gt; orcamentos, Map&lt;Integer, String&gt; nomesClientes) {
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        if (tabelaUltimosOrcamentos == null) {</span>
+<span class="nc" id="L243">            return;</span>
+        }
+
+<span class="nc" id="L246">        List&lt;Orcamento&gt; ultimos = orcamentos.stream()</span>
+<span class="nc" id="L247">            .sorted(Comparator</span>
+<span class="nc" id="L248">                .comparing(Orcamento::getDataEmissao, Comparator.nullsLast(Comparator.reverseOrder()))</span>
+<span class="nc" id="L249">                .thenComparing(Orcamento::getId, Comparator.nullsLast(Comparator.reverseOrder())))</span>
+<span class="nc" id="L250">            .limit(5)</span>
+<span class="nc" id="L251">            .toList();</span>
+
+<span class="nc" id="L253">        ObservableList&lt;OrcamentoRow&gt; rows = FXCollections.observableArrayList();</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        for (Orcamento o : ultimos) {</span>
+<span class="nc" id="L255">            String cliente = nomesClientes.getOrDefault(o.getIdCliente(), &quot;Cliente não identificado&quot;);</span>
+<span class="nc" id="L256">            String id = formatarCodigoOrcamento(o.getId());</span>
+<span class="nc" id="L257">            String data = formatarDataResumo(o.getDataEmissao());</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">            String valor = moeda.format(o.getValorFinal() != null ? o.getValorFinal() : BigDecimal.ZERO);</span>
+<span class="nc" id="L259">            String status = formatarStatus(o.getStatus());</span>
+<span class="nc" id="L260">            rows.add(new OrcamentoRow(o.getId(), id, cliente, data, valor, status));</span>
+<span class="nc" id="L261">        }</span>
+
+<span class="nc" id="L263">        tabelaUltimosOrcamentos.setItems(rows);</span>
+<span class="nc" id="L264">    }</span>
+
+    private void atualizarAlertasCriticos(List&lt;Orcamento&gt; orcamentos, Map&lt;Integer, String&gt; nomesClientes) {
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (alertasContainer == null) {</span>
+<span class="nc" id="L268">            return;</span>
+        }
+
+<span class="nc" id="L271">        alertasContainer.getChildren().clear();</span>
+<span class="nc" id="L272">        LocalDate hoje = LocalDate.now();</span>
+
+<span class="nc" id="L274">        List&lt;Orcamento&gt; alertas = orcamentos.stream()</span>
+<span class="nc" id="L275">            .filter(orcamento -&gt; &quot;PENDENTE&quot;.equalsIgnoreCase(orcamento.getStatus()))</span>
+<span class="nc" id="L276">            .sorted(Comparator.comparing(Orcamento::getDataValidade, Comparator.nullsLast(Comparator.naturalOrder())))</span>
+<span class="nc" id="L277">            .limit(3)</span>
+<span class="nc" id="L278">            .toList();</span>
+
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        if (alertas.isEmpty()) {</span>
+<span class="nc" id="L281">            alertasContainer.getChildren().add(criarAlerta(&quot;OK&quot;, &quot;Nenhum alerta crítico no momento.&quot;, &quot;Atualizado agora&quot;));</span>
+<span class="nc" id="L282">            return;</span>
+        }
+
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        for (Orcamento orcamento : alertas) {</span>
+<span class="nc" id="L286">            LocalDate validade = orcamento.getDataValidade();</span>
+<span class="nc" id="L287">            String cliente = nomesClientes.getOrDefault(orcamento.getIdCliente(), &quot;cliente sem nome&quot;);</span>
+            String tag;
+            String tempo;
+
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            if (validade == null) {</span>
+<span class="nc" id="L292">                tag = &quot;ATENÇÃO&quot;;</span>
+<span class="nc" id="L293">                tempo = &quot;Sem data de validade&quot;;</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">            } else if (validade.isBefore(hoje)) {</span>
+<span class="nc" id="L295">                tag = &quot;URGENTE&quot;;</span>
+<span class="nc" id="L296">                tempo = &quot;Vencido há &quot; + (hoje.toEpochDay() - validade.toEpochDay()) + &quot; dia(s)&quot;;</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">            } else if (!validade.isAfter(hoje.plusDays(2))) {</span>
+<span class="nc" id="L298">                tag = &quot;REVISÃO NECESSÁRIA&quot;;</span>
+<span class="nc" id="L299">                tempo = &quot;Vence em &quot; + (validade.toEpochDay() - hoje.toEpochDay()) + &quot; dia(s)&quot;;</span>
+            } else {
+<span class="nc" id="L301">                tag = &quot;LOGÍSTICA&quot;;</span>
+<span class="nc" id="L302">                tempo = &quot;Validade: &quot; + validade.format(DATA_LABEL_FORMATTER);</span>
+            }
+
+<span class="nc" id="L305">            String texto = &quot;Orçamento &quot; + formatarCodigoOrcamento(orcamento.getId()) + &quot; de &quot; + cliente + &quot; está pendente.&quot;;</span>
+<span class="nc" id="L306">            alertasContainer.getChildren().add(criarAlerta(tag, texto, tempo));</span>
+<span class="nc" id="L307">        }</span>
+<span class="nc" id="L308">    }</span>
+
+    private VBox criarAlerta(String tag, String texto, String tempo) {
+<span class="nc" id="L311">        VBox alerta = new VBox(8.0);</span>
+<span class="nc" id="L312">        alerta.getStyleClass().add(&quot;dashboard-alert&quot;);</span>
+
+<span class="nc" id="L314">        Label tagLabel = new Label(tag);</span>
+<span class="nc" id="L315">        tagLabel.getStyleClass().add(&quot;dashboard-alert-tag&quot;);</span>
+
+<span class="nc" id="L317">        Label textoLabel = new Label(texto);</span>
+<span class="nc" id="L318">        textoLabel.getStyleClass().add(&quot;dashboard-alert-text&quot;);</span>
+<span class="nc" id="L319">        textoLabel.setWrapText(true);</span>
+
+<span class="nc" id="L321">        Label tempoLabel = new Label(tempo);</span>
+<span class="nc" id="L322">        tempoLabel.getStyleClass().add(&quot;dashboard-alert-time&quot;);</span>
+
+<span class="nc" id="L324">        alerta.getChildren().addAll(tagLabel, textoLabel, tempoLabel);</span>
+<span class="nc" id="L325">        return alerta;</span>
+    }
+
+    private void atualizarMetaDiaria(List&lt;Orcamento&gt; orcamentos) {
+<span class="nc bnc" id="L329" title="All 2 branches missed.">        if (metaDiariaLabel == null) {</span>
+<span class="nc" id="L330">            return;</span>
+        }
+
+<span class="nc" id="L333">        long emitidosHoje = orcamentos.stream()</span>
+<span class="nc" id="L334">            .filter(orcamento -&gt; LocalDate.now().equals(orcamento.getDataEmissao()))</span>
+<span class="nc" id="L335">            .count();</span>
+
+<span class="nc" id="L337">        int percentual = (int) Math.min(100, Math.round((emitidosHoje * 100.0) / META_DIARIA_ORCAMENTOS));</span>
+<span class="nc bnc" id="L338" title="All 2 branches missed.">        if (emitidosHoje == 0) {</span>
+<span class="nc" id="L339">            metaDiariaLabel.setText(&quot;Você ainda não tem orçamentos emitidos hoje.&quot;);</span>
+<span class="nc" id="L340">            return;</span>
+        }
+
+<span class="nc bnc" id="L343" title="All 2 branches missed.">        if (percentual &gt;= 100) {</span>
+<span class="nc" id="L344">            metaDiariaLabel.setText(&quot;Meta diária atingida! &quot; + emitidosHoje + &quot; orçamento(s) emitido(s) hoje.&quot;);</span>
+<span class="nc" id="L345">            return;</span>
+        }
+
+<span class="nc" id="L348">        metaDiariaLabel.setText(&quot;Você atingiu &quot; + percentual + &quot;% da sua meta diária de orçamentos hoje.&quot;);</span>
+<span class="nc" id="L349">    }</span>
+
+    private String formatarCodigoOrcamento(Integer id) {
+<span class="nc bnc" id="L352" title="All 2 branches missed.">        return id == null ? &quot;ORC-S/N&quot; : String.format(&quot;ORC-%04d&quot;, id);</span>
+    }
+
+    private String formatarStatus(String status) {
+<span class="nc bnc" id="L356" title="All 4 branches missed.">        if (status == null || status.isBlank()) {</span>
+<span class="nc" id="L357">            return &quot;Sem Status&quot;;</span>
+        }
+<span class="nc" id="L359">        String normalizado = status.trim().toUpperCase();</span>
+<span class="nc bnc" id="L360" title="All 6 branches missed.">        return switch (normalizado) {</span>
+<span class="nc" id="L361">            case &quot;PENDENTE&quot; -&gt; &quot;Pendente&quot;;</span>
+<span class="nc" id="L362">            case &quot;APROVADO&quot; -&gt; &quot;Aprovado&quot;;</span>
+<span class="nc" id="L363">            case &quot;VENDIDO&quot; -&gt; &quot;Vendido&quot;;</span>
+<span class="nc" id="L364">            case &quot;FECHADO&quot; -&gt; &quot;Fechado&quot;;</span>
+<span class="nc" id="L365">            case &quot;CANCELADO&quot; -&gt; &quot;Cancelado&quot;;</span>
+<span class="nc" id="L366">            default -&gt; status;</span>
+        };
+    }
+
+    private String formatarDataResumo(LocalDate data) {
+<span class="nc bnc" id="L371" title="All 2 branches missed.">        if (data == null) {</span>
+<span class="nc" id="L372">            return &quot;-&quot;;</span>
+        }
+<span class="nc bnc" id="L374" title="All 2 branches missed.">        if (LocalDate.now().equals(data)) {</span>
+<span class="nc" id="L375">            return &quot;Hoje&quot;;</span>
+        }
+<span class="nc bnc" id="L377" title="All 2 branches missed.">        if (LocalDate.now().minusDays(1).equals(data)) {</span>
+<span class="nc" id="L378">            return &quot;Ontem&quot;;</span>
+        }
+<span class="nc" id="L380">        return data.format(DATA_LABEL_FORMATTER);</span>
+    }
+
+    private boolean isCancelado(String status) {
+<span class="nc bnc" id="L384" title="All 4 branches missed.">        return status != null &amp;&amp; &quot;CANCELADO&quot;.equalsIgnoreCase(status.trim());</span>
+    }
+
+    private boolean isConcluido(String status) {
+<span class="nc bnc" id="L388" title="All 2 branches missed.">        if (status == null) {</span>
+<span class="nc" id="L389">            return false;</span>
+        }
+<span class="nc" id="L391">        String normalized = status.trim().toUpperCase();</span>
+<span class="nc bnc" id="L392" title="All 6 branches missed.">        return normalized.equals(&quot;APROVADO&quot;) || normalized.equals(&quot;VENDIDO&quot;) || normalized.equals(&quot;FECHADO&quot;);</span>
+    }
+
+    public void navegarParaDashboard() {
+<span class="nc bnc" id="L396" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L397">            mainController.abrirDashboardTela();</span>
+        }
+<span class="nc" id="L399">    }</span>
+
+    public void navegarParaClientes() {
+<span class="nc bnc" id="L402" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L403">            mainController.abrirClientesTela();</span>
+        }
+<span class="nc" id="L405">    }</span>
+
+    public void navegarParaMateriais() {
+<span class="nc bnc" id="L408" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L409">            mainController.abrirMateriaisTela();</span>
+        }
+<span class="nc" id="L411">    }</span>
+
+    public void navegarParaOrcamentos() {
+<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L415">            mainController.abrirOrcamentosTela();</span>
+        }
+<span class="nc" id="L417">    }</span>
+
+    public void navegarParaRelatorios() {
+<span class="nc bnc" id="L420" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L421">            mainController.abrirRelatoriosTela();</span>
+        }
+<span class="nc" id="L423">    }</span>
+
+    public void navegarParaAjustes() {
+<span class="nc bnc" id="L426" title="All 2 branches missed.">        if (mainController != null) {</span>
+<span class="nc" id="L427">            mainController.abrirAjustesTela();</span>
+        }
+<span class="nc" id="L429">    }</span>
+
+    private void abrirVisualizacaoOrcamento(Integer idOrcamento) {
+        try {
+<span class="nc" id="L433">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/com/grafica/view/visualizar-orcamento.fxml&quot;));</span>
+<span class="nc" id="L434">            Parent root = loader.load();</span>
+            
+<span class="nc" id="L436">            VisualizarOrcamentoController controller = loader.getController();</span>
+<span class="nc" id="L437">            controller.carregarOrcamento(idOrcamento);</span>
+            
+<span class="nc" id="L439">            Stage stage = new Stage();</span>
+<span class="nc" id="L440">            stage.setTitle(&quot;Visualizar Orçamento #&quot; + String.format(&quot;%04d&quot;, idOrcamento));</span>
+<span class="nc" id="L441">            stage.initModality(Modality.APPLICATION_MODAL);</span>
+<span class="nc" id="L442">            stage.setScene(new Scene(root, 1000, 700));</span>
+<span class="nc" id="L443">            stage.showAndWait();</span>
+            
+<span class="nc" id="L445">        } catch (IOException e) {</span>
+<span class="nc" id="L446">            Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L447">            alert.setTitle(&quot;Erro&quot;);</span>
+<span class="nc" id="L448">            alert.setHeaderText(null);</span>
+<span class="nc" id="L449">            alert.setContentText(&quot;Erro ao abrir visualização do orçamento: &quot; + e.getMessage());</span>
+<span class="nc" id="L450">            alert.showAndWait();</span>
+<span class="nc" id="L451">            e.printStackTrace();</span>
+<span class="nc" id="L452">        }</span>
+<span class="nc" id="L453">    }</span>
+
+    // Inner class for table data
+    public static class OrcamentoRow {
+        private final Integer idOrcamento;
+        private final String id;
+        private final String cliente;
+        private final String data;
+        private final String valor;
+        private final String status;
+
+<span class="nc" id="L464">        public OrcamentoRow(Integer idOrcamento, String id, String cliente, String data, String valor, String status) {</span>
+<span class="nc" id="L465">            this.idOrcamento = idOrcamento;</span>
+<span class="nc" id="L466">            this.id = id;</span>
+<span class="nc" id="L467">            this.cliente = cliente;</span>
+<span class="nc" id="L468">            this.data = data;</span>
+<span class="nc" id="L469">            this.valor = valor;</span>
+<span class="nc" id="L470">            this.status = status;</span>
+<span class="nc" id="L471">        }</span>
+
+<span class="nc" id="L473">        public Integer getIdOrcamento() { return idOrcamento; }</span>
+<span class="nc" id="L474">        public String getId() { return id; }</span>
+<span class="nc" id="L475">        public String getCliente() { return cliente; }</span>
+<span class="nc" id="L476">        public String getData() { return data; }</span>
+<span class="nc" id="L477">        public String getValor() { return valor; }</span>
+<span class="nc" id="L478">        public String getStatus() { return status; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

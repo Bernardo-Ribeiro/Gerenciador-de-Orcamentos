@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrcamentoDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.dao</a> &gt; <span class="el_source">OrcamentoDAO.java</span></div><h1>OrcamentoDAO.java</h1><pre class="source lang-java linenums">package com.grafica.dao;
+
+import com.grafica.model.Orcamento;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OrcamentoDAO {
+
+    private Connection connection;
+
+<span class="nc" id="L16">    public OrcamentoDAO() {</span>
+<span class="nc" id="L17">    }</span>
+
+<span class="nc" id="L19">    public OrcamentoDAO(Connection connection) {</span>
+<span class="nc" id="L20">        this.connection = connection;</span>
+<span class="nc" id="L21">    }</span>
+
+    private Connection getConnection() throws SQLException {
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (connection != null) {</span>
+<span class="nc" id="L25">            return connection;</span>
+        }
+<span class="nc" id="L27">        return DbConnection.getConnection();</span>
+    }
+
+    public void criar(Orcamento orcamento) {
+<span class="nc" id="L31">        String sql = &quot;INSERT INTO orcamentos (id_cliente, id_usuario, data_emissao, data_validade, status, valor_bruto, margem_lucro_percentual, desconto_progressivo, valor_final) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L32">        try (Connection conn = getConnection();</span>
+<span class="nc" id="L33">             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+            
+<span class="nc" id="L35">            pstmt.setInt(1, orcamento.getIdCliente());</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            pstmt.setInt(2, orcamento.getIdUsuario() != null ? orcamento.getIdUsuario() : 1);</span>
+<span class="nc" id="L37">            pstmt.setDate(3, Date.valueOf(LocalDate.now()));</span>
+<span class="nc" id="L38">            pstmt.setDate(4, Date.valueOf(LocalDate.now().plusDays(15)));</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">            pstmt.setString(5, orcamento.getStatus() != null ? orcamento.getStatus().toUpperCase() : &quot;PENDENTE&quot;);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            pstmt.setBigDecimal(6, orcamento.getValorBruto() != null ? orcamento.getValorBruto() : BigDecimal.ZERO);</span>
+<span class="nc" id="L41">            pstmt.setBigDecimal(7, orcamento.getMargemLucroPercentual());</span>
+<span class="nc" id="L42">            pstmt.setBigDecimal(8, orcamento.getDescontoProgressivo());</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">            pstmt.setBigDecimal(9, orcamento.getValorFinal() != null ? orcamento.getValorFinal() : BigDecimal.ZERO);</span>
+            
+<span class="nc" id="L45">            pstmt.executeUpdate();</span>
+            
+<span class="nc" id="L47">            ResultSet rs = pstmt.getGeneratedKeys();</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">            if (rs.next()) {</span>
+<span class="nc" id="L49">                orcamento.setId(rs.getInt(1));</span>
+            }
+<span class="nc" id="L51">        } catch (SQLException e) {</span>
+<span class="nc" id="L52">            e.printStackTrace();</span>
+<span class="nc" id="L53">        }</span>
+<span class="nc" id="L54">    }</span>
+
+    public List&lt;Orcamento&gt; listarTodos() {
+<span class="nc" id="L57">        List&lt;Orcamento&gt; orcamentos = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L58">        String sql = &quot;SELECT * FROM orcamentos WHERE status != 'EXCLUIDO' ORDER BY data_emissao DESC&quot;;</span>
+        
+<span class="nc" id="L60">        try (Connection conn = getConnection();</span>
+<span class="nc" id="L61">             Statement stmt = conn.createStatement();</span>
+<span class="nc" id="L62">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+            
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L65">                orcamentos.add(mapearOrcamento(rs));</span>
+            }
+<span class="nc" id="L67">        } catch (SQLException e) {</span>
+<span class="nc" id="L68">            e.printStackTrace();</span>
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">        return orcamentos;</span>
+    }
+
+    public Orcamento buscarPorId(Integer id) {
+<span class="nc" id="L74">        String sql = &quot;SELECT * FROM orcamentos WHERE id = ? AND status != 'EXCLUIDO'&quot;;</span>
+<span class="nc" id="L75">        try (Connection conn = getConnection();</span>
+<span class="nc" id="L76">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="nc" id="L78">            pstmt.setInt(1, id);</span>
+<span class="nc" id="L79">            try (ResultSet rs = pstmt.executeQuery()) {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L81">                    return mapearOrcamento(rs);</span>
+                }
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            }</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L85">            e.printStackTrace();</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        return null;</span>
+    }
+
+    public void atualizar(Orcamento orcamento) {
+<span class="nc" id="L91">        String sql = &quot;UPDATE orcamentos SET valor_final = ?, margem_lucro_percentual = ?, desconto_progressivo = ?, status = ? WHERE id = ?&quot;;</span>
+<span class="nc" id="L92">        try (Connection conn = getConnection();</span>
+<span class="nc" id="L93">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="nc" id="L95">            pstmt.setBigDecimal(1, orcamento.getValorFinal());</span>
+<span class="nc" id="L96">            pstmt.setBigDecimal(2, orcamento.getMargemLucroPercentual());</span>
+<span class="nc" id="L97">            pstmt.setBigDecimal(3, orcamento.getDescontoProgressivo());</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            pstmt.setString(4, orcamento.getStatus() != null ? orcamento.getStatus().toUpperCase() : &quot;PENDENTE&quot;);</span>
+<span class="nc" id="L99">            pstmt.setInt(5, orcamento.getId());</span>
+            
+<span class="nc" id="L101">            pstmt.executeUpdate();</span>
+<span class="nc" id="L102">        } catch (SQLException e) {</span>
+<span class="nc" id="L103">            e.printStackTrace();</span>
+<span class="nc" id="L104">        }</span>
+<span class="nc" id="L105">    }</span>
+
+    public void deletar(Integer id) {
+<span class="nc" id="L108">        String sql = &quot;UPDATE orcamentos SET status = 'EXCLUIDO' WHERE id = ?&quot;;</span>
+<span class="nc" id="L109">        try (Connection conn = getConnection();</span>
+<span class="nc" id="L110">             PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+            
+<span class="nc" id="L112">            pstmt.setInt(1, id);</span>
+<span class="nc" id="L113">            pstmt.executeUpdate();</span>
+<span class="nc" id="L114">        } catch (SQLException e) {</span>
+<span class="nc" id="L115">            e.printStackTrace();</span>
+<span class="nc" id="L116">        }</span>
+<span class="nc" id="L117">    }</span>
+
+    private Orcamento mapearOrcamento(ResultSet rs) throws SQLException {
+<span class="nc" id="L120">        Orcamento orcamento = new Orcamento();</span>
+<span class="nc" id="L121">        orcamento.setId(rs.getInt(&quot;id&quot;));</span>
+<span class="nc" id="L122">        orcamento.setIdCliente(rs.getInt(&quot;id_cliente&quot;));</span>
+<span class="nc" id="L123">        orcamento.setIdUsuario(rs.getInt(&quot;id_usuario&quot;));</span>
+        
+<span class="nc" id="L125">        String dataEmissao = rs.getString(&quot;data_emissao&quot;);</span>
+<span class="nc bnc" id="L126" title="All 4 branches missed.">        if (dataEmissao != null &amp;&amp; !dataEmissao.isBlank()) {</span>
+            try {
+<span class="nc" id="L128">                orcamento.setDataEmissao(LocalDate.parse(dataEmissao));</span>
+<span class="nc" id="L129">            } catch (Exception e) {</span>
+                try {
+<span class="nc" id="L131">                    long timestamp = Long.parseLong(dataEmissao);</span>
+<span class="nc" id="L132">                    orcamento.setDataEmissao(Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate());</span>
+<span class="nc" id="L133">                } catch (Exception e2) {}</span>
+<span class="nc" id="L134">            }</span>
+        }
+
+<span class="nc" id="L137">        String dataValidade = rs.getString(&quot;data_validade&quot;);</span>
+<span class="nc bnc" id="L138" title="All 4 branches missed.">        if (dataValidade != null &amp;&amp; !dataValidade.isBlank()) {</span>
+            try {
+<span class="nc" id="L140">                orcamento.setDataValidade(LocalDate.parse(dataValidade));</span>
+<span class="nc" id="L141">            } catch (Exception e) {</span>
+                try {
+<span class="nc" id="L143">                    long timestamp = Long.parseLong(dataValidade);</span>
+<span class="nc" id="L144">                    orcamento.setDataValidade(Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate());</span>
+<span class="nc" id="L145">                } catch (Exception e2) {}</span>
+<span class="nc" id="L146">            }</span>
+        }
+        
+<span class="nc" id="L149">        orcamento.setStatus(rs.getString(&quot;status&quot;));</span>
+<span class="nc" id="L150">        orcamento.setValorBruto(rs.getBigDecimal(&quot;valor_bruto&quot;));</span>
+<span class="nc" id="L151">        orcamento.setMargemLucroPercentual(rs.getBigDecimal(&quot;margem_lucro_percentual&quot;));</span>
+<span class="nc" id="L152">        orcamento.setDescontoProgressivo(rs.getBigDecimal(&quot;desconto_progressivo&quot;));</span>
+<span class="nc" id="L153">        orcamento.setValorFinal(rs.getBigDecimal(&quot;valor_final&quot;));</span>
+        
+<span class="nc" id="L155">        return orcamento;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

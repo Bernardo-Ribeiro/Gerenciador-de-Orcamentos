@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemOrcamento.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.model</a> &gt; <span class="el_source">ItemOrcamento.java</span></div><h1>ItemOrcamento.java</h1><pre class="source lang-java linenums">package com.grafica.model;
+
+import java.math.BigDecimal;
+
+public class ItemOrcamento {
+    private Integer id;
+    private Integer idOrcamento;
+    private Integer idProduto;
+    private Integer idMaterial;
+    private Integer idLayout;
+    private Integer larguraMm;
+    private Integer alturaMm;
+    private Integer quantidade;
+    private BigDecimal areaCalculada;
+    private BigDecimal valorBrutoItem;
+    private BigDecimal valorFinalItem;
+    private BigDecimal custoUnitario;
+    private String tipoCobrancaAplicado;
+    
+    private Produto produto;
+    private Material material; // AREA, UNIDADE, TIRAGEM, FOLHA, PACOTE, SERVICO, CHAPA
+
+<span class="fc" id="L23">    public ItemOrcamento() {}</span>
+
+    public ItemOrcamento(Integer id, Integer idOrcamento, Integer idProduto, Integer idMaterial, Integer idLayout,
+                         Integer larguraMm, Integer alturaMm, Integer quantidade, BigDecimal areaCalculada,
+                         BigDecimal valorBrutoItem, BigDecimal valorFinalItem, BigDecimal custoUnitario,
+<span class="fc" id="L28">                         String tipoCobrancaAplicado) {</span>
+<span class="fc" id="L29">        this.id = id;</span>
+<span class="fc" id="L30">        this.idOrcamento = idOrcamento;</span>
+<span class="fc" id="L31">        this.idProduto = idProduto;</span>
+<span class="fc" id="L32">        this.idMaterial = idMaterial;</span>
+<span class="fc" id="L33">        this.idLayout = idLayout;</span>
+<span class="fc" id="L34">        this.larguraMm = larguraMm;</span>
+<span class="fc" id="L35">        this.alturaMm = alturaMm;</span>
+<span class="fc" id="L36">        this.quantidade = quantidade;</span>
+<span class="fc" id="L37">        this.areaCalculada = areaCalculada;</span>
+<span class="fc" id="L38">        this.valorBrutoItem = valorBrutoItem;</span>
+<span class="fc" id="L39">        this.valorFinalItem = valorFinalItem;</span>
+<span class="fc" id="L40">        this.custoUnitario = custoUnitario;</span>
+<span class="fc" id="L41">        this.tipoCobrancaAplicado = tipoCobrancaAplicado;</span>
+<span class="fc" id="L42">    }</span>
+
+    public Integer getId() {
+<span class="fc" id="L45">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="fc" id="L49">        this.id = id;</span>
+<span class="fc" id="L50">    }</span>
+
+    public Integer getIdOrcamento() {
+<span class="fc" id="L53">        return idOrcamento;</span>
+    }
+
+    public void setIdOrcamento(Integer idOrcamento) {
+<span class="fc" id="L57">        this.idOrcamento = idOrcamento;</span>
+<span class="fc" id="L58">    }</span>
+
+    public Integer getIdProduto() {
+<span class="nc" id="L61">        return idProduto;</span>
+    }
+
+    public void setIdProduto(Integer idProduto) {
+<span class="fc" id="L65">        this.idProduto = idProduto;</span>
+<span class="fc" id="L66">    }</span>
+
+    public Integer getIdMaterial() {
+<span class="nc" id="L69">        return idMaterial;</span>
+    }
+
+    public void setIdMaterial(Integer idMaterial) {
+<span class="fc" id="L73">        this.idMaterial = idMaterial;</span>
+<span class="fc" id="L74">    }</span>
+
+    public Integer getIdLayout() {
+<span class="nc" id="L77">        return idLayout;</span>
+    }
+
+    public void setIdLayout(Integer idLayout) {
+<span class="nc" id="L81">        this.idLayout = idLayout;</span>
+<span class="nc" id="L82">    }</span>
+
+    public Integer getLarguraMm() {
+<span class="fc" id="L85">        return larguraMm;</span>
+    }
+
+    public void setLarguraMm(Integer larguraMm) {
+<span class="fc" id="L89">        this.larguraMm = larguraMm;</span>
+<span class="fc" id="L90">    }</span>
+
+    public Integer getAlturaMm() {
+<span class="fc" id="L93">        return alturaMm;</span>
+    }
+
+    public void setAlturaMm(Integer alturaMm) {
+<span class="fc" id="L97">        this.alturaMm = alturaMm;</span>
+<span class="fc" id="L98">    }</span>
+
+    public Integer getQuantidade() {
+<span class="fc" id="L101">        return quantidade;</span>
+    }
+
+    public void setQuantidade(Integer quantidade) {
+<span class="fc" id="L105">        this.quantidade = quantidade;</span>
+<span class="fc" id="L106">    }</span>
+
+    public BigDecimal getAreaCalculada() {
+<span class="fc" id="L109">        return areaCalculada;</span>
+    }
+
+    public void setAreaCalculada(BigDecimal areaCalculada) {
+<span class="fc" id="L113">        this.areaCalculada = areaCalculada;</span>
+<span class="fc" id="L114">    }</span>
+
+    public BigDecimal getValorBrutoItem() {
+<span class="nc" id="L117">        return valorBrutoItem;</span>
+    }
+
+    public void setValorBrutoItem(BigDecimal valorBrutoItem) {
+<span class="fc" id="L121">        this.valorBrutoItem = valorBrutoItem;</span>
+<span class="fc" id="L122">    }</span>
+
+    public BigDecimal getValorFinalItem() {
+<span class="fc" id="L125">        return valorFinalItem;</span>
+    }
+
+    public void setValorFinalItem(BigDecimal valorFinalItem) {
+<span class="fc" id="L129">        this.valorFinalItem = valorFinalItem;</span>
+<span class="fc" id="L130">    }</span>
+
+    public BigDecimal getCustoUnitario() {
+<span class="nc" id="L133">        return custoUnitario;</span>
+    }
+
+    public void setCustoUnitario(BigDecimal custoUnitario) {
+<span class="fc" id="L137">        this.custoUnitario = custoUnitario;</span>
+<span class="fc" id="L138">    }</span>
+
+    public String getTipoCobrancaAplicado() {
+<span class="fc" id="L141">        return tipoCobrancaAplicado;</span>
+    }
+
+    public void setTipoCobrancaAplicado(String tipoCobrancaAplicado) {
+<span class="fc" id="L145">        this.tipoCobrancaAplicado = tipoCobrancaAplicado;</span>
+<span class="fc" id="L146">    }</span>
+
+    public Produto getProduto() {
+<span class="fc" id="L149">        return produto;</span>
+    }
+
+    public void setProduto(Produto produto) {
+<span class="fc" id="L153">        this.produto = produto;</span>
+<span class="fc" id="L154">    }</span>
+
+    public Material getMaterial() {
+<span class="fc" id="L157">        return material;</span>
+    }
+
+    public void setMaterial(Material material) {
+<span class="fc" id="L161">        this.material = material;</span>
+<span class="fc" id="L162">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L166">        return &quot;ItemOrcamento{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, idOrcamento=&quot; + idOrcamento +
+                &quot;, idProduto=&quot; + idProduto +
+                &quot;, idMaterial=&quot; + idMaterial +
+                &quot;, idLayout=&quot; + idLayout +
+                &quot;, larguraMm=&quot; + larguraMm +
+                &quot;, alturaMm=&quot; + alturaMm +
+                &quot;, quantidade=&quot; + quantidade +
+                &quot;, areaCalculada=&quot; + areaCalculada +
+                &quot;, valorBrutoItem=&quot; + valorBrutoItem +
+                &quot;, valorFinalItem=&quot; + valorFinalItem +
+                &quot;, custoUnitario=&quot; + custoUnitario +
+                &quot;, tipoCobrancaAplicado='&quot; + tipoCobrancaAplicado + '\'' +
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                &quot;, produto=&quot; + (produto != null ? produto.getNome() : &quot;null&quot;) +</span>
+<span class="pc bpc" id="L181" title="1 of 2 branches missed.">                &quot;, material=&quot; + (material != null ? material.getNome() : &quot;null&quot;) +</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

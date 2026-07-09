@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RelatoriosController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">RelatoriosController.java</span></div><h1>RelatoriosController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import com.grafica.dao.ClienteDAO;
+import com.grafica.dao.OrcamentoDAO;
+import com.grafica.model.Cliente;
+import com.grafica.model.Orcamento;
+import com.grafica.service.PdfService;
+import com.grafica.ui.TableUtils;
+import com.grafica.ui.UiUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L43">public class RelatoriosController {</span>
+    @FXML
+    private Label totalVendidoLabel;
+
+    @FXML
+    private Label orcamentosPendentesLabel;
+
+    @FXML
+    private Label conversaoMediaLabel;
+
+    @FXML
+    private Label clientesAtivosLabel;
+
+    @FXML
+    private TextField periodoField;
+
+    @FXML
+    private TextField statusField;
+
+    @FXML
+    private TextField clienteField;
+
+    @FXML
+    private Label resultadosSubtitleLabel;
+
+    @FXML
+    private TableView&lt;RelatorioOrcamentoView&gt; relatoriosTable;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, String&gt; colCodigo;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, String&gt; colCliente;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, String&gt; colData;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, BigDecimal&gt; colValor;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, String&gt; colStatus;
+    @FXML
+    private TableColumn&lt;RelatorioOrcamentoView, Void&gt; colAcoes;
+
+    @FXML
+    private VBox rankingClientesContainer;
+
+    @FXML
+    private Label feedbackLabel;
+
+    @FXML
+    private Button btnAplicarFiltros;
+
+    @FXML
+    private Button btnExportarCsv;
+
+    @FXML
+    private Button btnGerarPdf;
+
+    @FXML
+    private Label lblPaginacao;
+
+    @FXML
+    private Button btnAnterior;
+
+    @FXML
+    private Button btnProximo;
+
+    @FXML
+    private Button btnPage1;
+
+    @FXML
+    private Button btnPage2;
+
+    private OrcamentoDAO orcamentoDAO;
+    private ClienteDAO clienteDAO;
+    private Map&lt;Integer, String&gt; nomesClientes;
+    private List&lt;Orcamento&gt; orcamentosBase;
+    private List&lt;Orcamento&gt; orcamentosFiltrados;
+<span class="nc" id="L118">    private final ObservableList&lt;RelatorioOrcamentoView&gt; relatoriosVisiveis = FXCollections.observableArrayList();</span>
+
+<span class="nc" id="L120">    private final NumberFormat moeda = NumberFormat.getCurrencyInstance(new Locale(&quot;pt&quot;, &quot;BR&quot;));</span>
+<span class="nc" id="L121">    private static final DateTimeFormatter DATA_FORMAT = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+    private static final int ITENS_POR_PAGINA = 10;
+
+<span class="nc" id="L124">    private int paginaAtual = 1;</span>
+<span class="nc" id="L125">    private int totalPaginas = 1;</span>
+
+    @FXML
+    private void initialize() {
+<span class="nc" id="L129">        orcamentoDAO = new OrcamentoDAO();</span>
+<span class="nc" id="L130">        clienteDAO = new ClienteDAO();</span>
+<span class="nc" id="L131">        carregarDadosBase();</span>
+<span class="nc" id="L132">        configurarTabela();</span>
+<span class="nc" id="L133">        aplicarFiltros();</span>
+        
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (btnGerarPdf != null) {</span>
+<span class="nc" id="L136">            btnGerarPdf.setDisable(true);</span>
+        }
+        
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (relatoriosTable != null) {</span>
+<span class="nc" id="L140">            relatoriosTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -&gt; {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                if (btnGerarPdf != null) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                    btnGerarPdf.setDisable(newSelection == null);</span>
+                }
+<span class="nc" id="L144">            });</span>
+        }
+<span class="nc" id="L146">    }</span>
+
+    private void carregarDadosBase() {
+<span class="nc" id="L149">        List&lt;Cliente&gt; clientes = clienteDAO.listarTodos();</span>
+<span class="nc" id="L150">        nomesClientes = clientes.stream()</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            .filter(cliente -&gt; cliente.getId() != null)</span>
+<span class="nc" id="L152">            .collect(Collectors.toMap(Cliente::getId, Cliente::getNome, (atual, substituto) -&gt; atual));</span>
+
+<span class="nc" id="L154">        orcamentosBase = orcamentoDAO.listarTodos();</span>
+<span class="nc" id="L155">        orcamentosFiltrados = orcamentosBase;</span>
+<span class="nc" id="L156">    }</span>
+
+    @FXML
+    private void atualizarRelatorios() {
+        try {
+<span class="nc" id="L161">            carregarDadosBase();</span>
+<span class="nc" id="L162">            aplicarFiltros();</span>
+<span class="nc" id="L163">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            if (feedbackLabel != null) {</span>
+<span class="nc" id="L165">                feedbackLabel.setText(&quot;Erro ao carregar relatorios: &quot; + e.getMessage());</span>
+            }
+<span class="nc" id="L167">            System.err.println(&quot;Erro ao carregar relatorios: &quot; + e.getMessage());</span>
+<span class="nc" id="L168">        }</span>
+<span class="nc" id="L169">    }</span>
+
+    @FXML
+    private void aplicarFiltros() {
+<span class="nc" id="L173">        int dias = parsePeriodoDias();</span>
+<span class="nc" id="L174">        LocalDate limiteData = LocalDate.now().minusDays(dias);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        String statusFiltro = valorNormalizado(statusField != null ? statusField.getText() : null);</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        String clienteFiltro = valorNormalizado(clienteField != null ? clienteField.getText() : null);</span>
+
+<span class="nc" id="L178">        orcamentosFiltrados = orcamentosBase.stream()</span>
+<span class="nc bnc" id="L179" title="All 4 branches missed.">            .filter(orcamento -&gt; orcamento.getDataEmissao() == null || !orcamento.getDataEmissao().isBefore(limiteData))</span>
+<span class="nc bnc" id="L180" title="All 4 branches missed.">            .filter(orcamento -&gt; statusFiltro.isEmpty() || valorNormalizado(orcamento.getStatus()).contains(statusFiltro))</span>
+<span class="nc" id="L181">            .filter(orcamento -&gt; {</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                if (clienteFiltro.isEmpty()) {</span>
+<span class="nc" id="L183">                    return true;</span>
+                }
+<span class="nc" id="L185">                String nomeCliente = nomesClientes.getOrDefault(orcamento.getIdCliente(), &quot;&quot;);</span>
+<span class="nc" id="L186">                return valorNormalizado(nomeCliente).contains(clienteFiltro);</span>
+            })
+<span class="nc" id="L188">            .sorted(Comparator</span>
+<span class="nc" id="L189">                .comparing(Orcamento::getDataEmissao, Comparator.nullsLast(Comparator.reverseOrder()))</span>
+<span class="nc" id="L190">                .thenComparing(Orcamento::getId, Comparator.nullsLast(Comparator.reverseOrder())))</span>
+<span class="nc" id="L191">            .toList();</span>
+
+<span class="nc" id="L193">        paginaAtual = 1;</span>
+<span class="nc" id="L194">        atualizarCardsResumo();</span>
+<span class="nc" id="L195">        atualizarResultados();</span>
+<span class="nc" id="L196">        atualizarRankingClientes();</span>
+
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (feedbackLabel != null) {</span>
+<span class="nc" id="L199">            feedbackLabel.setText(&quot;Filtros aplicados com sucesso.&quot;);</span>
+        }
+<span class="nc" id="L201">    }</span>
+
+    @FXML
+    private void exportarCsv() {
+        try {
+<span class="nc" id="L206">            Path arquivo = Path.of(&quot;sistema-orcamento&quot;, &quot;target&quot;, &quot;relatorios-export.csv&quot;);</span>
+<span class="nc" id="L207">            Files.createDirectories(arquivo.getParent());</span>
+
+<span class="nc" id="L209">            List&lt;String&gt; linhas = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L210">                .map(orcamento -&gt; String.join(&quot;;&quot;,</span>
+<span class="nc" id="L211">                    formatarCodigoOrcamento(orcamento.getId()),</span>
+<span class="nc" id="L212">                    nomesClientes.getOrDefault(orcamento.getIdCliente(), &quot;Cliente nao identificado&quot;),</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">                    orcamento.getDataEmissao() != null ? orcamento.getDataEmissao().format(DATA_FORMAT) : &quot;-&quot;,</span>
+<span class="nc" id="L214">                    String.valueOf(valorSeguro(orcamento.getValorFinal())),</span>
+<span class="nc" id="L215">                    Objects.toString(orcamento.getStatus(), &quot;-&quot;)))</span>
+<span class="nc" id="L216">                .toList();</span>
+
+<span class="nc" id="L218">            String conteudo = &quot;codigo;cliente;data;valor_final;status\n&quot; + String.join(&quot;\n&quot;, linhas);</span>
+<span class="nc" id="L219">            Files.writeString(arquivo, conteudo, StandardCharsets.UTF_8);</span>
+
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (feedbackLabel != null) {</span>
+<span class="nc" id="L222">                feedbackLabel.setText(&quot;CSV exportado em: &quot; + arquivo);</span>
+            }
+<span class="nc" id="L224">        } catch (IOException e) {</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (feedbackLabel != null) {</span>
+<span class="nc" id="L226">                feedbackLabel.setText(&quot;Falha ao exportar CSV: &quot; + e.getMessage());</span>
+            }
+<span class="nc" id="L228">        }</span>
+<span class="nc" id="L229">    }</span>
+
+    @FXML
+    private void gerarPdf() {
+<span class="nc" id="L233">        RelatorioOrcamentoView selecionado = relatoriosTable.getSelectionModel().getSelectedItem();</span>
+        
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        if (selecionado == null) {</span>
+<span class="nc" id="L236">            Alert alert = new Alert(Alert.AlertType.WARNING, &quot;Selecione um orçamento na tabela.&quot;, ButtonType.OK);</span>
+<span class="nc" id="L237">            alert.showAndWait();</span>
+<span class="nc" id="L238">            return;</span>
+        }
+        
+<span class="nc" id="L241">        Orcamento orcamento = selecionado.getOrcamento();</span>
+        
+        try {
+<span class="nc" id="L244">            DirectoryChooser directoryChooser = new DirectoryChooser();</span>
+<span class="nc" id="L245">            directoryChooser.setTitle(&quot;Selecionar local para salvar o PDF&quot;);</span>
+<span class="nc" id="L246">            directoryChooser.setInitialDirectory(new File(System.getProperty(&quot;user.home&quot;)));</span>
+            
+<span class="nc" id="L248">            File diretorioSelecionado = directoryChooser.showDialog(null);</span>
+            
+<span class="nc bnc" id="L250" title="All 2 branches missed.">            if (diretorioSelecionado == null) {</span>
+<span class="nc" id="L251">                return;</span>
+            }
+            
+<span class="nc" id="L254">            String caminhoPdf = PdfService.gerarOrcamentoPdfPorId(orcamento.getId(), diretorioSelecionado.getAbsolutePath());</span>
+            
+<span class="nc" id="L256">            File arquivoPdf = new File(caminhoPdf);</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">            if (arquivoPdf.exists()) {</span>
+<span class="nc" id="L258">                java.awt.Desktop.getDesktop().open(arquivoPdf);</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                if (feedbackLabel != null) {</span>
+<span class="nc" id="L260">                    feedbackLabel.setText(&quot;PDF gerado com sucesso: &quot; + caminhoPdf);</span>
+                }
+            } else {
+<span class="nc bnc" id="L263" title="All 2 branches missed.">                if (feedbackLabel != null) {</span>
+<span class="nc" id="L264">                    feedbackLabel.setText(&quot;PDF gerado mas não foi possível abrir: &quot; + caminhoPdf);</span>
+                }
+            }
+            
+<span class="nc" id="L268">        } catch (Exception e) {</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">            if (feedbackLabel != null) {</span>
+<span class="nc" id="L270">                feedbackLabel.setText(&quot;Erro ao gerar PDF: &quot; + e.getMessage());</span>
+            }
+<span class="nc" id="L272">            e.printStackTrace();</span>
+<span class="nc" id="L273">        }</span>
+<span class="nc" id="L274">    }</span>
+
+    private void abrirVisualizacaoOrcamento(Integer idOrcamento) {
+        try {
+<span class="nc" id="L278">            FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/com/grafica/view/visualizar-orcamento.fxml&quot;));</span>
+<span class="nc" id="L279">            Parent root = loader.load();</span>
+            
+<span class="nc" id="L281">            VisualizarOrcamentoController controller = loader.getController();</span>
+<span class="nc" id="L282">            controller.carregarOrcamento(idOrcamento);</span>
+            
+<span class="nc" id="L284">            Stage stage = new Stage();</span>
+<span class="nc" id="L285">            stage.setTitle(&quot;Visualizar Orçamento #&quot; + String.format(&quot;%04d&quot;, idOrcamento));</span>
+<span class="nc" id="L286">            stage.initModality(Modality.APPLICATION_MODAL);</span>
+<span class="nc" id="L287">            stage.setScene(new Scene(root, 1000, 700));</span>
+<span class="nc" id="L288">            stage.showAndWait();</span>
+            
+<span class="nc" id="L290">        } catch (IOException e) {</span>
+<span class="nc" id="L291">            Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L292">            alert.setTitle(&quot;Erro&quot;);</span>
+<span class="nc" id="L293">            alert.setHeaderText(null);</span>
+<span class="nc" id="L294">            alert.setContentText(&quot;Erro ao abrir visualização do orçamento: &quot; + e.getMessage());</span>
+<span class="nc" id="L295">            alert.showAndWait();</span>
+<span class="nc" id="L296">            e.printStackTrace();</span>
+<span class="nc" id="L297">        }</span>
+<span class="nc" id="L298">    }</span>
+
+    private void atualizarCardsResumo() {
+<span class="nc" id="L301">        BigDecimal totalVendido = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L302">            .filter(orcamento -&gt; isConcluido(orcamento.getStatus()))</span>
+<span class="nc" id="L303">            .map(orcamento -&gt; valorSeguro(orcamento.getValorFinal()))</span>
+<span class="nc" id="L304">            .reduce(BigDecimal.ZERO, BigDecimal::add);</span>
+
+<span class="nc" id="L306">        long pendentes = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L307">            .filter(orcamento -&gt; &quot;PENDENTE&quot;.equalsIgnoreCase(orcamento.getStatus()))</span>
+<span class="nc" id="L308">            .count();</span>
+
+<span class="nc" id="L310">        long concluidos = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L311">            .filter(orcamento -&gt; isConcluido(orcamento.getStatus()))</span>
+<span class="nc" id="L312">            .count();</span>
+
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        int conversao = orcamentosFiltrados.isEmpty()</span>
+<span class="nc" id="L315">            ? 0</span>
+<span class="nc" id="L316">            : (int) Math.round((concluidos * 100.0) / orcamentosFiltrados.size());</span>
+
+<span class="nc" id="L318">        long clientesAtivos = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L319">            .map(Orcamento::getIdCliente)</span>
+<span class="nc" id="L320">            .filter(Objects::nonNull)</span>
+<span class="nc" id="L321">            .collect(Collectors.toSet())</span>
+<span class="nc" id="L322">            .size();</span>
+
+<span class="nc bnc" id="L324" title="All 2 branches missed.">        if (totalVendidoLabel != null) {</span>
+<span class="nc" id="L325">            totalVendidoLabel.setText(moeda.format(totalVendido));</span>
+        }
+<span class="nc bnc" id="L327" title="All 2 branches missed.">        if (orcamentosPendentesLabel != null) {</span>
+<span class="nc" id="L328">            orcamentosPendentesLabel.setText(String.valueOf(pendentes));</span>
+        }
+<span class="nc bnc" id="L330" title="All 2 branches missed.">        if (conversaoMediaLabel != null) {</span>
+<span class="nc" id="L331">            conversaoMediaLabel.setText(conversao + &quot;%&quot;);</span>
+        }
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (clientesAtivosLabel != null) {</span>
+<span class="nc" id="L334">            clientesAtivosLabel.setText(String.valueOf(clientesAtivos));</span>
+        }
+<span class="nc" id="L336">    }</span>
+
+    private void atualizarResultados() {
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (relatoriosTable == null) {</span>
+<span class="nc" id="L340">            return;</span>
+        }
+
+<span class="nc" id="L343">        relatoriosVisiveis.clear();</span>
+<span class="nc" id="L344">        int totalRegistros = orcamentosFiltrados.size();</span>
+<span class="nc" id="L345">        totalPaginas = Math.max(1, (int) Math.ceil(totalRegistros / (double) ITENS_POR_PAGINA));</span>
+<span class="nc" id="L346">        paginaAtual = Math.min(Math.max(paginaAtual, 1), totalPaginas);</span>
+
+<span class="nc" id="L348">        int inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;</span>
+<span class="nc" id="L349">        int fim = Math.min(inicio + ITENS_POR_PAGINA, totalRegistros);</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">        int exibidos = totalRegistros == 0 ? 0 : (fim - inicio);</span>
+
+<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (resultadosSubtitleLabel != null) {</span>
+<span class="nc" id="L353">            resultadosSubtitleLabel.setText(&quot;Mostrando &quot; + exibidos + &quot; de &quot; + totalRegistros + &quot; orçamentos encontrados.&quot;);</span>
+        }
+<span class="nc bnc" id="L355" title="All 2 branches missed.">        if (lblPaginacao != null) {</span>
+<span class="nc" id="L356">            lblPaginacao.setText(&quot;Página &quot; + paginaAtual + &quot; de &quot; + totalPaginas);</span>
+        }
+
+<span class="nc" id="L359">        Label placeholder = new Label(&quot;Nenhum orçamento encontrado para os filtros selecionados.&quot;);</span>
+<span class="nc" id="L360">        placeholder.getStyleClass().add(&quot;reports-card-subtitle&quot;);</span>
+<span class="nc" id="L361">        relatoriosTable.setPlaceholder(placeholder);</span>
+
+<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (totalRegistros == 0) {</span>
+<span class="nc" id="L364">            atualizarBotoesPaginacao();</span>
+<span class="nc" id="L365">            return;</span>
+        }
+
+<span class="nc bnc" id="L368" title="All 2 branches missed.">        for (int i = inicio; i &lt; fim; i++) {</span>
+<span class="nc" id="L369">            Orcamento orcamento = orcamentosFiltrados.get(i);</span>
+<span class="nc" id="L370">            relatoriosVisiveis.add(new RelatorioOrcamentoView(orcamento));</span>
+        }
+
+<span class="nc" id="L373">        atualizarBotoesPaginacao();</span>
+<span class="nc" id="L374">    }</span>
+
+    private void atualizarBotoesPaginacao() {
+<span class="nc" id="L377">        TableUtils.configurarPaginacao(btnAnterior, btnProximo, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L378">        TableUtils.configurarBotaoPagina(btnPage1, paginaAtual, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L379">        TableUtils.configurarBotaoPagina(btnPage2, paginaAtual + 1, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L380">    }</span>
+
+    @FXML
+    private void paginaAnterior() {
+<span class="nc bnc" id="L384" title="All 2 branches missed.">        if (paginaAtual &gt; 1) {</span>
+<span class="nc" id="L385">            paginaAtual--;</span>
+<span class="nc" id="L386">            atualizarResultados();</span>
+        }
+<span class="nc" id="L388">    }</span>
+
+    @FXML
+    private void paginaProxima() {
+<span class="nc bnc" id="L392" title="All 2 branches missed.">        if (paginaAtual &lt; totalPaginas) {</span>
+<span class="nc" id="L393">            paginaAtual++;</span>
+<span class="nc" id="L394">            atualizarResultados();</span>
+        }
+<span class="nc" id="L396">    }</span>
+
+    @FXML
+    private void irParaPagina(javafx.event.ActionEvent event) {
+<span class="nc bnc" id="L400" title="All 2 branches missed.">        if (!(event.getSource() instanceof Button botao)) {</span>
+<span class="nc" id="L401">            return;</span>
+        }
+        try {
+<span class="nc" id="L404">            paginaAtual = Integer.parseInt(botao.getText());</span>
+<span class="nc" id="L405">            atualizarResultados();</span>
+<span class="nc" id="L406">        } catch (NumberFormatException ignored) {</span>
+<span class="nc" id="L407">        }</span>
+<span class="nc" id="L408">    }</span>
+
+    private void configurarTabela() {
+<span class="nc" id="L411">        colCodigo.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;codigo&quot;));</span>
+<span class="nc" id="L412">        colCliente.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;cliente&quot;));</span>
+<span class="nc" id="L413">        colData.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;data&quot;));</span>
+<span class="nc" id="L414">        colValor.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;valor&quot;));</span>
+<span class="nc" id="L415">        colStatus.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;status&quot;));</span>
+
+<span class="nc" id="L417">        colValor.setCellFactory(tc -&gt; new TableCell&lt;&gt;() {</span>
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+<span class="nc" id="L420">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L421" title="All 4 branches missed.">                setText(empty || item == null ? null : moeda.format(item));</span>
+<span class="nc" id="L422">            }</span>
+        });
+
+<span class="nc" id="L425">        colStatus.setCellFactory(column -&gt; new TableCell&lt;&gt;() {</span>
+            @Override
+            protected void updateItem(String status, boolean empty) {
+<span class="nc" id="L428">                super.updateItem(status, empty);</span>
+<span class="nc bnc" id="L429" title="All 4 branches missed.">                if (empty || status == null) {</span>
+<span class="nc" id="L430">                    setGraphic(null);</span>
+<span class="nc" id="L431">                    setText(null);</span>
+<span class="nc" id="L432">                    return;</span>
+                }
+<span class="nc" id="L434">                Label statusLabel = new Label(status);</span>
+<span class="nc" id="L435">                statusLabel.getStyleClass().add(&quot;reports-pill&quot;);</span>
+                // TODO: Adicionar classes de estilo específicas para cada status (aprovado, pendente, etc)
+<span class="nc" id="L437">                setGraphic(statusLabel);</span>
+<span class="nc" id="L438">                setText(null);</span>
+<span class="nc" id="L439">            }</span>
+        });
+
+<span class="nc" id="L442">        colAcoes.setCellFactory(param -&gt; new TableCell&lt;&gt;() {</span>
+<span class="nc" id="L443">            private final Button ver = new Button(&quot;Ver&quot;);</span>
+<span class="nc" id="L444">            private final Button pdf = new Button(&quot;PDF&quot;);</span>
+<span class="nc" id="L445">            private final Button aprovar = new Button(&quot;Aprovar&quot;);</span>
+<span class="nc" id="L446">            private final Button reprovar = new Button(&quot;Reprovar&quot;);</span>
+<span class="nc" id="L447">            private final HBox acoesContainer = new HBox(6.0, ver, pdf, aprovar, reprovar);</span>
+
+            {
+<span class="nc" id="L450">                acoesContainer.setAlignment(Pos.CENTER_RIGHT);</span>
+<span class="nc" id="L451">                ver.getStyleClass().add(&quot;reports-action&quot;);</span>
+<span class="nc" id="L452">                pdf.getStyleClass().add(&quot;reports-action&quot;);</span>
+<span class="nc" id="L453">                aprovar.getStyleClass().add(&quot;reports-action&quot;);</span>
+<span class="nc" id="L454">                aprovar.getStyleClass().add(&quot;reports-action-approve&quot;);</span>
+<span class="nc" id="L455">                reprovar.getStyleClass().add(&quot;reports-action&quot;);</span>
+<span class="nc" id="L456">                reprovar.getStyleClass().add(&quot;reports-action-reject&quot;);</span>
+
+<span class="nc" id="L458">                ver.setOnAction(event -&gt; {</span>
+<span class="nc" id="L459">                    RelatorioOrcamentoView view = getTableView().getItems().get(getIndex());</span>
+<span class="nc bnc" id="L460" title="All 2 branches missed.">                    if (view != null) {</span>
+<span class="nc" id="L461">                        abrirVisualizacaoOrcamento(view.getOrcamento().getId());</span>
+                    }
+<span class="nc" id="L463">                });</span>
+<span class="nc" id="L464">                pdf.setOnAction(event -&gt; {</span>
+<span class="nc" id="L465">                    RelatorioOrcamentoView view = getTableView().getItems().get(getIndex());</span>
+<span class="nc bnc" id="L466" title="All 2 branches missed.">                    if (view != null) {</span>
+<span class="nc" id="L467">                        relatoriosTable.getSelectionModel().select(view);</span>
+<span class="nc" id="L468">                        gerarPdf();</span>
+                    }
+<span class="nc" id="L470">                });</span>
+<span class="nc" id="L471">                aprovar.setOnAction(event -&gt; aprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));</span>
+<span class="nc" id="L472">                reprovar.setOnAction(event -&gt; reprovarOrcamento(getTableView().getItems().get(getIndex()).getOrcamento()));</span>
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+<span class="nc" id="L477">                super.updateItem(item, empty);</span>
+<span class="nc bnc" id="L478" title="All 2 branches missed.">                setGraphic(empty ? null : acoesContainer);</span>
+<span class="nc" id="L479">            }</span>
+        });
+
+<span class="nc" id="L482">        relatoriosTable.setItems(relatoriosVisiveis);</span>
+<span class="nc" id="L483">        relatoriosTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);</span>
+<span class="nc" id="L484">    }</span>
+
+    private void aprovarOrcamento(Orcamento orcamento) {
+<span class="nc bnc" id="L487" title="All 4 branches missed.">        if (orcamento == null || orcamento.getId() == null) return;</span>
+        try {
+<span class="nc" id="L489">            orcamento.setStatus(&quot;APROVADO&quot;);</span>
+<span class="nc" id="L490">            orcamentoDAO.atualizar(orcamento);</span>
+<span class="nc" id="L491">            feedbackLabel.setText(&quot;Orcamento &quot; + formatarCodigoOrcamento(orcamento.getId()) + &quot; aprovado.&quot;);</span>
+            // Atualiza dados locais e UI
+<span class="nc" id="L493">            carregarDadosBase();</span>
+<span class="nc" id="L494">            aplicarFiltros();</span>
+<span class="nc" id="L495">        } catch (Exception e) {</span>
+<span class="nc" id="L496">            feedbackLabel.setText(&quot;Falha ao aprovar: &quot; + e.getMessage());</span>
+<span class="nc" id="L497">        }</span>
+<span class="nc" id="L498">    }</span>
+
+    private void reprovarOrcamento(Orcamento orcamento) {
+<span class="nc bnc" id="L501" title="All 4 branches missed.">        if (orcamento == null || orcamento.getId() == null) return;</span>
+        try {
+<span class="nc" id="L503">            orcamento.setStatus(&quot;REPROVADO&quot;);</span>
+<span class="nc" id="L504">            orcamentoDAO.atualizar(orcamento);</span>
+<span class="nc" id="L505">            feedbackLabel.setText(&quot;Orcamento &quot; + formatarCodigoOrcamento(orcamento.getId()) + &quot; reprovado.&quot;);</span>
+            // Atualiza dados locais e UI
+<span class="nc" id="L507">            carregarDadosBase();</span>
+<span class="nc" id="L508">            aplicarFiltros();</span>
+<span class="nc" id="L509">        } catch (Exception e) {</span>
+<span class="nc" id="L510">            feedbackLabel.setText(&quot;Falha ao reprovar: &quot; + e.getMessage());</span>
+<span class="nc" id="L511">        }</span>
+<span class="nc" id="L512">    }</span>
+
+    private void atualizarRankingClientes() {
+<span class="nc bnc" id="L515" title="All 2 branches missed.">        if (rankingClientesContainer == null) {</span>
+<span class="nc" id="L516">            return;</span>
+        }
+
+<span class="nc" id="L519">        rankingClientesContainer.getChildren().clear();</span>
+
+<span class="nc" id="L521">        Map&lt;Integer, BigDecimal&gt; ranking = orcamentosFiltrados.stream()</span>
+<span class="nc" id="L522">            .filter(orcamento -&gt; isConcluido(orcamento.getStatus()))</span>
+<span class="nc" id="L523">            .collect(Collectors.groupingBy(</span>
+                Orcamento::getIdCliente,
+<span class="nc" id="L525">                Collectors.mapping(Orcamento::getValorFinal,</span>
+<span class="nc" id="L526">                    Collectors.reducing(BigDecimal.ZERO, this::valorSeguro, BigDecimal::add))));</span>
+
+<span class="nc" id="L528">        List&lt;Map.Entry&lt;Integer, BigDecimal&gt;&gt; topClientes = ranking.entrySet().stream()</span>
+<span class="nc" id="L529">            .sorted(Map.Entry.&lt;Integer, BigDecimal&gt;comparingByValue().reversed())</span>
+<span class="nc" id="L530">            .limit(4)</span>
+<span class="nc" id="L531">            .toList();</span>
+
+<span class="nc bnc" id="L533" title="All 2 branches missed.">        if (topClientes.isEmpty()) {</span>
+<span class="nc" id="L534">            Label vazio = new Label(&quot;Sem vendas concluidas para montar ranking.&quot;);</span>
+<span class="nc" id="L535">            vazio.getStyleClass().add(&quot;reports-card-subtitle&quot;);</span>
+<span class="nc" id="L536">            rankingClientesContainer.getChildren().add(vazio);</span>
+<span class="nc" id="L537">            return;</span>
+        }
+
+<span class="nc bnc" id="L540" title="All 2 branches missed.">        for (Map.Entry&lt;Integer, BigDecimal&gt; entry : topClientes) {</span>
+<span class="nc" id="L541">            rankingClientesContainer.getChildren().add(criarLinhaRanking(entry.getKey(), entry.getValue()));</span>
+<span class="nc" id="L542">        }</span>
+<span class="nc" id="L543">    }</span>
+
+    private VBox criarLinhaRanking(Integer idCliente, BigDecimal valorTotal) {
+<span class="nc" id="L546">        VBox bloco = new VBox(4.0);</span>
+
+<span class="nc" id="L548">        HBox cabecalho = new HBox(6.0);</span>
+<span class="nc" id="L549">        cabecalho.setAlignment(Pos.CENTER_LEFT);</span>
+
+<span class="nc" id="L551">        Label nome = new Label(nomesClientes.getOrDefault(idCliente, &quot;Cliente nao identificado&quot;));</span>
+<span class="nc" id="L552">        nome.getStyleClass().add(&quot;reports-table-value&quot;);</span>
+
+<span class="nc" id="L554">        Region espaco = new Region();</span>
+<span class="nc" id="L555">        HBox.setHgrow(espaco, Priority.ALWAYS);</span>
+
+<span class="nc" id="L557">        Label valor = new Label(moeda.format(valorTotal));</span>
+<span class="nc" id="L558">        valor.getStyleClass().add(&quot;reports-link&quot;);</span>
+
+<span class="nc" id="L560">        cabecalho.getChildren().addAll(nome, espaco, valor);</span>
+
+<span class="nc" id="L562">        Label barra = new Label();</span>
+<span class="nc" id="L563">        barra.getStyleClass().add(&quot;reports-progress&quot;);</span>
+
+<span class="nc" id="L565">        bloco.getChildren().addAll(cabecalho, barra);</span>
+<span class="nc" id="L566">        return bloco;</span>
+    }
+
+    private int parsePeriodoDias() {
+<span class="nc bnc" id="L570" title="All 6 branches missed.">        if (periodoField == null || periodoField.getText() == null || periodoField.getText().isBlank()) {</span>
+<span class="nc" id="L571">            return 30;</span>
+        }
+<span class="nc" id="L573">        String apenasNumeros = periodoField.getText().replaceAll(&quot;[^0-9]&quot;, &quot;&quot;);</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">        if (apenasNumeros.isBlank()) {</span>
+<span class="nc" id="L575">            return 30;</span>
+        }
+        try {
+<span class="nc" id="L578">            int valor = Integer.parseInt(apenasNumeros);</span>
+<span class="nc" id="L579">            return Math.max(1, valor);</span>
+<span class="nc" id="L580">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L581">            return 30;</span>
+        }
+    }
+
+    private String valorNormalizado(String valor) {
+<span class="nc bnc" id="L586" title="All 2 branches missed.">        return valor == null ? &quot;&quot; : valor.trim().toUpperCase();</span>
+    }
+
+    private BigDecimal valorSeguro(BigDecimal valor) {
+<span class="nc bnc" id="L590" title="All 2 branches missed.">        return valor == null ? BigDecimal.ZERO : valor;</span>
+    }
+
+    private String formatarData(LocalDate data) {
+<span class="nc bnc" id="L594" title="All 2 branches missed.">        return data == null ? &quot;-&quot; : data.format(DATA_FORMAT);</span>
+    }
+
+    private String formatarCodigoOrcamento(Integer id) {
+<span class="nc bnc" id="L598" title="All 2 branches missed.">        return id == null ? &quot;ORC-S/N&quot; : String.format(&quot;ORC-%04d&quot;, id);</span>
+    }
+
+    private String formatarStatus(String status) {
+<span class="nc bnc" id="L602" title="All 4 branches missed.">        if (status == null || status.isBlank()) {</span>
+<span class="nc" id="L603">            return &quot;Sem Status&quot;;</span>
+        }
+<span class="nc" id="L605">        String normalizado = status.trim().toUpperCase();</span>
+<span class="nc bnc" id="L606" title="All 4 branches missed.">        return switch (normalizado) {</span>
+<span class="nc" id="L607">            case &quot;PENDENTE&quot; -&gt; &quot;Pendente&quot;;</span>
+<span class="nc" id="L608">            case &quot;APROVADO&quot; -&gt; &quot;Aprovado&quot;;</span>
+<span class="nc" id="L609">            case &quot;REPROVADO&quot; -&gt; &quot;Reprovado&quot;;</span>
+<span class="nc" id="L610">            default -&gt; status;</span>
+        };
+    }
+
+    private boolean isConcluido(String status) {
+<span class="nc bnc" id="L615" title="All 4 branches missed.">        return status != null &amp;&amp; &quot;APROVADO&quot;.equalsIgnoreCase(status.trim());</span>
+    }
+
+    public class RelatorioOrcamentoView {
+        private final Orcamento orcamento;
+
+<span class="nc" id="L621">        public RelatorioOrcamentoView(Orcamento orcamento) {</span>
+<span class="nc" id="L622">            this.orcamento = orcamento;</span>
+<span class="nc" id="L623">        }</span>
+
+        public Orcamento getOrcamento() {
+<span class="nc" id="L626">            return orcamento;</span>
+        }
+
+        public String getCodigo() {
+<span class="nc" id="L630">            return formatarCodigoOrcamento(orcamento.getId());</span>
+        }
+
+        public String getCliente() {
+<span class="nc" id="L634">            return nomesClientes.getOrDefault(orcamento.getIdCliente(), &quot;Cliente nao identificado&quot;);</span>
+        }
+
+        public String getData() {
+<span class="nc" id="L638">            return formatarData(orcamento.getDataEmissao());</span>
+        }
+
+<span class="nc" id="L641">        public BigDecimal getValor() { return valorSeguro(orcamento.getValorFinal()); }</span>
+
+<span class="nc" id="L643">        public String getStatus() { return formatarStatus(orcamento.getStatus()); }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

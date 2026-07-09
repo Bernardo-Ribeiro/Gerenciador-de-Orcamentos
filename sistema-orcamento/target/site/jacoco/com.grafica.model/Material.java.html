@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Material.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.model</a> &gt; <span class="el_source">Material.java</span></div><h1>Material.java</h1><pre class="source lang-java linenums">package com.grafica.model;
+
+import java.math.BigDecimal;
+
+public class Material {
+    private Integer id;
+    private String nome;
+    private String categoria; // ENUM: COMUNICACAO_VISUAL, IMPRESSOS
+    private Integer idCategoriaLucro;
+    private String tipoItem; // ENUM: BASE, ACABAMENTO
+    private String tipoCobranca; // ENUM: AREA, UNIDADE, TIRAGEM, FOLHA, PACOTE, SERVICO, CHAPA
+    private BigDecimal custoBase;
+    private BigDecimal custoProducao;
+    private String status; // ENUM: ATIVO, INATIVO
+
+<span class="fc" id="L16">    public Material() {</span>
+<span class="fc" id="L17">    }</span>
+
+<span class="fc" id="L19">    public Material(String nome, String categoria, String tipoItem, String tipoCobranca, BigDecimal custoBase) {</span>
+<span class="fc" id="L20">        this.nome = nome;</span>
+<span class="fc" id="L21">        this.categoria = categoria;</span>
+<span class="fc" id="L22">        this.tipoItem = tipoItem;</span>
+<span class="fc" id="L23">        this.tipoCobranca = tipoCobranca;</span>
+<span class="fc" id="L24">        this.custoBase = custoBase;</span>
+<span class="fc" id="L25">        this.custoProducao = BigDecimal.ZERO;</span>
+<span class="fc" id="L26">        this.status = &quot;ATIVO&quot;;</span>
+<span class="fc" id="L27">    }</span>
+
+<span class="fc" id="L29">    public Material(Integer id, String nome, String categoria, Integer idCategoriaLucro, String tipoItem, String tipoCobranca, BigDecimal custoBase, BigDecimal custoProducao, String status) {</span>
+<span class="fc" id="L30">        this.id = id;</span>
+<span class="fc" id="L31">        this.nome = nome;</span>
+<span class="fc" id="L32">        this.categoria = categoria;</span>
+<span class="fc" id="L33">        this.idCategoriaLucro = idCategoriaLucro;</span>
+<span class="fc" id="L34">        this.tipoItem = tipoItem;</span>
+<span class="fc" id="L35">        this.tipoCobranca = tipoCobranca;</span>
+<span class="fc" id="L36">        this.custoBase = custoBase;</span>
+<span class="fc" id="L37">        this.custoProducao = custoProducao;</span>
+<span class="fc" id="L38">        this.status = status;</span>
+<span class="fc" id="L39">    }</span>
+
+    public Integer getId() {
+<span class="fc" id="L42">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="fc" id="L46">        this.id = id;</span>
+<span class="fc" id="L47">    }</span>
+
+    public String getNome() {
+<span class="fc" id="L50">        return nome;</span>
+    }
+
+    public void setNome(String nome) {
+<span class="fc" id="L54">        this.nome = nome;</span>
+<span class="fc" id="L55">    }</span>
+
+    public String getCategoria() {
+<span class="fc" id="L58">        return categoria;</span>
+    }
+
+    public void setCategoria(String categoria) {
+<span class="fc" id="L62">        this.categoria = categoria;</span>
+<span class="fc" id="L63">    }</span>
+
+    public Integer getIdCategoriaLucro() {
+<span class="nc" id="L66">        return idCategoriaLucro;</span>
+    }
+
+    public void setIdCategoriaLucro(Integer idCategoriaLucro) {
+<span class="nc" id="L70">        this.idCategoriaLucro = idCategoriaLucro;</span>
+<span class="nc" id="L71">    }</span>
+
+    public String getTipoItem() {
+<span class="nc" id="L74">        return tipoItem;</span>
+    }
+
+    public void setTipoItem(String tipoItem) {
+<span class="nc" id="L78">        this.tipoItem = tipoItem;</span>
+<span class="nc" id="L79">    }</span>
+
+    public String getTipoCobranca() {
+<span class="fc" id="L82">        return tipoCobranca;</span>
+    }
+
+    public void setTipoCobranca(String tipoCobranca) {
+<span class="fc" id="L86">        this.tipoCobranca = tipoCobranca;</span>
+<span class="fc" id="L87">    }</span>
+
+    public BigDecimal getCustoBase() {
+<span class="fc" id="L90">        return custoBase;</span>
+    }
+
+    public void setCustoBase(BigDecimal custoBase) {
+<span class="fc" id="L94">        this.custoBase = custoBase;</span>
+<span class="fc" id="L95">    }</span>
+
+    public BigDecimal getCustoProducao() {
+<span class="nc" id="L98">        return custoProducao;</span>
+    }
+
+    public void setCustoProducao(BigDecimal custoProducao) {
+<span class="nc" id="L102">        this.custoProducao = custoProducao;</span>
+<span class="nc" id="L103">    }</span>
+
+    public String getStatus() {
+<span class="fc" id="L106">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="fc" id="L110">        this.status = status;</span>
+<span class="fc" id="L111">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L115">        return &quot;Material{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, nome='&quot; + nome + '\'' +
+                &quot;, categoria='&quot; + categoria + '\'' +
+                &quot;, idCategoriaLucro=&quot; + idCategoriaLucro +
+                &quot;, tipoItem='&quot; + tipoItem + '\'' +
+                &quot;, tipoCobranca='&quot; + tipoCobranca + '\'' +
+                &quot;, custoBase=&quot; + custoBase +
+                &quot;, custoProducao=&quot; + custoProducao +
+                &quot;, status='&quot; + status + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

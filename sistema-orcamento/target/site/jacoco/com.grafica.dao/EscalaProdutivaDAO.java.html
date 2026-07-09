@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EscalaProdutivaDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.dao</a> &gt; <span class="el_source">EscalaProdutivaDAO.java</span></div><h1>EscalaProdutivaDAO.java</h1><pre class="source lang-java linenums">package com.grafica.dao;
+
+import com.grafica.model.EscalaProdutiva;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L8">public class EscalaProdutivaDAO {</span>
+
+    public void criar(EscalaProdutiva escala) {
+<span class="nc" id="L11">        String sql = &quot;INSERT INTO escalas_produtivas (id_material, qtd_minima, qtd_maxima, desconto_percentual) VALUES (?, ?, ?, ?)&quot;;</span>
+
+<span class="nc" id="L13">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L14">             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {</span>
+
+<span class="nc" id="L16">            stmt.setInt(1, escala.getIdMaterial());</span>
+<span class="nc" id="L17">            stmt.setInt(2, escala.getQtdMinima());</span>
+<span class="nc" id="L18">            stmt.setInt(3, escala.getQtdMaxima());</span>
+<span class="nc" id="L19">            stmt.setBigDecimal(4, escala.getDescontoPercentual());</span>
+
+<span class="nc" id="L21">            stmt.executeUpdate();</span>
+
+<span class="nc" id="L23">            try (ResultSet rs = stmt.getGeneratedKeys()) {</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">                if (rs.next()) {</span>
+<span class="nc" id="L25">                    escala.setId(rs.getInt(1));</span>
+                }
+            }
+<span class="nc" id="L28">        } catch (SQLException e) {</span>
+<span class="nc" id="L29">            e.printStackTrace();</span>
+<span class="nc" id="L30">        }</span>
+<span class="nc" id="L31">    }</span>
+
+    public List&lt;EscalaProdutiva&gt; listarPorMaterial(Integer idMaterial) {
+<span class="nc" id="L34">        List&lt;EscalaProdutiva&gt; escalas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L35">        String sql = &quot;SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual FROM escalas_produtivas WHERE id_material = ? ORDER BY qtd_minima&quot;;</span>
+
+<span class="nc" id="L37">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L38">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L40">            stmt.setInt(1, idMaterial);</span>
+<span class="nc" id="L41">            try (ResultSet rs = stmt.executeQuery()) {</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                while (rs.next()) {</span>
+<span class="nc" id="L43">                    escalas.add(mapearEscala(rs));</span>
+                }
+            }
+<span class="nc" id="L46">        } catch (SQLException e) {</span>
+<span class="nc" id="L47">            e.printStackTrace();</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">        return escalas;</span>
+    }
+
+    public List&lt;EscalaProdutiva&gt; listarTodos() {
+<span class="nc" id="L53">        List&lt;EscalaProdutiva&gt; escalas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L54">        String sql = &quot;SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual FROM escalas_produtivas ORDER BY id_material, qtd_minima&quot;;</span>
+
+<span class="nc" id="L56">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L57">             Statement stmt = conn.createStatement();</span>
+<span class="nc" id="L58">             ResultSet rs = stmt.executeQuery(sql)) {</span>
+
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L61">                escalas.add(mapearEscala(rs));</span>
+            }
+<span class="nc" id="L63">        } catch (SQLException e) {</span>
+<span class="nc" id="L64">            e.printStackTrace();</span>
+<span class="nc" id="L65">        }</span>
+<span class="nc" id="L66">        return escalas;</span>
+    }
+
+    public void atualizar(EscalaProdutiva escala) {
+<span class="nc" id="L70">        String sql = &quot;UPDATE escalas_produtivas SET id_material = ?, qtd_minima = ?, qtd_maxima = ?, desconto_percentual = ? WHERE id = ?&quot;;</span>
+
+<span class="nc" id="L72">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L73">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L75">            stmt.setInt(1, escala.getIdMaterial());</span>
+<span class="nc" id="L76">            stmt.setInt(2, escala.getQtdMinima());</span>
+<span class="nc" id="L77">            stmt.setInt(3, escala.getQtdMaxima());</span>
+<span class="nc" id="L78">            stmt.setBigDecimal(4, escala.getDescontoPercentual());</span>
+<span class="nc" id="L79">            stmt.setInt(5, escala.getId());</span>
+
+<span class="nc" id="L81">            stmt.executeUpdate();</span>
+<span class="nc" id="L82">        } catch (SQLException e) {</span>
+<span class="nc" id="L83">            e.printStackTrace();</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">    }</span>
+
+    public void deletar(Integer id) {
+<span class="nc" id="L88">        String sql = &quot;DELETE FROM escalas_produtivas WHERE id = ?&quot;;</span>
+
+<span class="nc" id="L90">        try (Connection conn = DbConnection.getConnection();</span>
+<span class="nc" id="L91">             PreparedStatement stmt = conn.prepareStatement(sql)) {</span>
+
+<span class="nc" id="L93">            stmt.setInt(1, id);</span>
+<span class="nc" id="L94">            stmt.executeUpdate();</span>
+<span class="nc" id="L95">        } catch (SQLException e) {</span>
+<span class="nc" id="L96">            e.printStackTrace();</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">    }</span>
+
+    private EscalaProdutiva mapearEscala(ResultSet rs) throws SQLException {
+<span class="nc" id="L101">        return new EscalaProdutiva(</span>
+<span class="nc" id="L102">            rs.getInt(&quot;id&quot;),</span>
+<span class="nc" id="L103">            rs.getInt(&quot;id_material&quot;),</span>
+<span class="nc" id="L104">            rs.getInt(&quot;qtd_minima&quot;),</span>
+<span class="nc" id="L105">            rs.getInt(&quot;qtd_maxima&quot;),</span>
+<span class="nc" id="L106">            rs.getBigDecimal(&quot;desconto_percentual&quot;)</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

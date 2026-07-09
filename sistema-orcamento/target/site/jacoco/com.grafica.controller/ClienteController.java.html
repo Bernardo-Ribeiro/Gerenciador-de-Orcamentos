@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClienteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sistema-orcamento</a> &gt; <a href="index.source.html" class="el_package">com.grafica.controller</a> &gt; <span class="el_source">ClienteController.java</span></div><h1>ClienteController.java</h1><pre class="source lang-java linenums">package com.grafica.controller;
+
+import com.grafica.dao.ClienteDAO;
+import com.grafica.model.Cliente;
+import com.grafica.ui.TableUtils;
+import com.grafica.ui.UiUtils;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L22">public class ClienteController {</span>
+    @FXML
+    private TextField nomeField;
+
+    @FXML
+    private TextField cpfCnpjField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private TextField telefonejField;
+
+    @FXML
+    private TextField txtBusca;
+
+    @FXML
+    private ComboBox&lt;String&gt; cmbStatusFiltro;
+
+    @FXML
+    private HBox filtersRow;
+
+    @FXML
+    private TableView&lt;Cliente&gt; clientesTable;
+
+    @FXML
+    private TableColumn&lt;Cliente, Integer&gt; idColumn;
+
+    @FXML
+    private TableColumn&lt;Cliente, String&gt; nomeColumn;
+
+    @FXML
+    private TableColumn&lt;Cliente, String&gt; cpfCnpjColumn;
+
+    @FXML
+    private TableColumn&lt;Cliente, String&gt; emailColumn;
+
+    @FXML
+    private TableColumn&lt;Cliente, String&gt; telefoneColumn;
+
+    @FXML
+    private TableColumn&lt;Cliente, String&gt; statusColumn;
+
+    @FXML
+    private Label lblRegistros;
+
+    @FXML
+    private Button btnAnterior;
+
+    @FXML
+    private Button btnPage1;
+
+    @FXML
+    private Button btnPage2;
+
+    @FXML
+    private Button btnProximo;
+
+    private ClienteDAO clienteDAO;
+    private ObservableList&lt;Cliente&gt; clientes;
+<span class="nc" id="L82">    private List&lt;Cliente&gt; clientesFiltrados = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L83">    private int paginaAtual = 1;</span>
+<span class="nc" id="L84">    private int totalPaginas = 1;</span>
+<span class="nc" id="L85">    private final int itensPorPagina = 5;</span>
+
+    @FXML
+    private void initialize() {
+<span class="nc" id="L89">        clienteDAO = new ClienteDAO();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (cmbStatusFiltro != null) {</span>
+<span class="nc" id="L91">            cmbStatusFiltro.setItems(FXCollections.observableArrayList(&quot;Todos&quot;, &quot;Ativo&quot;, &quot;Inativo&quot;));</span>
+<span class="nc" id="L92">            cmbStatusFiltro.setValue(&quot;Ativo&quot;);</span>
+        }
+<span class="nc" id="L94">        configurarTabela();</span>
+<span class="nc" id="L95">        carregarClientes();</span>
+<span class="nc" id="L96">    }</span>
+
+    private void configurarTabela() {
+<span class="nc" id="L99">        idColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;id&quot;));</span>
+<span class="nc" id="L100">        nomeColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;nome&quot;));</span>
+<span class="nc" id="L101">        cpfCnpjColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;cpfCnpj&quot;));</span>
+<span class="nc" id="L102">        emailColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;emailContato&quot;));</span>
+<span class="nc" id="L103">        telefoneColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;telefoneWhatsapp&quot;));</span>
+<span class="nc" id="L104">        statusColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;status&quot;));</span>
+<span class="nc" id="L105">        statusColumn.setCellFactory(column -&gt; new TableCell&lt;Cliente, String&gt;() {</span>
+<span class="nc" id="L106">            private final Label statusLabel = new Label();</span>
+
+            {
+<span class="nc" id="L109">                statusLabel.getStyleClass().add(&quot;clients-status-pill&quot;);</span>
+            }
+
+            @Override
+            protected void updateItem(String status, boolean empty) {
+<span class="nc" id="L114">                super.updateItem(status, empty);</span>
+<span class="nc bnc" id="L115" title="All 4 branches missed.">                if (empty || status == null) {</span>
+<span class="nc" id="L116">                    setGraphic(null);</span>
+<span class="nc" id="L117">                    setText(null);</span>
+<span class="nc" id="L118">                    return;</span>
+                }
+
+<span class="nc" id="L121">                String normalized = status.trim().toLowerCase();</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">                boolean ativo = normalized.equals(&quot;ativo&quot;) || normalized.equals(&quot;ativa&quot;);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                statusLabel.setText(ativo ? &quot;Ativo&quot; : &quot;Inativo&quot;);</span>
+<span class="nc" id="L124">                statusLabel.getStyleClass().removeAll(&quot;clients-status-active&quot;, &quot;clients-status-inactive&quot;);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                statusLabel.getStyleClass().add(ativo ? &quot;clients-status-active&quot; : &quot;clients-status-inactive&quot;);</span>
+<span class="nc" id="L126">                setGraphic(statusLabel);</span>
+<span class="nc" id="L127">                setText(null);</span>
+<span class="nc" id="L128">            }</span>
+        });
+
+<span class="nc" id="L131">        clientesTable.setColumnResizePolicy(</span>
+            TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
+        );
+<span class="nc" id="L134">    }</span>
+
+    @FXML
+    private void novoCliente() {
+<span class="nc" id="L138">        limparCampos();</span>
+<span class="nc" id="L139">    }</span>
+
+    @FXML
+    private void salvarCliente() {
+        try {
+<span class="nc" id="L144">            Cliente cliente = new Cliente(</span>
+<span class="nc" id="L145">                nomeField.getText(),</span>
+<span class="nc" id="L146">                cpfCnpjField.getText(),</span>
+<span class="nc" id="L147">                emailField.getText(),</span>
+<span class="nc" id="L148">                telefonejField.getText()</span>
+            );
+
+<span class="nc" id="L151">            clienteDAO.criar(cliente);</span>
+<span class="nc" id="L152">            carregarClientes();</span>
+<span class="nc" id="L153">            limparCampos();</span>
+<span class="nc" id="L154">        } catch (Exception e) {</span>
+<span class="nc" id="L155">            System.err.println(&quot;Erro ao salvar cliente: &quot; + e.getMessage());</span>
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">    }</span>
+
+    @FXML
+    private void deletarCliente() {
+<span class="nc" id="L161">        Cliente cliente = clientesTable.getSelectionModel().getSelectedItem();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (cliente != null) {</span>
+            try {
+<span class="nc" id="L164">                clienteDAO.deletar(cliente.getId());</span>
+<span class="nc" id="L165">                carregarClientes();</span>
+<span class="nc" id="L166">            } catch (Exception e) {</span>
+<span class="nc" id="L167">                System.err.println(&quot;Erro ao deletar cliente: &quot; + e.getMessage());</span>
+<span class="nc" id="L168">            }</span>
+        }
+<span class="nc" id="L170">    }</span>
+
+    private void carregarClientes() {
+        try {
+<span class="nc" id="L174">            clientes = FXCollections.observableArrayList(clienteDAO.listarTodos());</span>
+<span class="nc" id="L175">            aplicarFiltro();</span>
+<span class="nc" id="L176">        } catch (Exception e) {</span>
+<span class="nc" id="L177">            System.err.println(&quot;Erro ao carregar clientes: &quot; + e.getMessage());</span>
+<span class="nc" id="L178">        }</span>
+<span class="nc" id="L179">    }</span>
+
+    private void limparCampos() {
+<span class="nc" id="L182">        nomeField.clear();</span>
+<span class="nc" id="L183">        cpfCnpjField.clear();</span>
+<span class="nc" id="L184">        emailField.clear();</span>
+<span class="nc" id="L185">        telefonejField.clear();</span>
+<span class="nc" id="L186">    }</span>
+
+    @FXML
+    private void filtrarClientes() {
+<span class="nc" id="L190">        aplicarFiltro();</span>
+<span class="nc" id="L191">    }</span>
+
+    @FXML
+    private void alternarFiltros() {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (filtersRow == null) {</span>
+<span class="nc" id="L196">            return;</span>
+        }
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        boolean visivel = !filtersRow.isVisible();</span>
+<span class="nc" id="L199">        filtersRow.setVisible(visivel);</span>
+<span class="nc" id="L200">        filtersRow.setManaged(visivel);</span>
+<span class="nc" id="L201">    }</span>
+
+    @FXML
+    private void limparFiltros() {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        if (txtBusca != null) {</span>
+<span class="nc" id="L206">            txtBusca.clear();</span>
+        }
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (cmbStatusFiltro != null) {</span>
+<span class="nc" id="L209">            cmbStatusFiltro.setValue(&quot;Todos&quot;);</span>
+        }
+<span class="nc" id="L211">        aplicarFiltro();</span>
+<span class="nc" id="L212">    }</span>
+
+    private void aplicarFiltro() {
+<span class="nc bnc" id="L215" title="All 4 branches missed.">        String busca = txtBusca != null &amp;&amp; txtBusca.getText() != null</span>
+<span class="nc" id="L216">            ? txtBusca.getText().trim().toLowerCase()</span>
+<span class="nc" id="L217">            : &quot;&quot;;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        String statusFiltro = cmbStatusFiltro != null ? cmbStatusFiltro.getValue() : null;</span>
+
+<span class="nc" id="L220">        clientesFiltrados = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        for (Cliente cliente : clientes) {</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">            if (!passesFiltroStatus(cliente, statusFiltro)) {</span>
+<span class="nc" id="L223">                continue;</span>
+            }
+<span class="nc bnc" id="L225" title="All 4 branches missed.">            if (!busca.isEmpty() &amp;&amp; !matchesBusca(cliente, busca)) {</span>
+<span class="nc" id="L226">                continue;</span>
+            }
+<span class="nc" id="L228">            clientesFiltrados.add(cliente);</span>
+<span class="nc" id="L229">        }</span>
+
+<span class="nc" id="L231">        paginaAtual = 1;</span>
+<span class="nc" id="L232">        atualizarPaginacao();</span>
+<span class="nc" id="L233">    }</span>
+
+    private boolean passesFiltroStatus(Cliente cliente, String statusFiltro) {
+<span class="nc bnc" id="L236" title="All 4 branches missed.">        if (statusFiltro == null || statusFiltro.equalsIgnoreCase(&quot;Todos&quot;)) {</span>
+<span class="nc" id="L237">            return true;</span>
+        }
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        String status = cliente.getStatus() != null ? cliente.getStatus() : &quot;&quot;;</span>
+<span class="nc" id="L240">        return status.equalsIgnoreCase(statusFiltro);</span>
+    }
+
+    private boolean matchesBusca(Cliente cliente, String busca) {
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        String nome = cliente.getNome() != null ? cliente.getNome().toLowerCase() : &quot;&quot;;</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">        String doc = cliente.getCpfCnpj() != null ? cliente.getCpfCnpj().toLowerCase() : &quot;&quot;;</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        String email = cliente.getEmailContato() != null ? cliente.getEmailContato().toLowerCase() : &quot;&quot;;</span>
+<span class="nc bnc" id="L247" title="All 6 branches missed.">        return nome.contains(busca) || doc.contains(busca) || email.contains(busca);</span>
+    }
+
+    private void atualizarPaginacao() {
+<span class="nc" id="L251">        TableUtils.atualizarTabelaPaginada(clientesTable, clientesFiltrados, paginaAtual, itensPorPagina, lblRegistros);</span>
+<span class="nc" id="L252">        atualizarBotoesPaginacao();</span>
+<span class="nc" id="L253">    }</span>
+
+    private void atualizarBotoesPaginacao() {
+<span class="nc" id="L256">        TableUtils.configurarPaginacao(btnAnterior, btnProximo, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L257">        TableUtils.configurarBotaoPagina(btnPage1, paginaAtual, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L258">        TableUtils.configurarBotaoPagina(btnPage2, paginaAtual + 1, paginaAtual, totalPaginas);</span>
+<span class="nc" id="L259">    }</span>
+
+    @FXML
+    private void paginaAnterior() {
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (paginaAtual &gt; 1) {</span>
+<span class="nc" id="L264">            paginaAtual--;</span>
+<span class="nc" id="L265">            atualizarPaginacao();</span>
+        }
+<span class="nc" id="L267">    }</span>
+
+    @FXML
+    private void paginaProxima() {
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if (paginaAtual &lt; totalPaginas) {</span>
+<span class="nc" id="L272">            paginaAtual++;</span>
+<span class="nc" id="L273">            atualizarPaginacao();</span>
+        }
+<span class="nc" id="L275">    }</span>
+
+    @FXML
+    private void irParaPagina(javafx.event.ActionEvent event) {
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (!(event.getSource() instanceof Button)) {</span>
+<span class="nc" id="L280">            return;</span>
+        }
+<span class="nc" id="L282">        Button botao = (Button) event.getSource();</span>
+        try {
+<span class="nc" id="L284">            int pagina = Integer.parseInt(botao.getText());</span>
+<span class="nc" id="L285">            paginaAtual = pagina;</span>
+<span class="nc" id="L286">            atualizarPaginacao();</span>
+<span class="nc" id="L287">        } catch (NumberFormatException ignored) {</span>
+<span class="nc" id="L288">        }</span>
+<span class="nc" id="L289">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
