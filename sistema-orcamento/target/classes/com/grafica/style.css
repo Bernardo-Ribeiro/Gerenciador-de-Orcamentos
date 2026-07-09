@@ -1496,14 +1496,30 @@
 /* Inputs com contraste */
 .form-input,
 .search-input {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-text-fill: rgba(255, 255, 255, 0.95);
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+    -fx-text-fill: rgb(255, 255, 255);
     -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
 }
 
 .form-input:focused {
     -fx-background-color: rgba(255, 255, 255, 0.12);
     -fx-border-color: #60a5fa;
+}
+
+/* TextArea - contraste correto */
+.text-area,
+.text-area .content {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+    -fx-text-fill: rgb(255, 255, 255);
+}
+
+.text-area:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-border-color: #60a5fa;
+}
+
+.text-area .prompt-text {
+    -fx-fill: rgba(255, 255, 255, 0.4);
 }
 
 /* Tabelas - contraste garantido */
@@ -2081,7 +2097,7 @@ Button.btn-sair:hover {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 15, 0, 0, 3);
 }
 
-/* Ícone do stat card */
+/* ï¿½cone do stat card */
 .stat-icon {
     -fx-min-width: 40px;
     -fx-pref-width: 40px;
@@ -2096,7 +2112,7 @@ Button.btn-sair:hover {
     -fx-border-radius: 10;
 }
 
-/* Label do stat (título descritivo) */
+/* Label do stat (tï¿½tulo descritivo) */
 .stat-label {
     -fx-text-fill: rgba(255, 255, 255, 0.6) !important;
     -fx-font-size: 13px;

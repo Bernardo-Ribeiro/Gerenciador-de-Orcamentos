@@ -143,48 +143,6 @@
                                         </children>
                                     </HBox>
                                 </VBox>
-
-                                <VBox spacing="12.0" styleClass="card">
-                                    <children>
-                                        <Label styleClass="card-title" text="Pré-visualização em Tempo Real" />
-
-                                        <VBox spacing="8.0" styleClass="card-card">
-                                            <children>
-                                                <HBox spacing="8.0" alignment="CENTER_LEFT">
-                                                    <children>
-                                                        <Label styleClass="card-brand" text="" />
-                                                        <Region HBox.hgrow="ALWAYS" />
-                                                        <Label styleClass="card-logo" text="LOGO" />
-                                                    </children>
-                                                </HBox>
-                                                <Label styleClass="card-text" text="" />
-                                                <Label styleClass="card-text" text="" />
-                                                <Label styleClass="card-text" text="" />
-                                                <HBox spacing="6.0" alignment="CENTER_LEFT" styleClass="card-divider">
-                                                    <children>
-                                                        <Label styleClass="card-caption" text="ORÇAMENTO #2024-085" />
-                                                        <Region HBox.hgrow="ALWAYS" />
-                                                        <Label styleClass="card-caption" text="Emitido em 24/05/2024" />
-                                                    </children>
-                                                </HBox>
-                                                <VBox spacing="4.0" styleClass="card-block">
-                                                    <children>
-                                                        <Label styleClass="card-placeholder" text="" />
-                                                        <Label styleClass="card-placeholder" text="" />
-                                                        <Label styleClass="card-placeholder" text="" />
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </VBox>
-
-                                        <HBox spacing="8.0" alignment="CENTER_LEFT" styleClass="note-card">
-                                            <children>
-                                                <Label styleClass="note-card-icon" text="i" />
-                                                <Label styleClass="note-card-text" text="Layout responsivo para visualização em dispositivos móveis e impressão A4." wrapText="true" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
                             </children>
                         </HBox>
                     </children>
