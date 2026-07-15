@@ -1,6 +1,13 @@
 BEGIN TRANSACTION;
 
 -- =====================================================
+-- 0. USUÁRIO PADRÃO
+-- =====================================================
+
+INSERT INTO usuarios (nome, email, senha_hash, status) VALUES
+('Administrador', 'admin@grafica.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'ATIVO');
+
+-- =====================================================
 -- 1. PRODUTOS
 -- =====================================================
 

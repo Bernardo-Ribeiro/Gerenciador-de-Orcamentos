@@ -15,6 +15,7 @@ if (Test-Path $isccPath) {
 } else {
     # Tenta encontrar em outros locais comuns
     $possiblePaths = @(
+        "C:\Program Files\Inno Setup 7\ISCC.exe",
         "C:\Program Files\Inno Setup 6\ISCC.exe",
         "C:\Program Files (x86)\Inno Setup 5\ISCC.exe",
         "C:\Program Files\Inno Setup 5\ISCC.exe"
