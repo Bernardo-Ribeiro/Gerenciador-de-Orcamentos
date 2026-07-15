@@ -8,7 +8,7 @@ import java.util.List;
 public class EscalaProdutivaDAO {
 
     public void criar(EscalaProdutiva escala) {
-        String sql = "INSERT INTO escalas_produtivas (id_material, qtd_minima, qtd_maxima, desconto_percentual) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO escalas_produtivas (id_material, qtd_minima, qtd_maxima, desconto_percentual, custo_unitario) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -17,6 +17,11 @@ public class EscalaProdutivaDAO {
             stmt.setInt(2, escala.getQtdMinima());
             stmt.setInt(3, escala.getQtdMaxima());
             stmt.setBigDecimal(4, escala.getDescontoPercentual());
+            if (escala.getCustoUnitario() == null) {
+                stmt.setNull(5, Types.DOUBLE);
+            } else {
+                stmt.setDouble(5, escala.getCustoUnitario());
+            }
 
             stmt.executeUpdate();
 
@@ -32,7 +37,7 @@ public class EscalaProdutivaDAO {
 
     public List<EscalaProdutiva> listarPorMaterial(Integer idMaterial) {
         List<EscalaProdutiva> escalas = new ArrayList<>();
-        String sql = "SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual FROM escalas_produtivas WHERE id_material = ? ORDER BY qtd_minima";
+        String sql = "SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual, custo_unitario FROM escalas_produtivas WHERE id_material = ? ORDER BY qtd_minima";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -51,7 +56,7 @@ public class EscalaProdutivaDAO {
 
     public List<EscalaProdutiva> listarTodos() {
         List<EscalaProdutiva> escalas = new ArrayList<>();
-        String sql = "SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual FROM escalas_produtivas ORDER BY id_material, qtd_minima";
+        String sql = "SELECT id, id_material, qtd_minima, qtd_maxima, desconto_percentual, custo_unitario FROM escalas_produtivas ORDER BY id_material, qtd_minima";
 
         try (Connection conn = DbConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -67,7 +72,7 @@ public class EscalaProdutivaDAO {
     }
 
     public void atualizar(EscalaProdutiva escala) {
-        String sql = "UPDATE escalas_produtivas SET id_material = ?, qtd_minima = ?, qtd_maxima = ?, desconto_percentual = ? WHERE id = ?";
+        String sql = "UPDATE escalas_produtivas SET id_material = ?, qtd_minima = ?, qtd_maxima = ?, desconto_percentual = ?, custo_unitario = ? WHERE id = ?";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -76,7 +81,12 @@ public class EscalaProdutivaDAO {
             stmt.setInt(2, escala.getQtdMinima());
             stmt.setInt(3, escala.getQtdMaxima());
             stmt.setBigDecimal(4, escala.getDescontoPercentual());
-            stmt.setInt(5, escala.getId());
+            if (escala.getCustoUnitario() == null) {
+                stmt.setNull(5, Types.DOUBLE);
+            } else {
+                stmt.setDouble(5, escala.getCustoUnitario());
+            }
+            stmt.setInt(6, escala.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -97,13 +107,28 @@ public class EscalaProdutivaDAO {
         }
     }
 
+    public void deletarPorMaterial(Integer idMaterial) {
+        String sql = "DELETE FROM escalas_produtivas WHERE id_material = ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idMaterial);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private EscalaProdutiva mapearEscala(ResultSet rs) throws SQLException {
+        Double custoUnitario = rs.getObject("custo_unitario") != null ? rs.getDouble("custo_unitario") : null;
         return new EscalaProdutiva(
             rs.getInt("id"),
             rs.getInt("id_material"),
             rs.getInt("qtd_minima"),
             rs.getInt("qtd_maxima"),
-            rs.getBigDecimal("desconto_percentual")
+            rs.getBigDecimal("desconto_percentual"),
+            custoUnitario
         );
     }
 }

@@ -8,16 +8,18 @@ public class EscalaProdutiva {
     private Integer qtdMinima;
     private Integer qtdMaxima;
     private BigDecimal descontoPercentual;
+    private Double custoUnitario;
 
     public EscalaProdutiva() {
     }
 
-    public EscalaProdutiva(Integer id, Integer idMaterial, Integer qtdMinima, Integer qtdMaxima, BigDecimal descontoPercentual) {
+    public EscalaProdutiva(Integer id, Integer idMaterial, Integer qtdMinima, Integer qtdMaxima, BigDecimal descontoPercentual, Double custoUnitario) {
         this.id = id;
         this.idMaterial = idMaterial;
         this.qtdMinima = qtdMinima;
         this.qtdMaxima = qtdMaxima;
         this.descontoPercentual = descontoPercentual;
+        this.custoUnitario = custoUnitario;
     }
 
     public Integer getId() {
@@ -58,5 +60,13 @@ public class EscalaProdutiva {
 
     public void setDescontoPercentual(BigDecimal descontoPercentual) {
         this.descontoPercentual = descontoPercentual;
+    }
+
+    public Double getCustoUnitario() {
+        return custoUnitario;
+    }
+
+    public void setCustoUnitario(Double custoUnitario) {
+        this.custoUnitario = custoUnitario;
     }
 }

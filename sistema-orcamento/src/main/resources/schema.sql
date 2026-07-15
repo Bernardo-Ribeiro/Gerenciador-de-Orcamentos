@@ -105,7 +105,8 @@ CREATE TABLE IF NOT EXISTS escalas_produtivas (
     id_material INTEGER NOT NULL,
     qtd_minima INTEGER NOT NULL,
     qtd_maxima INTEGER NOT NULL,
-    desconto_percentual REAL NOT NULL,
+    desconto_percentual REAL NOT NULL DEFAULT 0.00,
+    custo_unitario REAL,
     FOREIGN KEY (id_material) REFERENCES materiais(id) ON DELETE CASCADE
 );
 

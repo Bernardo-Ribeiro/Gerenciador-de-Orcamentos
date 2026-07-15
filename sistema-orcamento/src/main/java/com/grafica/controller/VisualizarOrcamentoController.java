@@ -276,7 +276,7 @@ public class VisualizarOrcamentoController {
                 
                 BigDecimal valorFinalCalculado = CalculoService.calcularValorFinalItem(
                     largura, altura, quantidade, custoBaseAtual,
-                    orcamento.getDescontoProgressivo() != null ? orcamento.getDescontoProgressivo() : BigDecimal.ZERO,
+                    item.getIdMaterial(),
                     orcamento.getMargemLucroPercentual() != null ? orcamento.getMargemLucroPercentual() : BigDecimal.ZERO
                 );
                 

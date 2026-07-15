@@ -32,7 +32,11 @@ public class ClienteDAO {
             pstmt.setString(2, cliente.getCpfCnpj());
             pstmt.setString(3, cliente.getEmailContato());
             pstmt.setString(4, cliente.getTelefoneWhatsapp());
-            pstmt.setString(5, cliente.getStatus());
+            String status = cliente.getStatus();
+            if (status == null || !(status.equalsIgnoreCase("ATIVO") || status.equalsIgnoreCase("INATIVO"))) {
+                status = "ATIVO";
+            }
+            pstmt.setString(5, status);
             
             pstmt.executeUpdate();
             
@@ -87,7 +91,11 @@ public class ClienteDAO {
             pstmt.setString(1, cliente.getNome());
             pstmt.setString(2, cliente.getEmailContato());
             pstmt.setString(3, cliente.getTelefoneWhatsapp());
-            pstmt.setString(4, cliente.getStatus());
+            String status = cliente.getStatus();
+            if (status == null || !(status.equalsIgnoreCase("ATIVO") || status.equalsIgnoreCase("INATIVO"))) {
+                status = "ATIVO";
+            }
+            pstmt.setString(4, status);
             pstmt.setInt(5, cliente.getId());
             
             pstmt.executeUpdate();

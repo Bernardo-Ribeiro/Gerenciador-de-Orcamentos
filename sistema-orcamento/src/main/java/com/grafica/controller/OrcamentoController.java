@@ -36,6 +36,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OrcamentoController {
     @FXML private SearchableComboBox<Cliente> clienteCombo;
@@ -232,10 +233,9 @@ public class OrcamentoController {
 
         materialCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null && newVal.getIdCategoriaLucro() != null) {
-                // Busca a categoria de lucro associada ao material selecionado
                 CategoriaLucro cat = categoriaLucroDAO.obterPorId(newVal.getIdCategoriaLucro());
                 if (cat != null) {
-                    margemField.setText(cat.getMargemPadrao().toString()); // Preenche o campo de margem automaticamente
+                    margemField.setText(cat.getMargemPadrao().toString());
                 }
             }
         });
@@ -298,7 +298,6 @@ public class OrcamentoController {
             }
             materialCombo.setItems(FXCollections.observableArrayList(materiais));
             if (!materiais.isEmpty()) {
-                // Selecionar material padrão
                 for (int i = 0; i < pms.size(); i++) {
                     if (pms.get(i).getMaterialPadrao()) {
                         if (i < materiais.size()) {
@@ -343,13 +342,11 @@ public class OrcamentoController {
         Material material = materialCombo.getValue();
         if (material == null) { mostrarErro("Selecione um material."); return; }
 
-        // Validação: O layout pertence ao produto?
         if (layout != null && !layout.getIdProduto().equals(produto.getId())) {
             mostrarErro("Inconsistência de dados: O layout '" + layout.getNomeLayout() + "' não pertence ao produto '" + produto.getNome() + "'.");
             return;
         }
 
-        // Validação: A categoria do material é compatível com a do produto?
         if (!produto.getCategoria().equals(material.getCategoria())) {
             mostrarErro("Inconsistência de dados: O material '" + material.getNome() + "' (categoria " + material.getCategoria() + ") não é compatível com o produto '" + produto.getNome() + "' (categoria " + produto.getCategoria() + ").");
             return;
@@ -366,29 +363,27 @@ public class OrcamentoController {
         BigDecimal margem = lerDecimal(margemField, "0");
         BigDecimal desconto = lerDecimal(descuentoField, "0");
 
-        // Obter custo base do material
         BigDecimal custoBase = material.getCustoBase();
         if (custoBase == null) {
             mostrarErro("O material selecionado não possui um custo base definido.");
             return;
         }
 
-        // Calcular área
         BigDecimal area = largura.multiply(altura).divide(BigDecimal.valueOf(1_000_000), 4, RoundingMode.HALF_UP);
 
         BigDecimal valorBruto;
         BigDecimal valorFinal;
 
         if ("AREA".equals(material.getTipoCobranca())) {
-            valorBruto = CalculoService.calcularValorBrutoItem(largura, altura, quantidade, custoBase);
-            valorFinal = CalculoService.calcularValorFinalItem(largura, altura, quantidade, custoBase, desconto, margem);
-        } else { // Assumindo "UNIDADE" ou outro tipo
-            valorBruto = custoBase.multiply(quantidade);
+            valorFinal = CalculoService.calcularValorFinalItem(largura, altura, quantidade, custoBase, material.getId(), margem);
+            valorBruto = CalculoService.calcularValorBrutoItem(largura, altura, quantidade, CalculoService.resolverCustoUnitarioEfetivo(material.getId(), quantidade.intValue(), custoBase));
+        } else {
+            BigDecimal custoEfetivo = CalculoService.resolverCustoUnitarioEfetivo(material.getId(), quantidade.intValue(), custoBase);
+            valorBruto = custoEfetivo.multiply(quantidade);
             BigDecimal valorComDesconto = CalculoService.aplicarDescuentoEscala(valorBruto, desconto);
             valorFinal = CalculoService.aplicarMargenGanancia(valorComDesconto, margem);
         }
 
-        // Calcular custo dos acabamentos selecionados
         BigDecimal custoAcabamentos = BigDecimal.ZERO;
         StringBuilder descAcabamentos = new StringBuilder();
         for (Map.Entry<Integer, CheckBox> entry : acabamentoCheckboxes.entrySet()) {
@@ -462,7 +457,6 @@ public class OrcamentoController {
             }
             orcamentoBadgeLabel.setText("ID: #" + orcamentoAtual.getId());
             
-            // Salva os itens sempre (novo ou existente)
             salvarItensOrcamento();
             
         } catch (Exception e) {
@@ -489,7 +483,6 @@ public class OrcamentoController {
             System.out.println("=== Salvando itens do orçamento " + orcamentoAtual.getId() + " ===");
             System.out.println("Quantidade de itens na lista: " + itens.size());
             
-            // Deleta itens existentes antes de salvar os novos
             new ItemOrcamentoDAO().deletarPorOrcamento(orcamentoAtual.getId());
             System.out.println("Itens antigos deletados.");
             
@@ -537,7 +530,6 @@ public class OrcamentoController {
         quantidadeField.clear();
         areaCalculadaLabel.setText("* Área calculada: 0,00 m²");
         usarLayoutRadio.setSelected(true);
-        // Desmarcar checkboxes não obrigatórios
         for (Map.Entry<Integer, CheckBox> entry : acabamentoCheckboxes.entrySet()) {
             if (!entry.getValue().isDisable()) entry.getValue().setSelected(false);
         }

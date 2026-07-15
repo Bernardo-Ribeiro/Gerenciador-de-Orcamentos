@@ -19,7 +19,7 @@ public class Cliente {
         this.cpfCnpj = cpfCnpj;
         this.emailContato = emailContato;
         this.telefoneWhatsapp = telefoneWhatsapp;
-        this.status = "ativo";
+        this.status = "ATIVO";
         this.dataCadastro = LocalDateTime.now();
     }
 

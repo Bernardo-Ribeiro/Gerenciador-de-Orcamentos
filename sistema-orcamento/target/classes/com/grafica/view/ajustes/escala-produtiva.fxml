@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -18,7 +19,7 @@
         <VBox spacing="6.0">
             <children>
                 <Label styleClass="title" text="Escala Produtiva" />
-                <Label styleClass="text-body-sm" text="Configure margens de desconto no preço unitário por intervalo de quantidade." wrapText="true" />
+                <Label styleClass="text-body-sm" text="Configure as escalas por material. Selecione um material para editar os intervalos e o custo unitário." wrapText="true" />
             </children>
         </VBox>
 
@@ -32,18 +33,36 @@
                         <Insets top="0.0" right="4.0" bottom="4.0" left="4.0" />
                     </padding>
                     <children>
+                        <HBox spacing="12.0" alignment="CENTER_LEFT">
+                            <children>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="filter-label" text="Produto" />
+                                        <ComboBox fx:id="produtoCombo" prefWidth="260.0" styleClass="input" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="filter-label" text="Material" />
+                                        <ComboBox fx:id="materialCombo" prefWidth="260.0" styleClass="input" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+
                         <HBox spacing="16.0" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
                             <children>
                                 <VBox spacing="12.0" styleClass="card" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="cardpage-title" text="Tabela de Desconto Progressivo" />
-                                        <Label styleClass="cardpage-subtitle" text="Defina os intervalos e os percentuais aplicados automaticamente." wrapText="true" />
+                                        <Label styleClass="cardpage-title" text="Intervalos do Material" />
+                                        <Label styleClass="cardpage-subtitle" text="Defina intervalos de quantidade com desconto percentual ou custo unitário." wrapText="true" />
 
                                         <HBox spacing="12.0" styleClass="table-header" alignment="CENTER_LEFT">
                                             <children>
                                                 <Label styleClass="header-label" text="Qtd. Inicial" prefWidth="110.0" />
                                                 <Label styleClass="header-label" text="Qtd. Final" prefWidth="110.0" />
-                                                <Label styleClass="header-label" text="Desconto (%)" prefWidth="130.0" />
+                                                <Label styleClass="header-label" text="Desconto (%)" prefWidth="120.0" />
+                                                <Label styleClass="header-label" text="Custo Unit. (R$)" prefWidth="120.0" />
                                                 <Label styleClass="header-label" text="Ações" prefWidth="90.0" />
                                             </children>
                                         </HBox>
@@ -79,7 +98,7 @@
 
                                         <HBox spacing="6.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Label fx:id="lblDescontoTitulo" styleClass="sim-label" text="Desconto (0%):" />
+                                                <Label fx:id="lblDescontoTitulo" styleClass="sim-label" text="Custo Efetivo (0%):" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                                 <Label fx:id="lblDescontoValor" styleClass="sim-negative" text="- R$ 0.00" />
                                             </children>

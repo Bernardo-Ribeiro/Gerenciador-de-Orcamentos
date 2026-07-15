@@ -2,6 +2,7 @@ com\grafica\ui\UiUtils.class
 com\grafica\ui\BaseController.class
 com\grafica\ui\FormUtils.class
 com\grafica\controller\OrcamentoController$4.class
+com\grafica\controller\EscalaProdutivaController$EscalaSelecionada.class
 com\grafica\model\CategoriaLucro.class
 com\grafica\controller\OrcamentoController$1.class
 com\grafica\model\Cliente.class
@@ -27,6 +28,7 @@ com\grafica\controller\ClienteController.class
 com\grafica\dao\ItemOrcamentoAcabamentoDAO.class
 com\grafica\dao\ProdutoMaterialDAO.class
 com\grafica\controller\CustosInsumosController$1.class
+com\grafica\controller\EscalaProdutivaController$2.class
 com\grafica\controller\RelatoriosController.class
 com\grafica\dao\ClienteDAO.class
 com\grafica\ui\TableUtils$3.class
@@ -57,6 +59,7 @@ com\grafica\controller\ProdutoController$3.class
 com\grafica\controller\EscalaProdutivaController$IntervaloRow.class
 com\grafica\model\EscalaProdutiva.class
 com\grafica\dao\ProdutoDAO.class
+com\grafica\controller\EscalaProdutivaController$1.class
 com\grafica\controller\ClienteController$1.class
 com\grafica\dao\LayoutProdutoDAO.class
 com\grafica\controller\MaterialController.class
